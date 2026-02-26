@@ -1,3 +1,24 @@
 <resources>
-    <string name="app_name">ucms-android</string>
+    <string name="app_name">UCMS</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="student_id">Student ID</string>
+    <string name="password">Password</string>
+    <string name="full_name">Full Name</string>
+    <string name="course">Course</string>
+    <string name="year_level">Year Level</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="no_account">Don\'t have an account? Register</string>
+    <string name="have_account">Already have an account? Login</string>
+    <string name="email_verification_title">Verify Your Email</string>
+    <string name="email_verification_message">Your account is limited. Add and verify your email to create tickets.</string>
+    <string name="email_hint">Email address</string>
+    <string name="send_verification">Send Verification Email</string>
+    <string name="skip">Skip for now</string>
+    <string name="loading">Please wait…</string>
+    <string name="error_empty_fields">Please fill in all fields</string>
+    <string name="error_invalid_student_id">Invalid student ID format (e.g. 20230733-N)</string>
+    <string name="error_login_failed">Login failed. Check your credentials.</string>
+    <string name="error_register_failed">Registration failed. Please try again.</string>
+    <string name="success_register">Registered successfully. Please login.</string>
 </resources>
