@@ -16,6 +16,7 @@
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Ucmsandroid">
@@ -53,6 +54,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Admin screens -->
+        <activity
+            android:name=".ui.admin.AdminTicketDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.admin.AnalyticsActivity"
+            android:exported="false" />
+
+        <!-- Student screens -->
+        <activity
+            android:name=".ui.student.TicketDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.SubmitTicketActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.NotificationsActivity"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
