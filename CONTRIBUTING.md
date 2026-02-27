@@ -69,6 +69,12 @@ Use this format when opening a PR:
 - [ ] All API calls go through `ApiClient` — no direct Supabase calls
 - [ ] JWT attached via `AuthInterceptor` — no manual Authorization headers
 - [ ] `403 ACCOUNT_LIMITED` handled with email verification prompt
+- [ ] No hardcoded dimensions — use `@dimen/` tokens
+- [ ] No hardcoded colors — use `@color/` tokens
+- [ ] No hardcoded strings — use `@string/` references
+- [ ] View IDs follow `camelCase` type prefix convention (`tvTitle`, `btnLogin`, etc.)
+- [ ] Buttons use `MaterialButton` + `app:cornerRadius="@dimen/corner_radius_button"`
+- [ ] Cards use `MaterialCardView` + `app:cardCornerRadius="@dimen/corner_radius_card"`
 - [ ] No secrets or hardcoded URLs committed
 - [ ] App builds and runs on API 24+
 - [ ] CI passes
@@ -76,8 +82,10 @@ Use this format when opening a PR:
 
 ## Code Style
 
+> See `docs/design-system.md` for the full design system reference (colors, dimensions, theme, layout rules).
+
 - Follow the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html)
-- XML layout IDs use `snake_case` (e.g. `btn_submit`, `tv_ticket_title`)
+- XML layout IDs use `camelCase` with type prefix (e.g. `btnSubmit`, `tvTicketTitle`) — see `docs/design-system.md`
 - Activities and Fragments use `PascalCase` (e.g. `TicketDetailActivity`, `LoginFragment`)
 
 ## Package Structure
