@@ -39,18 +39,6 @@
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ResetPasswordActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:scheme="ucms"
-                    android:host="reset-password" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
         <activity
