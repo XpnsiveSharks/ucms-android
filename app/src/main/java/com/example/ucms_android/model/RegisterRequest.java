@@ -2,14 +2,14 @@ package com.example.ucms_android.model;
 
 public class RegisterRequest {
     private String studentId;
-    private String fullName;
+    private String name;
     private String course;
     private int yearLevel;
     private String password;
 
-    public RegisterRequest(String studentId, String fullName, String course, int yearLevel, String password) {
+    public RegisterRequest(String studentId, String name, String course, int yearLevel, String password) {
         this.studentId = studentId;
-        this.fullName = fullName;
+        this.name = name;
         this.course = course;
         this.yearLevel = yearLevel;
         this.password = password;
@@ -19,8 +19,8 @@ public class RegisterRequest {
         return studentId;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getName() {
+        return name;
     }
 
     public String getCourse() {

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ===== Buttons ===== -->
+
+    <style name="Style.Button.Primary" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorOnPrimary</item>
+        <item name="cornerRadius">@dimen/corner_radius_button</item>
+        <item name="android:paddingStart">@dimen/spacing_xlarge</item>
+        <item name="android:paddingEnd">@dimen/spacing_xlarge</item>
+    </style>
+
+    <style name="Style.Button.Secondary" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textColor">@color/colorSecondary</item>
+        <item name="strokeColor">@color/colorSecondary</item>
+        <item name="cornerRadius">@dimen/corner_radius_button</item>
+        <item name="android:paddingStart">@dimen/spacing_xlarge</item>
+        <item name="android:paddingEnd">@dimen/spacing_xlarge</item>
+    </style>
+
+    <!-- ===== Cards ===== -->
+
+    <style name="Style.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardBackgroundColor">@color/colorBackground</item>
+        <item name="cardCornerRadius">@dimen/corner_radius_card</item>
+        <item name="cardElevation">2dp</item>
+        <item name="contentPadding">@dimen/spacing_medium</item>
+    </style>
+
+    <!-- ===== Status Badges ===== -->
+
+    <style name="Style.Badge" parent="">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodySmall</item>
+        <item name="android:textColor">@color/colorOnPrimary</item>
+        <item name="android:paddingStart">@dimen/spacing_small</item>
+        <item name="android:paddingEnd">@dimen/spacing_small</item>
+        <item name="android:paddingTop">@dimen/spacing_xsmall</item>
+        <item name="android:paddingBottom">@dimen/spacing_xsmall</item>
+    </style>
+
+    <style name="Style.Badge.Pending" parent="Style.Badge">
+        <item name="android:background">@drawable/bg_badge_pending</item>
+    </style>
+
+    <style name="Style.Badge.InProgress" parent="Style.Badge">
+        <item name="android:background">@drawable/bg_badge_inprogress</item>
+    </style>
+
+    <style name="Style.Badge.Resolved" parent="Style.Badge">
+        <item name="android:background">@drawable/bg_badge_resolved</item>
+    </style>
+
+    <style name="Style.Badge.Closed" parent="Style.Badge">
+        <item name="android:background">@drawable/bg_badge_closed</item>
+    </style>
+
+    <!-- ===== Text Input ===== -->
+
+    <style name="Style.TextInput" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">@dimen/corner_radius_input</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/corner_radius_input</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/corner_radius_input</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/corner_radius_input</item>
+        <item name="boxStrokeColor">@color/colorDivider</item>
+        <item name="hintTextColor">@color/colorTextSecondary</item>
+    </style>
+
+    <!-- ===== Text ===== -->
+
+    <style name="Style.Text.Title" parent="">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.HeadlineMedium</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+    </style>
+
+    <style name="Style.Text.Body" parent="">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyLarge</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+    </style>
+
+    <style name="Style.Text.Caption" parent="">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodySmall</item>
+        <item name="android:textColor">@color/colorTextSecondary</item>
+    </style>
+
+    <style name="Style.Text.Scrollable" parent="">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyLarge</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:overScrollMode">never</item>
+        <item name="android:maxLines">8</item>
+        <item name="android:ellipsize">none</item>
+    </style>
+
+</resources>

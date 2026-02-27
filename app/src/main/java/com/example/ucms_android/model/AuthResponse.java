@@ -1,19 +1,13 @@
 package com.example.ucms_android.model;
 
 public class AuthResponse {
-    private String token;
-    private String role;
+    private String accessToken;
+    private String tokenType;
+    private long expiresIn;
+    private String refreshToken;
 
-    public AuthResponse(String token, String role) {
-        this.token = token;
-        this.role = role;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public String getRole() {
-        return role;
-    }
+    public String getAccessToken() { return accessToken; }
+    public String getTokenType() { return tokenType; }
+    public long getExpiresIn() { return expiresIn; }
+    public String getRefreshToken() { return refreshToken; }
 }

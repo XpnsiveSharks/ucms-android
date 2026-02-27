@@ -36,7 +36,7 @@ BACKEND_BASE_URL=http://10.0.2.2:8080/
 ```
 
 > ⚠️ `local.properties` must never be committed. It is already in `.gitignore`.
-> ⚠️ `BACKEND_BASE_URL` is the local emulator URL. If running on a physical device, replace `10.0.2.2` with your machine's local IP address.
+> ⚠️ `BACKEND_BASE_URL` is the local emulator URL. If running on a physical device, see [`docs/dev-setup.md`](docs/dev-setup.md) for instructions.
 
 ---
 
@@ -73,6 +73,7 @@ BACKEND_BASE_URL=http://10.0.2.2:8080/
 |-----|------|-------------|
 | Design System | [`docs/design-system.md`](docs/design-system.md) | Colors, dimensions, theme setup, and layout guidelines — **read before touching any layout or resource file** |
 | API Contract | [`docs/api-contract.md`](docs/api-contract.md) | All backend endpoints, request/response shapes |
+| Dev Setup | [`docs/dev-setup.md`](docs/dev-setup.md) | Local configuration, backend URL setup for emulator and real device |
 | Roles & Permissions | [`docs/roles-permissions.md`](docs/roles-permissions.md) | Student vs Admin rules, ownership checks |
 | Ticket Status Flow | [`docs/ticket-status-flow.md`](docs/ticket-status-flow.md) | Valid ticket status transitions |
 

@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.ucms_android.model.ApiError;
-import com.example.ucms_android.model.AuthResponse;
+import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.RegisterRequest;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.AuthService;
@@ -64,12 +64,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void attemptRegister() {
         String studentId = getText(etStudentId);
-        String fullName = getText(etFullName);
+        String name = getText(etFullName);
         String course = getText(etCourse);
         String yearLevelText = getText(etYearLevel);
         String password = getText(etPassword);
 
-        if (studentId.isEmpty() || fullName.isEmpty() || course.isEmpty() || yearLevelText.isEmpty() || password.isEmpty()) {
+        if (studentId.isEmpty() || name.isEmpty() || course.isEmpty() || yearLevelText.isEmpty() || password.isEmpty()) {
             showError(getString(R.string.error_empty_fields));
             return;
         }
@@ -89,13 +89,13 @@ public class RegisterActivity extends AppCompatActivity {
 
         setLoading(true);
 
-        RegisterRequest request = new RegisterRequest(studentId, fullName, course, yearLevel, password);
-        authService.register(request).enqueue(new Callback<AuthResponse>() {
+        RegisterRequest request = new RegisterRequest(studentId, name, course, yearLevel, password);
+        authService.register(request).enqueue(new Callback<ApiResponse<Void>>() {
             @Override
-            public void onResponse(@NonNull Call<AuthResponse> call, @NonNull Response<AuthResponse> response) {
+            public void onResponse(@NonNull Call<ApiResponse<Void>> call, @NonNull Response<ApiResponse<Void>> response) {
                 runOnUiThread(() -> {
                     setLoading(false);
-                    if (response.isSuccessful()) {
+                    if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                         Toast.makeText(RegisterActivity.this, getString(R.string.success_register), Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                         finish();
@@ -111,7 +111,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<AuthResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ApiResponse<Void>> call, @NonNull Throwable t) {
                 runOnUiThread(() -> {
                     setLoading(false);
                     showError(getString(R.string.error_register_failed));
