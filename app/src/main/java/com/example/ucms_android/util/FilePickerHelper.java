@@ -38,6 +38,7 @@ public final class FilePickerHelper {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
 
         if (mimeTypes.length == 1) {
@@ -170,6 +171,8 @@ public final class FilePickerHelper {
                     return cursor.getString(index);
                 }
             }
+        } catch (SecurityException | IllegalArgumentException e) {
+            android.util.Log.w("FilePickerHelper", "queryDisplayName failed: " + e.getMessage());
         }
 
         return null;
@@ -190,6 +193,8 @@ public final class FilePickerHelper {
                     return cursor.getString(index);
                 }
             }
+        } catch (SecurityException | IllegalArgumentException e) {
+            android.util.Log.w("FilePickerHelper", "queryMediaStoreDisplayName failed: " + e.getMessage());
         }
 
         return null;

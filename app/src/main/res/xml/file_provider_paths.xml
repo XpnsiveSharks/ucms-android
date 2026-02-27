@@ -2,14 +2,14 @@
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
     <cache-path
         name="cache"
-        path="." />
+        path="ticket_attachments" />
     <files-path
         name="files"
-        path="." />
+        path="ticket_attachments" />
     <external-files-path
         name="external_files"
-        path="." />
+        path="ticket_attachments" />
     <external-cache-path
         name="external_cache"
-        path="." />
+        path="ticket_attachments" />
 </paths>
