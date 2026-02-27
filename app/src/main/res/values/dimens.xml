@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Screen -->
+    <dimen name="screen_padding">24dp</dimen>
+
+    <!-- Spacing -->
+    <dimen name="spacing_xxlarge">32dp</dimen>
+    <dimen name="spacing_xlarge">24dp</dimen>
+    <dimen name="spacing_large">20dp</dimen>
+    <dimen name="spacing_medium">16dp</dimen>
+    <dimen name="spacing_small">12dp</dimen>
+    <dimen name="spacing_xsmall">10dp</dimen>
+
+    <!-- Corner Radius -->
+    <dimen name="corner_radius_button">50dp</dimen>
+    <dimen name="corner_radius_card">16dp</dimen>
+    <dimen name="corner_radius_badge">50dp</dimen>
+    <dimen name="corner_radius_input">8dp</dimen>
+</resources>
