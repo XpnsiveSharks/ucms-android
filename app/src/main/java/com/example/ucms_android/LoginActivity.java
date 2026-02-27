@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.ucms_android.auth.EmailVerificationActivity;
 import com.example.ucms_android.auth.TokenManager;
 import com.example.ucms_android.model.ApiError;
+import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.AuthResponse;
 import com.example.ucms_android.model.LoginRequest;
 import com.example.ucms_android.network.ApiClient;
@@ -78,21 +79,23 @@ public class LoginActivity extends AppCompatActivity {
         setLoading(true);
 
         LoginRequest request = new LoginRequest(studentId, password);
-        authService.login(request).enqueue(new Callback<AuthResponse>() {
+        authService.login(request).enqueue(new Callback<ApiResponse<AuthResponse>>() {
             @Override
-            public void onResponse(@NonNull Call<AuthResponse> call, @NonNull Response<AuthResponse> response) {
+            public void onResponse(@NonNull Call<ApiResponse<AuthResponse>> call, @NonNull Response<ApiResponse<AuthResponse>> response) {
                 runOnUiThread(() -> {
                     setLoading(false);
 
-                    if (response.isSuccessful() && response.body() != null) {
-                        AuthResponse authResponse = response.body();
-                        TokenManager tokenManager = TokenManager.getInstance();
-                        tokenManager.saveToken(LoginActivity.this, authResponse.getToken());
-                        tokenManager.saveRole(LoginActivity.this, authResponse.getRole());
-
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        finish();
-                        return;
+                    if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                        AuthResponse authResponse = response.body().getData();
+                        if (authResponse != null && authResponse.getAccessToken() != null) {
+                            String role = extractRoleFromJwt(authResponse.getAccessToken());
+                            TokenManager tokenManager = TokenManager.getInstance();
+                            tokenManager.saveToken(LoginActivity.this, authResponse.getAccessToken());
+                            tokenManager.saveRole(LoginActivity.this, role);
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            finish();
+                            return;
+                        }
                     }
 
                     ApiError apiError = parseApiError(response);
@@ -112,13 +115,33 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<AuthResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ApiResponse<AuthResponse>> call, @NonNull Throwable t) {
                 runOnUiThread(() -> {
                     setLoading(false);
                     showError(getString(R.string.error_login_failed));
                 });
             }
         });
+    }
+
+    private String extractRoleFromJwt(String token) {
+        try {
+            String[] parts = token.split("\\.");
+            if (parts.length < 2) return "STUDENT";
+            String payload = parts[1];
+            int mod = payload.length() % 4;
+            if (mod != 0) payload += "====".substring(mod);
+            byte[] decoded = android.util.Base64.decode(payload, android.util.Base64.URL_SAFE);
+            String json = new String(decoded, java.nio.charset.StandardCharsets.UTF_8);
+            org.json.JSONObject obj = new org.json.JSONObject(json);
+            if (obj.has("user_metadata")) {
+                org.json.JSONObject meta = obj.getJSONObject("user_metadata");
+                if (meta.has("role")) return meta.getString("role");
+            }
+            return "STUDENT";
+        } catch (Exception e) {
+            return "STUDENT";
+        }
     }
 
     private void setLoading(boolean loading) {
