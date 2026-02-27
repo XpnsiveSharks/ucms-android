@@ -50,7 +50,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         // Extract recovery token from deep link
         recoveryToken = extractRecoveryToken(getIntent());
 
-        if (recoveryToken == null) {
+        if (recoveryToken == null || recoveryToken.trim().isEmpty()) {
             Snackbar.make(btnResetPassword, getString(R.string.error_invalid_reset_link), Snackbar.LENGTH_LONG).show();
             btnResetPassword.setEnabled(false);
             return;

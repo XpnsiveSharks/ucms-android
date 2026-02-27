@@ -17,7 +17,13 @@ public class SupabaseApiClient {
     public static Retrofit getInstance() {
         if (instance == null) {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+            if (com.example.ucms_android.BuildConfig.DEBUG) {
+                logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+            } else {
+                logging.setLevel(HttpLoggingInterceptor.Level.NONE);
+            }
+            logging.redactHeader("Authorization");
+            logging.redactHeader("Cookie");
 
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(logging)

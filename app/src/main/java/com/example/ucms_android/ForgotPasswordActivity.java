@@ -19,8 +19,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.io.IOException;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -87,12 +85,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                             Snackbar.make(btnSendReset, getString(R.string.success_reset_email), Snackbar.LENGTH_LONG).show();
                             btnSendReset.setEnabled(false);
                         } else {
-                            try {
-                                String errorBody = response.errorBody() != null ? response.errorBody().string() : "null";
-                                Log.e(TAG, "Recovery failed - code: " + response.code() + " body: " + errorBody);
-                            } catch (IOException e) {
-                                Log.e(TAG, "Recovery failed - code: " + response.code());
-                            }
+                            Log.e(TAG, "Recovery failed - server error: " + response.code());
                             Snackbar.make(btnSendReset, getString(R.string.error_reset_failed), Snackbar.LENGTH_LONG).show();
                         }
                     }
@@ -100,7 +93,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         setLoading(false);
-                        Log.e(TAG, "Network failure: " + t.getMessage(), t);
+                        Log.e(TAG, "Network failure during password recovery");
                         Snackbar.make(btnSendReset, getString(R.string.error_reset_failed), Snackbar.LENGTH_LONG).show();
                     }
                 });
