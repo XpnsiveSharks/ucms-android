@@ -35,10 +35,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            val supabaseKey = localProperties.getProperty("SUPABASE_ANON_KEY", "")
-            check(supabaseKey.isNotBlank()) {
-                "SUPABASE_ANON_KEY must be set in local.properties for release builds"
-            }
         }
     }
     compileOptions {
@@ -64,4 +60,13 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.security.crypto)
+}
+
+gradle.taskGraph.whenReady {
+    if (allTasks.any { it.name.contains("Release") }) {
+        val supabaseKey = localProperties.getProperty("SUPABASE_ANON_KEY", "")
+        check(supabaseKey.isNotBlank()) {
+            "SUPABASE_ANON_KEY must be set in local.properties for release builds"
+        }
+    }
 }
