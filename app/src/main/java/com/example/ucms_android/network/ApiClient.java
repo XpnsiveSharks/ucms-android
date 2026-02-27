@@ -2,6 +2,8 @@ package com.example.ucms_android.network;
 
 import android.content.Context;
 
+import com.example.ucms_android.BuildConfig;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -10,7 +12,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-    private static final String BASE_URL = "http://10.0.2.2:8080/";
+    private static final String BASE_URL = BuildConfig.BACKEND_BASE_URL;
     private static Retrofit retrofit;
 
     private ApiClient() {
@@ -19,7 +21,13 @@ public class ApiClient {
     public static synchronized Retrofit getInstance(Context context) {
         if (retrofit == null) {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            if (BuildConfig.DEBUG) {
+                loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            } else {
+                loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+            }
+            loggingInterceptor.redactHeader("Authorization");
+            loggingInterceptor.redactHeader("Cookie");
 
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .addInterceptor(new AuthInterceptor(context.getApplicationContext()))

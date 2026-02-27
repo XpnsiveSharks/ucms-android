@@ -2,6 +2,7 @@ package com.example.ucms_android.auth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
@@ -16,8 +17,7 @@ public class TokenManager {
 
     private static TokenManager instance;
 
-    private TokenManager() {
-    }
+    private TokenManager() {}
 
     public static synchronized TokenManager getInstance() {
         if (instance == null) {
@@ -43,7 +43,12 @@ public class TokenManager {
     }
 
     public void clear(Context context) {
-        getPrefs(context).edit().clear().apply();
+        Context appContext = context.getApplicationContext();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            appContext.deleteSharedPreferences(PREFS_NAME);
+        } else {
+            getPrefs(context).edit().clear().apply();
+        }
     }
 
     public boolean hasToken(Context context) {
@@ -51,22 +56,41 @@ public class TokenManager {
         return token != null && !token.trim().isEmpty();
     }
 
+    private MasterKey buildMasterKey(Context appContext) throws GeneralSecurityException, IOException {
+        return new MasterKey.Builder(appContext)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build();
+    }
+
+    private SharedPreferences buildEncryptedPrefs(Context appContext, MasterKey masterKey)
+            throws GeneralSecurityException, IOException {
+        return EncryptedSharedPreferences.create(
+                appContext,
+                PREFS_NAME,
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        );
+    }
+
     private SharedPreferences getPrefs(Context context) {
         Context appContext = context.getApplicationContext();
         try {
-            MasterKey masterKey = new MasterKey.Builder(appContext)
-                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-                    .build();
-
-            return EncryptedSharedPreferences.create(
-                    appContext,
-                    PREFS_NAME,
-                    masterKey,
-                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-            );
+            return buildEncryptedPrefs(appContext, buildMasterKey(appContext));
         } catch (GeneralSecurityException | IOException e) {
-            throw new IllegalStateException("Unable to initialize secure preferences", e);
+            android.util.Log.e("TokenManager", "Secure prefs corrupted, clearing and retrying", e);
+            // Clear corrupted prefs and retry once
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                appContext.deleteSharedPreferences(PREFS_NAME);
+            } else {
+                appContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().clear().apply();
+            }
+            try {
+                return buildEncryptedPrefs(appContext, buildMasterKey(appContext));
+            } catch (GeneralSecurityException | IOException retryException) {
+                android.util.Log.e("TokenManager", "Failed to initialize secure prefs after retry - forcing re-auth", retryException);
+                throw new RuntimeException("Secure storage unavailable. Please log in again.", retryException);
+            }
         }
     }
 }

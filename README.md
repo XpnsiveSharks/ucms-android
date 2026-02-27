@@ -24,6 +24,22 @@ cd ucms-android
 
 ---
 
+## Local Configuration
+
+The app reads sensitive config from `local.properties` (gitignored — never committed).
+
+After cloning, add the following to your `local.properties` file (in the root of the project):
+
+```properties
+SUPABASE_ANON_KEY=<ask the project lead for this value>
+BACKEND_BASE_URL=http://10.0.2.2:8080/
+```
+
+> ⚠️ `local.properties` must never be committed. It is already in `.gitignore`.
+> ⚠️ `BACKEND_BASE_URL` is the local emulator URL. If running on a physical device, replace `10.0.2.2` with your machine's local IP address.
+
+---
+
 ## Setup
 
 1. Open **Android Studio**

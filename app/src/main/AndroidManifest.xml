@@ -13,9 +13,7 @@
 
     <application
         android:name=".UcmsApplication"
-        android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -30,6 +28,19 @@
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
+        <!-- SECURITY: Token received via deep link fragment must be verified server-side before use -->
+        <activity
+            android:name=".ResetPasswordActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="ucms"
+                    android:host="reset-password" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
