@@ -66,7 +66,23 @@ public class TokenManager {
                     EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             );
         } catch (GeneralSecurityException | IOException e) {
-            throw new IllegalStateException("Unable to initialize secure preferences", e);
+            android.util.Log.e("TokenManager", "Secure prefs corrupted, clearing and retrying", e);
+            appContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().clear().apply();
+            try {
+                MasterKey masterKey = new MasterKey.Builder(appContext)
+                        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                        .build();
+                return EncryptedSharedPreferences.create(
+                        appContext,
+                        PREFS_NAME,
+                        masterKey,
+                        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                );
+            } catch (GeneralSecurityException | IOException retryException) {
+                android.util.Log.e("TokenManager", "Failed to initialize secure prefs after retry", retryException);
+                return appContext.getSharedPreferences(PREFS_NAME + "_fallback", Context.MODE_PRIVATE);
+            }
         }
     }
 }

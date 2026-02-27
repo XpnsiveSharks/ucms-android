@@ -1,5 +1,7 @@
 package com.example.ucms_android.network;
 
+import com.example.ucms_android.BuildConfig;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -10,14 +12,14 @@ import java.util.concurrent.TimeUnit;
 public class SupabaseApiClient {
 
     private static final String BASE_URL = "https://icosjzuwekgilmmxgqwr.supabase.co/";
-    public static final String ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imljb3NqenV3ZWtnaWxtbXhncXdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwMDkyNTgsImV4cCI6MjA4NzU4NTI1OH0.wXKERkACJyoudEGMpumz83zAiIg9dMoJuC5xbbhriJA";
+    public static final String ANON_KEY = BuildConfig.SUPABASE_ANON_KEY;
 
     private static Retrofit instance;
 
     public static Retrofit getInstance() {
         if (instance == null) {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            if (com.example.ucms_android.BuildConfig.DEBUG) {
+            if (BuildConfig.DEBUG) {
                 logging.setLevel(HttpLoggingInterceptor.Level.BODY);
             } else {
                 logging.setLevel(HttpLoggingInterceptor.Level.NONE);
