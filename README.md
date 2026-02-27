@@ -71,7 +71,7 @@ BACKEND_BASE_URL=http://10.0.2.2:8080/
 
 | Doc | Path | Description |
 |-----|------|-------------|
-| Design System | `docs/design-system.md` | Colors, dimensions, theme setup, and layout guidelines — **read before touching any layout or resource file** |
+| Design System | [`docs/design-system.md`](docs/design-system.md) | Colors, dimensions, theme setup, and layout guidelines — **read before touching any layout or resource file** |
 | API Contract | `docs/api-contract.md` | All backend endpoints, request/response shapes |
 | Roles & Permissions | `docs/roles-permissions.md` | Student vs Admin rules, ownership checks |
 | Ticket Status Flow | `docs/ticket-status-flow.md` | Valid ticket status transitions |
