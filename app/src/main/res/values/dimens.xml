@@ -16,4 +16,6 @@
     <dimen name="corner_radius_card">16dp</dimen>
     <dimen name="corner_radius_badge">50dp</dimen>
     <dimen name="corner_radius_input">8dp</dimen>
+    <!-- Stroke -->
+    <dimen name="stroke_width_default">1dp</dimen>
 </resources>
