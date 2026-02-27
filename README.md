@@ -30,7 +30,7 @@ The app reads sensitive config from `local.properties` (gitignored — never com
 
 After cloning, add the following to your `local.properties` file (in the root of the project):
 
-```
+```properties
 SUPABASE_ANON_KEY=<ask the project lead for this value>
 BACKEND_BASE_URL=http://10.0.2.2:8080/
 ```

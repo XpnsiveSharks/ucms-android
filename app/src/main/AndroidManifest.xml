@@ -14,8 +14,6 @@
     <application
         android:name=".UcmsApplication"
         android:allowBackup="false"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -30,6 +28,7 @@
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
+        <!-- SECURITY: Token received via deep link fragment must be verified server-side before use -->
         <activity
             android:name=".ResetPasswordActivity"
             android:exported="true">
