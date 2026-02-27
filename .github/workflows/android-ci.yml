@@ -29,5 +29,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Inject secrets into local.properties
+        run: echo "SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> local.properties
+
       - name: Build and run unit tests
         run: ./gradlew build
