@@ -51,6 +51,17 @@ cd ucms-android
 
 ---
 
+## Documentation
+
+| Doc | Path | Description |
+|-----|------|-------------|
+| Design System | `docs/design-system.md` | Colors, dimensions, theme setup, and layout guidelines — **read before touching any layout or resource file** |
+| API Contract | `docs/api-contract.md` | All backend endpoints, request/response shapes |
+| Roles & Permissions | `docs/roles-permissions.md` | Student vs Admin rules, ownership checks |
+| Ticket Status Flow | `docs/ticket-status-flow.md` | Valid ticket status transitions |
+
+---
+
 ## Notes
 
 - Min SDK: **API 24** (Android 7.0)

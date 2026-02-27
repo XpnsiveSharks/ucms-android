@@ -1,5 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Base -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Brand — Primary (Orange) -->
+    <color name="colorPrimary">#FFAA33</color>
+    <color name="colorPrimaryDark">#F78914</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorPrimaryContainer">#FFE0A0</color>
+    <color name="colorOnPrimaryContainer">#1A1A1A</color>
+
+    <!-- Brand — Secondary (Green) -->
+    <color name="colorSecondary">#92CD28</color>
+    <color name="colorSecondaryLight">#B6EE56</color>
+    <color name="colorSecondaryLighter">#E4FF7F</color>
+    <color name="colorOnSecondary">#FFFFFF</color>
+    <color name="colorSecondaryContainer">#D4F5A0</color>
+    <color name="colorOnSecondaryContainer">#1A1A1A</color>
+
+    <!-- Surface & Background -->
+    <color name="colorBackground">#FFFFFF</color>
+    <color name="colorSurface">#F5F5F5</color>
+    <color name="colorOnSurface">#1A1A1A</color>
+    <color name="colorOnBackground">#1A1A1A</color>
+
+    <!-- Text -->
+    <color name="colorTextPrimary">#1A1A1A</color>
+    <color name="colorTextSecondary">#757575</color>
+
+    <!-- Divider & Border -->
+    <color name="colorDivider">#E0E0E0</color>
+
+    <!-- Status Badges -->
+    <color name="colorStatusPending">#FFAA33</color>
+    <color name="colorStatusInProgress">#B6EE56</color>
+    <color name="colorStatusResolved">#92CD28</color>
+    <color name="colorStatusClosed">#757575</color>
 </resources>
