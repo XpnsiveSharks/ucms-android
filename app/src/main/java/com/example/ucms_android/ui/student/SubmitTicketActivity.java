@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.ucms_android.R;
 import com.example.ucms_android.auth.EmailVerificationActivity;
+import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.Category;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.model.TicketRequest;
@@ -78,11 +79,11 @@ public class SubmitTicketActivity extends AppCompatActivity {
     }
 
     private void loadCategories() {
-        categoryService.getCategories().enqueue(new Callback<List<Category>>() {
+        categoryService.getCategories().enqueue(new Callback<ApiResponse<List<Category>>>() {
             @Override
-            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    categories = response.body();
+            public void onResponse(Call<ApiResponse<List<Category>>> call, Response<ApiResponse<List<Category>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    categories = response.body().getData();
                     ArrayAdapter<Category> adapter = new ArrayAdapter<>(
                             SubmitTicketActivity.this,
                             android.R.layout.simple_spinner_item,
@@ -96,7 +97,7 @@ public class SubmitTicketActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Category>> call, Throwable t) {
+            public void onFailure(Call<ApiResponse<List<Category>>> call, Throwable t) {
                 Toast.makeText(SubmitTicketActivity.this,
                         getString(R.string.error_network), Toast.LENGTH_SHORT).show();
             }
@@ -125,10 +126,10 @@ public class SubmitTicketActivity extends AppCompatActivity {
         String category = categories.isEmpty() ? "" : categories.get(spinnerCategory.getSelectedItemPosition()).getName();
         TicketRequest request = new TicketRequest(title, description, category);
 
-        ticketService.createTicket(request).enqueue(new Callback<Ticket>() {
+        ticketService.createTicket(request).enqueue(new Callback<ApiResponse<Ticket>>() {
             @Override
-            public void onResponse(Call<Ticket> call, Response<Ticket> response) {
-                if (response.isSuccessful()) {
+            public void onResponse(Call<ApiResponse<Ticket>> call, Response<ApiResponse<Ticket>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     Toast.makeText(SubmitTicketActivity.this,
                             getString(R.string.ticket_submitted), Toast.LENGTH_SHORT).show();
                     finish();
@@ -141,7 +142,7 @@ public class SubmitTicketActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Ticket> call, Throwable t) {
+            public void onFailure(Call<ApiResponse<Ticket>> call, Throwable t) {
                 Snackbar.make(btnSubmit,
                         getString(R.string.error_network), Snackbar.LENGTH_SHORT).show();
             }

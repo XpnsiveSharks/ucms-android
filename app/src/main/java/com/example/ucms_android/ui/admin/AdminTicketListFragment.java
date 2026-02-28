@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ucms_android.R;
+import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.TicketService;
@@ -114,16 +115,16 @@ public class AdminTicketListFragment extends Fragment {
     }
 
     private void loadTickets() {
-        ticketService.getTickets().enqueue(new Callback<List<Ticket>>() {
+        ticketService.getTickets(null).enqueue(new Callback<ApiResponse<List<Ticket>>>() {
             @Override
-            public void onResponse(@NonNull Call<List<Ticket>> call,
-                                   @NonNull Response<List<Ticket>> response) {
+            public void onResponse(@NonNull Call<ApiResponse<List<Ticket>>> call,
+                                   @NonNull Response<ApiResponse<List<Ticket>>> response) {
                 if (!isAdded()) {
                     return;
                 }
                 requireActivity().runOnUiThread(() -> {
-                    if (response.isSuccessful() && response.body() != null) {
-                        allTickets = response.body();
+                    if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                        allTickets = response.body().getData();
                         applyFilter();
                     } else {
                         Toast.makeText(requireContext(),
@@ -134,7 +135,7 @@ public class AdminTicketListFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<Ticket>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ApiResponse<List<Ticket>>> call, @NonNull Throwable t) {
                 if (!isAdded()) {
                     return;
                 }

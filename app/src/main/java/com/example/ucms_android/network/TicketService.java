@@ -1,5 +1,6 @@
 package com.example.ucms_android.network;
 
+import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.StatusUpdateRequest;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.model.TicketRequest;
@@ -18,20 +19,17 @@ import retrofit2.http.Query;
 public interface TicketService {
 
     @GET("api/tickets")
-    Call<List<Ticket>> getTickets();
-
-    @GET("api/tickets")
-    Call<List<Ticket>> getTicketsByStatus(@Query("status") String status);
+    Call<ApiResponse<List<Ticket>>> getTickets(@Query("status") String status);
 
     @GET("api/tickets/{id}")
-    Call<Ticket> getTicketById(@Path("id") Long id);
+    Call<ApiResponse<Ticket>> getTicketById(@Path("id") Long id);
 
     @POST("api/tickets")
-    Call<Ticket> createTicket(@Body TicketRequest request);
+    Call<ApiResponse<Ticket>> createTicket(@Body TicketRequest request);
 
     @PATCH("api/tickets/{id}/status")
-    Call<Ticket> updateTicketStatus(@Path("id") Long id, @Body StatusUpdateRequest request);
+    Call<ApiResponse<Ticket>> updateTicketStatus(@Path("id") Long id, @Body StatusUpdateRequest request);
 
     @GET("api/tickets/{id}/responses")
-    Call<List<TicketResponse>> getTicketResponses(@Path("id") Long id);
+    Call<ApiResponse<List<TicketResponse>>> getTicketResponses(@Path("id") Long id);
 }
