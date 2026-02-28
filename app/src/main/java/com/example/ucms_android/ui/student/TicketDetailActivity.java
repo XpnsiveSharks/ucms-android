@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ucms_android.R;
+import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.model.TicketResponse;
 import com.example.ucms_android.network.ApiClient;
@@ -72,11 +73,11 @@ public class TicketDetailActivity extends AppCompatActivity {
     }
 
     private void loadTicket() {
-        ticketService.getTicketById(ticketId).enqueue(new Callback<Ticket>() {
+        ticketService.getTicketById(ticketId).enqueue(new Callback<ApiResponse<Ticket>>() {
             @Override
-            public void onResponse(Call<Ticket> call, Response<Ticket> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    populateViews(response.body());
+            public void onResponse(Call<ApiResponse<Ticket>> call, Response<ApiResponse<Ticket>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    populateViews(response.body().getData());
                 } else {
                     Toast.makeText(TicketDetailActivity.this,
                             getString(R.string.error_loading_tickets), Toast.LENGTH_SHORT).show();
@@ -85,7 +86,7 @@ public class TicketDetailActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Ticket> call, Throwable t) {
+            public void onFailure(Call<ApiResponse<Ticket>> call, Throwable t) {
                 Toast.makeText(TicketDetailActivity.this,
                         getString(R.string.error_network), Toast.LENGTH_SHORT).show();
                 finish();
@@ -113,16 +114,16 @@ public class TicketDetailActivity extends AppCompatActivity {
     }
 
     private void loadResponses() {
-        ticketService.getTicketResponses(ticketId).enqueue(new Callback<List<TicketResponse>>() {
+        ticketService.getTicketResponses(ticketId).enqueue(new Callback<ApiResponse<List<TicketResponse>>>() {
             @Override
-            public void onResponse(Call<List<TicketResponse>> call, Response<List<TicketResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    responseAdapter.updateData(response.body());
+            public void onResponse(Call<ApiResponse<List<TicketResponse>>> call, Response<ApiResponse<List<TicketResponse>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    responseAdapter.updateData(response.body().getData());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<TicketResponse>> call, Throwable t) {
+            public void onFailure(Call<ApiResponse<List<TicketResponse>>> call, Throwable t) {
                 // Silently fail — responses are supplementary
             }
         });

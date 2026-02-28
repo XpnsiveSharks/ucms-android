@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.ucms_android.R;
+import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.StatusUpdateRequest;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.network.ApiClient;
@@ -84,11 +85,11 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
     }
 
     private void loadTicket() {
-        ticketService.getTicketById(ticketId).enqueue(new Callback<Ticket>() {
+        ticketService.getTicketById(ticketId).enqueue(new Callback<ApiResponse<Ticket>>() {
             @Override
-            public void onResponse(Call<Ticket> call, Response<Ticket> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    populateViews(response.body());
+            public void onResponse(Call<ApiResponse<Ticket>> call, Response<ApiResponse<Ticket>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    populateViews(response.body().getData());
                 } else {
                     Toast.makeText(AdminTicketDetailActivity.this,
                             getString(R.string.error_loading_tickets), Toast.LENGTH_SHORT).show();
@@ -97,7 +98,7 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Ticket> call, Throwable t) {
+            public void onFailure(Call<ApiResponse<Ticket>> call, Throwable t) {
                 Toast.makeText(AdminTicketDetailActivity.this,
                         getString(R.string.error_network), Toast.LENGTH_SHORT).show();
                 finish();
@@ -131,12 +132,13 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
     private void updateStatus() {
         String selectedStatus = STATUS_OPTIONS[spinnerCategory.getSelectedItemPosition()];
         ticketService.updateTicketStatus(ticketId, new StatusUpdateRequest(selectedStatus))
-                .enqueue(new Callback<Ticket>() {
+                .enqueue(new Callback<ApiResponse<Ticket>>() {
                     @Override
-                    public void onResponse(Call<Ticket> call, Response<Ticket> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            tvStatus.setText(response.body().getStatus());
-                            tvStatus.setBackground(getStatusDrawable(response.body().getStatus()));
+                    public void onResponse(Call<ApiResponse<Ticket>> call, Response<ApiResponse<Ticket>> response) {
+                        if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                            Ticket updatedTicket = response.body().getData();
+                            tvStatus.setText(updatedTicket.getStatus());
+                            tvStatus.setBackground(getStatusDrawable(updatedTicket.getStatus()));
                             Snackbar.make(btnUpdateStatus,
                                     getString(R.string.status_updated), Snackbar.LENGTH_SHORT).show();
                         } else if (response.code() == 400) {
@@ -152,7 +154,7 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<Ticket> call, Throwable t) {
+                    public void onFailure(Call<ApiResponse<Ticket>> call, Throwable t) {
                         Snackbar.make(btnUpdateStatus,
                                 getString(R.string.error_network), Snackbar.LENGTH_SHORT).show();
                     }

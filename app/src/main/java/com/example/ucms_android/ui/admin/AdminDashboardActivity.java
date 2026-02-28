@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ucms_android.R;
+import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.TicketService;
@@ -63,11 +64,11 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void loadTickets() {
-        ticketService.getTickets().enqueue(new Callback<List<Ticket>>() {
+        ticketService.getTickets(null).enqueue(new Callback<ApiResponse<List<Ticket>>>() {
             @Override
-            public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Ticket> tickets = response.body();
+            public void onResponse(Call<ApiResponse<List<Ticket>>> call, Response<ApiResponse<List<Ticket>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    List<Ticket> tickets = response.body().getData();
                     updateStats(tickets);
                     updateRecentList(tickets);
                 } else {
@@ -77,7 +78,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Ticket>> call, Throwable t) {
+            public void onFailure(Call<ApiResponse<List<Ticket>>> call, Throwable t) {
                 Toast.makeText(AdminDashboardActivity.this,
                         getString(R.string.error_network), Toast.LENGTH_SHORT).show();
             }
