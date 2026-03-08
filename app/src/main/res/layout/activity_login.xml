@@ -12,7 +12,7 @@
         android:layout_width="@dimen/login_logo_size"
         android:layout_height="@dimen/login_logo_size"
         android:layout_marginTop="@dimen/login_logo_margin_top"
-        android:src="@mipmap/ic_launcher"
+        android:src="@drawable/cms_logo"
         android:contentDescription="@string/app_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -107,7 +107,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etPassword"
-        app:layout_constraintWidth_percent="0.5" />
+        app:layout_constraintWidth_percent="0.8" />
 
     <!-- Forgot Password Link -->
     <TextView

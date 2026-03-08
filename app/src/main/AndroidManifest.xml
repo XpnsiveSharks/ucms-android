@@ -43,7 +43,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ForgotPasswordActivity"
+            android:name=".ui.auth.ForgotPasswordActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.ucms_android.api.request.PasswordUpdateRequest;
 import com.example.ucms_android.network.SupabaseApiClient;
 import com.example.ucms_android.network.SupabaseAuthService;
+import com.example.ucms_android.ui.auth.LoginActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
