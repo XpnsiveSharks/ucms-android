@@ -1,138 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSurface"
-    android:padding="@dimen/screen_padding">
+    android:fillViewport="true"
+    android:background="@color/colorSurface">
 
-    <!-- Logo -->
-    <ImageView
-        android:id="@+id/ivLogo"
-        android:layout_width="@dimen/login_logo_size"
-        android:layout_height="@dimen/login_logo_size"
-        android:layout_marginTop="@dimen/login_logo_margin_top"
-        android:src="@drawable/cms_logo"
-        android:contentDescription="@string/app_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- App Title -->
-    <TextView
-        android:id="@+id/tvAppTitle"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_medium"
-        android:text="@string/app_name"
-        android:textColor="@color/black"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivLogo" />
+        android:padding="@dimen/screen_padding">
 
-    <!-- Student-ID Label -->
-    <TextView
-        android:id="@+id/tvStudentIdLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_xxlarge"
-        android:layout_marginStart="@dimen/spacing_small"
-        android:text="@string/student_id_label"
-        android:textColor="@color/colorTextSecondary"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@id/etStudentId"
-        app:layout_constraintTop_toBottomOf="@id/tvAppTitle" />
+        <!-- Logo -->
+        <ImageView
+            android:id="@+id/ivLogo"
+            android:layout_width="@dimen/login_logo_size"
+            android:layout_height="@dimen/login_logo_size"
+            android:layout_marginTop="@dimen/login_logo_margin_top"
+            android:src="@drawable/cms_logo"
+            android:contentDescription="@string/app_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Student-ID Input -->
-    <EditText
-        android:id="@+id/etStudentId"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/login_input_height"
-        android:layout_marginTop="@dimen/spacing_xsmall"
-        android:background="@drawable/bg_input"
-        android:elevation="@dimen/elevation_low"
-        android:paddingHorizontal="@dimen/spacing_medium"
-        android:inputType="text"
-        android:maxLines="1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvStudentIdLabel"
-        app:layout_constraintWidth_percent="0.9" />
+        <!-- App Title -->
+        <TextView
+            android:id="@+id/tvAppTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:text="@string/app_name"
+            android:textColor="@color/black"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivLogo" />
 
-    <!-- Password Label -->
-    <TextView
-        android:id="@+id/tvPasswordLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_large"
-        android:layout_marginStart="@dimen/spacing_small"
-        android:text="@string/password"
-        android:textColor="@color/colorTextSecondary"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@id/etPassword"
-        app:layout_constraintTop_toBottomOf="@id/etStudentId" />
+        <!-- Student-ID Label -->
+        <TextView
+            android:id="@+id/tvStudentIdLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xxlarge"
+            android:layout_marginStart="@dimen/spacing_small"
+            android:text="@string/student_id_label"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/etStudentId"
+            app:layout_constraintTop_toBottomOf="@id/tvAppTitle" />
 
-    <!-- Password Input -->
-    <EditText
-        android:id="@+id/etPassword"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/login_input_height"
-        android:layout_marginTop="@dimen/spacing_xsmall"
-        android:background="@drawable/bg_input"
-        android:elevation="@dimen/elevation_low"
-        android:paddingHorizontal="@dimen/spacing_medium"
-        android:inputType="textPassword"
-        android:maxLines="1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvPasswordLabel"
-        app:layout_constraintWidth_percent="0.9" />
+        <!-- Student-ID Input -->
+        <EditText
+            android:id="@+id/etStudentId"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/login_input_height"
+            android:layout_marginTop="@dimen/spacing_xsmall"
+            android:background="@drawable/bg_input"
+            android:elevation="@dimen/elevation_low"
+            android:paddingHorizontal="@dimen/spacing_medium"
+            android:inputType="text"
+            android:maxLines="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvStudentIdLabel"
+            app:layout_constraintWidth_percent="0.9" />
 
-    <!-- Login Button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnLogin"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/login_button_height"
-        android:layout_marginTop="@dimen/spacing_xxlarge"
-        app:backgroundTint="@color/colorSecondary"
-        app:cornerRadius="@dimen/corner_radius_button"
-        android:elevation="@dimen/elevation_medium"
-        android:text="@string/login"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etPassword"
-        app:layout_constraintWidth_percent="0.8" />
+        <!-- Password Label -->
+        <TextView
+            android:id="@+id/tvPasswordLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginStart="@dimen/spacing_small"
+            android:text="@string/password"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/etPassword"
+            app:layout_constraintTop_toBottomOf="@id/etStudentId" />
 
-    <!-- Forgot Password Link -->
-    <TextView
-        android:id="@+id/tvForgotPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_xlarge"
-        android:clickable="true"
-        android:focusable="true"
-        android:text="@string/forgot_password"
-        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnLogin" />
+        <!-- Password Input -->
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/login_input_height"
+            android:layout_marginTop="@dimen/spacing_xsmall"
+            android:background="@drawable/bg_input"
+            android:elevation="@dimen/elevation_low"
+            android:paddingHorizontal="@dimen/spacing_medium"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvPasswordLabel"
+            app:layout_constraintWidth_percent="0.9" />
 
-    <!-- Progress Indicator -->
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_large"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvForgotPassword" />
+        <!-- Login Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLogin"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/login_button_height"
+            android:layout_marginTop="@dimen/spacing_xxlarge"
+            app:backgroundTint="@color/colorSecondary"
+            app:cornerRadius="@dimen/corner_radius_button"
+            android:elevation="@dimen/elevation_medium"
+            android:text="@string/login"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etPassword"
+            app:layout_constraintWidth_percent="0.8" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Forgot Password Link -->
+        <TextView
+            android:id="@+id/tvForgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:layout_marginBottom="24dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="@string/forgot_password"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnLogin"
+            app:layout_constraintVertical_bias="0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
