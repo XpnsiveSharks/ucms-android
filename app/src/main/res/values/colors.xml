@@ -37,4 +37,6 @@
     <color name="colorStatusInProgress">#B6EE56</color>
     <color name="colorStatusResolved">#92CD28</color>
     <color name="colorStatusClosed">#757575</color>
+
+
 </resources>

@@ -16,6 +16,11 @@
     <dimen name="corner_radius_card">16dp</dimen>
     <dimen name="corner_radius_badge">50dp</dimen>
     <dimen name="corner_radius_input">8dp</dimen>
-    <!-- Stroke -->
-    <dimen name="stroke_width_default">1dp</dimen>
+    <!-- Logo & Login Specific -->
+    <dimen name="login_logo_size">160dp</dimen>
+    <dimen name="login_logo_margin_top">60dp</dimen>
+    <dimen name="login_input_height">56dp</dimen>
+    <dimen name="login_button_height">64dp</dimen>
+    <dimen name="elevation_low">4dp</dimen>
+    <dimen name="elevation_medium">8dp</dimen>
 </resources>
