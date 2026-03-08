@@ -2,20 +2,17 @@ package com.example.ucms_android;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-
 import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.ui.auth.LoginActivity;
 import com.example.ucms_android.ui.admin.AdminDashboardFragment;
 import com.example.ucms_android.ui.admin.AdminTicketListFragment;
 import com.example.ucms_android.ui.common.AnalyticsFragment;
 import com.example.ucms_android.ui.common.SettingsFragment;
+import com.example.ucms_android.ui.student.StudentHomeFragment;
 import com.example.ucms_android.ui.student.TicketListFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,48 +38,39 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavView);
         
-        // Load the correct menu resource
         bottomNav.getMenu().clear();
         if (isAdmin) {
             bottomNav.inflateMenu(R.menu.menu_admin);
-            bottomNav.setLabelVisibilityMode(NavigationBarView.LABEL_VISIBILITY_LABELED);
         } else {
             bottomNav.inflateMenu(R.menu.menu_student);
-            bottomNav.setLabelVisibilityMode(NavigationBarView.LABEL_VISIBILITY_UNLABELED);
         }
 
         if (savedInstanceState == null) {
-            loadFragment(getDefaultFragment());
-            // Select first item based on role
+            Fragment defaultFragment = isAdmin ? new AdminDashboardFragment() : new StudentHomeFragment();
+            loadFragment(defaultFragment);
             bottomNav.setSelectedItemId(isAdmin ? R.id.nav_admin_dashboard : R.id.nav_student_home);
         }
 
         bottomNav.setOnItemSelectedListener(item -> {
-            Fragment fragment = getFragmentForItem(item.getItemId());
+            Fragment fragment = null;
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.nav_admin_dashboard) fragment = new AdminDashboardFragment();
+            else if (itemId == R.id.nav_admin_tickets) fragment = new AdminTicketListFragment();
+            else if (itemId == R.id.nav_admin_analytics) fragment = new AnalyticsFragment();
+            else if (itemId == R.id.nav_admin_settings) fragment = new SettingsFragment();
+            else if (itemId == R.id.nav_student_home) fragment = new StudentHomeFragment();
+            else if (itemId == R.id.nav_student_tickets) fragment = new TicketListFragment();
+            // Add placeholders for other student tabs if needed
+            else if (itemId == R.id.nav_student_add) fragment = new StudentHomeFragment(); 
+            else if (itemId == R.id.nav_student_profile) fragment = new StudentHomeFragment();
+
             if (fragment != null) {
                 loadFragment(fragment);
                 return true;
             }
             return false;
         });
-    }
-
-    private Fragment getDefaultFragment() {
-        return isAdmin ? new AdminDashboardFragment() : new TicketListFragment();
-    }
-
-    private Fragment getFragmentForItem(int itemId) {
-        // Handle Admin Items
-        if (itemId == R.id.nav_admin_dashboard) return new AdminDashboardFragment();
-        if (itemId == R.id.nav_admin_tickets) return new AdminTicketListFragment();
-        if (itemId == R.id.nav_admin_analytics) return new AnalyticsFragment();
-        if (itemId == R.id.nav_admin_settings) return new SettingsFragment();
-
-        // Handle Student Items
-        if (itemId == R.id.nav_student_home) return new TicketListFragment();
-        // Add other student fragments here when ready (Add, Profile, etc)
-        
-        return null;
     }
 
     private void loadFragment(Fragment fragment) {
