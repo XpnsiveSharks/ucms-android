@@ -60,4 +60,9 @@ public class Ticket {
     public boolean isConfirmedResolved() { return confirmedResolved; }
     public String getCreatedAt() { return createdAt; }
     public String getUpdatedAt() { return updatedAt; }
+
+    public void setTicketNumber(String ticketNumber) { this.ticketNumber = ticketNumber; }
+    public void setTitle(String title) { this.title = title; }
+    public void setCategory(String category) { this.category = category; }
+    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
 }
