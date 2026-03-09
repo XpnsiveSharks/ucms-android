@@ -68,9 +68,6 @@
             android:name=".ui.student.TicketDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.student.SubmitTicketActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.student.NotificationsActivity"
             android:exported="false" />
 

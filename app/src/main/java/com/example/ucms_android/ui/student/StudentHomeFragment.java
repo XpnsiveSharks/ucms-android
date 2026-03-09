@@ -33,7 +33,12 @@ public class StudentHomeFragment extends Fragment {
         
         // Setup Submit button listener
         view.findViewById(R.id.btnSubmitNewConcern).setOnClickListener(v -> {
-            // Navigate to SubmitTicketActivity
+            if (getActivity() instanceof com.example.ucms_android.MainActivity) {
+                ((com.example.ucms_android.MainActivity) getActivity()).loadFragment(new SubmitTicketFragment());
+                // Update bottom nav selection
+                com.google.android.material.bottomnavigation.BottomNavigationView nav = getActivity().findViewById(R.id.bottomNavView);
+                if (nav != null) nav.setSelectedItemId(R.id.nav_student_add);
+            }
         });
         
         // Setup View All listener
