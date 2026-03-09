@@ -3,14 +3,20 @@ package com.example.ucms_android.ui.student;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.example.ucms_android.R;
 import com.example.ucms_android.auth.EmailVerificationActivity;
@@ -22,9 +28,8 @@ import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.CategoryService;
 import com.example.ucms_android.network.TicketService;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +38,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SubmitTicketActivity extends AppCompatActivity {
+public class SubmitTicketFragment extends Fragment {
 
     private Spinner spinnerCategory;
-    private TextInputLayout tilTitle, tilDescription;
-    private TextInputEditText etTitle, etDescription;
-    private MaterialButton btnAttachment, btnSubmit;
-    private TextView tvAttachmentName;
+    private EditText etTitle, etDescription;
+    private MaterialCardView cvAttachment;
+    private MaterialButton btnSubmit;
+    private TextView tvAttachmentName, tvAttachmentHint;
 
     private TicketService ticketService;
     private CategoryService categoryService;
@@ -51,28 +56,33 @@ public class SubmitTicketActivity extends AppCompatActivity {
                 if (uri != null) {
                     selectedFileUri = uri;
                     tvAttachmentName.setText(uri.getLastPathSegment());
-                    tvAttachmentName.setVisibility(android.view.View.VISIBLE);
+                    tvAttachmentName.setVisibility(View.VISIBLE);
+                    tvAttachmentHint.setVisibility(View.GONE);
                 }
             });
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_submit_ticket);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_submit_ticket, container, false);
+    }
 
-        spinnerCategory = findViewById(R.id.spinnerCategory);
-        tilTitle = findViewById(R.id.tilTitle);
-        tilDescription = findViewById(R.id.tilDescription);
-        etTitle = findViewById(R.id.etTitle);
-        etDescription = findViewById(R.id.etDescription);
-        btnAttachment = findViewById(R.id.btnAttachment);
-        btnSubmit = findViewById(R.id.btnSubmit);
-        tvAttachmentName = findViewById(R.id.tvAttachmentName);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        ticketService = ApiClient.getInstance(this).create(TicketService.class);
-        categoryService = ApiClient.getInstance(this).create(CategoryService.class);
+        spinnerCategory = view.findViewById(R.id.spinnerCategory);
+        etTitle = view.findViewById(R.id.etTitle);
+        etDescription = view.findViewById(R.id.etDescription);
+        cvAttachment = view.findViewById(R.id.cvAttachment);
+        btnSubmit = view.findViewById(R.id.btnSubmit);
+        tvAttachmentName = view.findViewById(R.id.tvAttachmentName);
+        tvAttachmentHint = view.findViewById(R.id.tvAttachmentHint);
 
-        btnAttachment.setOnClickListener(v -> filePickerLauncher.launch("*/*"));
+        ticketService = ApiClient.getInstance(requireContext()).create(TicketService.class);
+        categoryService = ApiClient.getInstance(requireContext()).create(CategoryService.class);
+
+        cvAttachment.setOnClickListener(v -> filePickerLauncher.launch("*/*"));
         btnSubmit.setOnClickListener(v -> submitTicket());
 
         loadCategories();
@@ -82,44 +92,42 @@ public class SubmitTicketActivity extends AppCompatActivity {
         categoryService.getCategories().enqueue(new Callback<ApiResponse<List<Category>>>() {
             @Override
             public void onResponse(Call<ApiResponse<List<Category>>> call, Response<ApiResponse<List<Category>>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                if (isAdded() && response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     categories = response.body().getData();
                     ArrayAdapter<Category> adapter = new ArrayAdapter<>(
-                            SubmitTicketActivity.this,
+                            requireContext(),
                             android.R.layout.simple_spinner_item,
                             categories);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerCategory.setAdapter(adapter);
-                } else {
-                    Toast.makeText(SubmitTicketActivity.this,
+                } else if (isAdded()) {
+                    Toast.makeText(requireContext(),
                             getString(R.string.error_loading_categories), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse<List<Category>>> call, Throwable t) {
-                Toast.makeText(SubmitTicketActivity.this,
-                        getString(R.string.error_network), Toast.LENGTH_SHORT).show();
+                if (isAdded()) {
+                    Toast.makeText(requireContext(),
+                            getString(R.string.error_network), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
     private void submitTicket() {
-        String title = etTitle.getText() != null ? etTitle.getText().toString().trim() : "";
-        String description = etDescription.getText() != null ? etDescription.getText().toString().trim() : "";
+        String title = etTitle.getText().toString().trim();
+        String description = etDescription.getText().toString().trim();
 
         boolean valid = true;
         if (title.isEmpty()) {
-            tilTitle.setError(getString(R.string.error_title_required));
+            etTitle.setError(getString(R.string.error_title_required));
             valid = false;
-        } else {
-            tilTitle.setError(null);
         }
         if (description.isEmpty()) {
-            tilDescription.setError(getString(R.string.error_description_required));
+            etDescription.setError(getString(R.string.error_description_required));
             valid = false;
-        } else {
-            tilDescription.setError(null);
         }
         if (!valid) return;
 
@@ -129,12 +137,17 @@ public class SubmitTicketActivity extends AppCompatActivity {
         ticketService.createTicket(request).enqueue(new Callback<ApiResponse<Ticket>>() {
             @Override
             public void onResponse(Call<ApiResponse<Ticket>> call, Response<ApiResponse<Ticket>> response) {
+                if (!isAdded()) return;
+                
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    Toast.makeText(SubmitTicketActivity.this,
+                    Toast.makeText(requireContext(),
                             getString(R.string.ticket_submitted), Toast.LENGTH_SHORT).show();
-                    finish();
+                    // Go back to Home
+                    if (getActivity() instanceof com.example.ucms_android.MainActivity) {
+                        ((com.example.ucms_android.MainActivity) getActivity()).loadFragment(new StudentHomeFragment());
+                    }
                 } else if (response.code() == 403) {
-                    startActivity(new Intent(SubmitTicketActivity.this, EmailVerificationActivity.class));
+                    startActivity(new Intent(requireContext(), EmailVerificationActivity.class));
                 } else {
                     Snackbar.make(btnSubmit,
                             getString(R.string.error_submit_failed), Snackbar.LENGTH_SHORT).show();
@@ -143,8 +156,10 @@ public class SubmitTicketActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ApiResponse<Ticket>> call, Throwable t) {
-                Snackbar.make(btnSubmit,
-                        getString(R.string.error_network), Snackbar.LENGTH_SHORT).show();
+                if (isAdded()) {
+                    Snackbar.make(btnSubmit,
+                            getString(R.string.error_network), Snackbar.LENGTH_SHORT).show();
+                }
             }
         });
     }
