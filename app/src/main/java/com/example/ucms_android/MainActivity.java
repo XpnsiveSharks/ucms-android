@@ -11,6 +11,7 @@ import com.example.ucms_android.ui.admin.AdminTicketListFragment;
 import com.example.ucms_android.ui.common.AnalyticsFragment;
 import com.example.ucms_android.ui.common.SettingsFragment;
 import com.example.ucms_android.ui.student.StudentHomeFragment;
+import com.example.ucms_android.ui.student.StudentProfileFragment;
 import com.example.ucms_android.ui.student.SubmitTicketFragment;
 import com.example.ucms_android.ui.student.TicketListFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -68,10 +69,7 @@ public class MainActivity extends AppCompatActivity {
             else if (itemId == R.id.nav_student_home) fragment = new StudentHomeFragment();
             else if (itemId == R.id.nav_student_tickets) fragment = new TicketListFragment();
             else if (itemId == R.id.nav_student_add) fragment = new SubmitTicketFragment();
-            else if (itemId == R.id.nav_student_profile) {
-                // Future profile fragment
-                return false;
-            }
+            else if (itemId == R.id.nav_student_profile) fragment = new StudentProfileFragment();
 
             if (fragment != null) {
                 loadFragment(fragment);

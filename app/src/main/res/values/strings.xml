@@ -79,6 +79,16 @@
     <string name="attachment_hint">Tap to upload photo or file</string>
     <string name="submit">Submit</string>
     <string name="submit_new_concern">Submit New Concern</string>
+    <string name="my_profile_title">My Profile</string>
+    <string name="active_student_badge">Active Student</string>
+    <string name="full_name_label">Full Name</string>
+    <string name="student_number_label">Student Number</string>
+    <string name="cannot_be_changed_hint">Cannot be changed</string>
+    <string name="course_program_label">Course / Program</string>
+    <string name="year_level_label">Year Level</string>
+    <string name="logout">Logout</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="change_password">Change Password</string>
     <string name="responses_title">Responses</string>
     <string name="error_loading_tickets">Failed to load tickets</string>
     <string name="error_network">Network error. Please try again.</string>
