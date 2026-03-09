@@ -1,86 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/spacing_small"
-    app:cardBackgroundColor="@color/colorBackground"
-    app:cardCornerRadius="@dimen/corner_radius_card"
-    app:cardElevation="2dp">
+    android:layout_marginBottom="16dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:strokeColor="@color/colorDivider"
+    app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/spacing_medium">
+        android:padding="20dp">
 
         <!-- Ticket number -->
         <TextView
             android:id="@+id/tvTicketNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-            android:textColor="@color/colorTextSecondary"
+            android:text="#10149"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="#10149" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Status badge -->
         <TextView
             android:id="@+id/tvStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/spacing_small"
-            android:paddingEnd="@dimen/spacing_small"
-            android:paddingTop="@dimen/spacing_xsmall"
-            android:paddingBottom="@dimen/spacing_xsmall"
-            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-            android:textColor="@color/colorOnPrimary"
-            app:layout_constraintBottom_toBottomOf="@id/tvTicketNumber"
+            android:background="@drawable/bg_badge_pending"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="4dp"
+            android:text="Pending"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvTicketNumber"
-            tools:background="@drawable/bg_badge_pending"
-            tools:text="Pending" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Ticket title -->
         <TextView
             android:id="@+id/tvTicketTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xsmall"
-            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-            android:textColor="@color/colorTextPrimary"
+            android:layout_marginTop="12dp"
+            android:text="Issue with Subject Pre-requisites"
+            android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvTicketNumber"
-            tools:text="Cannot access student portal" />
+            app:layout_constraintTop_toBottomOf="@id/tvTicketNumber" />
 
         <!-- Category -->
         <TextView
             android:id="@+id/tvCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xsmall"
-            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+            android:layout_marginTop="12dp"
+            android:text="ACADEMIC"
             android:textColor="@color/colorTextSecondary"
+            android:textSize="12sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvTicketTitle"
-            tools:text="IT Support" />
+            app:layout_constraintTop_toBottomOf="@id/tvTicketTitle" />
 
         <!-- Time -->
         <TextView
             android:id="@+id/tvTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xsmall"
-            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+            android:text="10:59 AM"
             android:textColor="@color/colorTextSecondary"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@id/tvCategory"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvCategory"
-            tools:text="2 mins ago" />
+            app:layout_constraintTop_toTopOf="@id/tvCategory" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

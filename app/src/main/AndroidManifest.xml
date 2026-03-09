@@ -65,9 +65,6 @@
 
         <!-- Student screens -->
         <activity
-            android:name=".ui.student.TicketDetailActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.student.NotificationsActivity"
             android:exported="false" />
 

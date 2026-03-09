@@ -49,6 +49,18 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
         holder.tvTime.setText(ticket.getCreatedAt());
         holder.tvStatus.setText(ticket.getStatus());
         holder.tvStatus.setBackground(getStatusBackground(holder, ticket.getStatus()));
+        
+        // Change text color for In-Progress badge to black for readability against light green
+        if ("IN_PROGRESS".equalsIgnoreCase(ticket.getStatus())) {
+            holder.tvStatus.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.black));
+            holder.cardView.setStrokeColor(holder.itemView.getContext().getResources().getColor(R.color.colorAccentBlue));
+            holder.cardView.setStrokeWidth(4);
+        } else {
+            holder.tvStatus.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.white));
+            holder.cardView.setStrokeColor(holder.itemView.getContext().getResources().getColor(R.color.colorDivider));
+            holder.cardView.setStrokeWidth(2);
+        }
+
         holder.itemView.setOnClickListener(v -> listener.onTicketClick(ticket));
     }
 
@@ -70,10 +82,12 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
     public int getItemCount() { return tickets.size(); }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
+        com.google.android.material.card.MaterialCardView cardView;
         TextView tvTicketNumber, tvTicketTitle, tvCategory, tvTime, tvStatus;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
+            cardView = (com.google.android.material.card.MaterialCardView) itemView;
             tvTicketNumber = itemView.findViewById(R.id.tvTicketNumber);
             tvTicketTitle = itemView.findViewById(R.id.tvTicketTitle);
             tvCategory = itemView.findViewById(R.id.tvCategory);

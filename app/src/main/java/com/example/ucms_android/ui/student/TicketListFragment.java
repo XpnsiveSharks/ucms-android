@@ -29,13 +29,22 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
+
 public class TicketListFragment extends Fragment {
 
     private TextView tvEmptyState;
     private RecyclerView rvTickets;
-    private MaterialButton btnSubmitTicket;
+    private TextView tabAll, tabPending, tabInProgress;
+    private EditText etSearch;
     private TicketAdapter adapter;
     private TicketService ticketService;
+    
+    private List<Ticket> allTickets = new ArrayList<>();
+    private String currentFilter = "ALL";
+    private String currentQuery = "";
 
     @Nullable
     @Override
@@ -50,28 +59,105 @@ public class TicketListFragment extends Fragment {
 
         tvEmptyState = view.findViewById(R.id.tvEmptyState);
         rvTickets = view.findViewById(R.id.rvTickets);
-        btnSubmitTicket = view.findViewById(R.id.btnSubmitTicket);
+        
+        etSearch = view.findViewById(R.id.etSearch);
+        tabAll = view.findViewById(R.id.tabAll);
+        tabPending = view.findViewById(R.id.tabPending);
+        tabInProgress = view.findViewById(R.id.tabInProgress);
 
         ticketService = ApiClient.getInstance(requireContext()).create(TicketService.class);
 
         adapter = new TicketAdapter(new ArrayList<>(), ticket -> {
-            Intent intent = new Intent(requireActivity(), TicketDetailActivity.class);
-            intent.putExtra("ticketId", ticket.getId());
-            startActivity(intent);
+            if (getActivity() instanceof com.example.ucms_android.MainActivity) {
+                ((com.example.ucms_android.MainActivity) getActivity()).loadFragment(TicketDetailFragment.newInstance(ticket.getId()));
+            }
         });
         rvTickets.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvTickets.setAdapter(adapter);
 
-        btnSubmitTicket.setOnClickListener(v -> {
-            if (getActivity() instanceof com.example.ucms_android.MainActivity) {
-                ((com.example.ucms_android.MainActivity) getActivity()).loadFragment(new SubmitTicketFragment());
-                // Update bottom nav selection
-                com.google.android.material.bottomnavigation.BottomNavigationView nav = getActivity().findViewById(R.id.bottomNavView);
-                if (nav != null) nav.setSelectedItemId(R.id.nav_student_add);
+        setupSearchAndFilters();
+        loadTickets();
+    }
+    
+    private void setupSearchAndFilters() {
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                currentQuery = s.toString().toLowerCase();
+                applyFilters();
             }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
         });
 
-        loadTickets();
+        tabAll.setOnClickListener(v -> {
+            currentFilter = "ALL";
+            updateTabUI(tabAll);
+            applyFilters();
+        });
+
+        tabPending.setOnClickListener(v -> {
+            currentFilter = "PENDING";
+            updateTabUI(tabPending);
+            applyFilters();
+        });
+
+        tabInProgress.setOnClickListener(v -> {
+            currentFilter = "IN_PROGRESS";
+            updateTabUI(tabInProgress);
+            applyFilters();
+        });
+        
+        updateTabUI(tabAll);
+    }
+    
+    private void updateTabUI(TextView activeTab) {
+        tabAll.setBackgroundResource(R.drawable.bg_chip_unselected);
+        tabPending.setBackgroundResource(R.drawable.bg_chip_unselected);
+        tabInProgress.setBackgroundResource(R.drawable.bg_chip_unselected);
+        
+        tabAll.setTextColor(getResources().getColor(R.color.colorTextSecondary));
+        tabPending.setTextColor(getResources().getColor(R.color.colorTextSecondary));
+        tabInProgress.setTextColor(getResources().getColor(R.color.colorTextSecondary));
+
+        if (activeTab == tabAll) {
+            tabAll.setBackgroundResource(R.drawable.bg_chip_selected); // Need to create this
+            tabAll.setTextColor(getResources().getColor(R.color.black));
+        } else if (activeTab == tabPending) {
+            tabPending.setBackgroundResource(R.drawable.bg_chip_pending);
+            tabPending.setTextColor(getResources().getColor(R.color.white));
+        } else if (activeTab == tabInProgress) {
+            tabInProgress.setBackgroundResource(R.drawable.bg_chip_inprogress);
+            tabInProgress.setTextColor(getResources().getColor(R.color.black));
+        }
+    }
+    
+    private void applyFilters() {
+        List<Ticket> filteredList = new ArrayList<>();
+        for (Ticket ticket : allTickets) {
+            boolean matchesFilter = currentFilter.equals("ALL") || 
+                                    ticket.getStatus().equalsIgnoreCase(currentFilter);
+            boolean matchesSearch = ticket.getTitle().toLowerCase().contains(currentQuery) || 
+                                    ticket.getTicketNumber().toLowerCase().contains(currentQuery);
+                                    
+            if (matchesFilter && matchesSearch) {
+                filteredList.add(ticket);
+            }
+        }
+        
+        adapter.updateData(filteredList);
+        
+        if (filteredList.isEmpty()) {
+            rvTickets.setVisibility(View.GONE);
+            tvEmptyState.setVisibility(View.VISIBLE);
+        } else {
+            rvTickets.setVisibility(View.VISIBLE);
+            tvEmptyState.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -90,15 +176,8 @@ public class TicketListFragment extends Fragment {
                 }
                 requireActivity().runOnUiThread(() -> {
                     if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                        List<Ticket> tickets = response.body().getData();
-                        if (tickets.isEmpty()) {
-                            rvTickets.setVisibility(View.GONE);
-                            tvEmptyState.setVisibility(View.VISIBLE);
-                        } else {
-                            rvTickets.setVisibility(View.VISIBLE);
-                            tvEmptyState.setVisibility(View.GONE);
-                            adapter.updateData(tickets);
-                        }
+                        allTickets = response.body().getData();
+                        applyFilters();
                     } else {
                         Toast.makeText(requireContext(),
                                 getString(R.string.error_loading_tickets),
