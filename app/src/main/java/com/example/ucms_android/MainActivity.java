@@ -25,15 +25,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         sessionManager = new SessionManager(this);
+        
+        // TEMPORARY: Disabled login check to view dashboard during development
+        /*
         if (!sessionManager.isLoggedIn()) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
         }
+        */
 
         setContentView(R.layout.activity_main);
 
-        String role = sessionManager.getRole();
+        // TEMPORARY: Forced role to STUDENT to view student home
+        String role = "STUDENT"; 
         isAdmin = ROLE_ADMIN.equalsIgnoreCase(role);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavView);
@@ -61,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
             else if (itemId == R.id.nav_admin_settings) fragment = new SettingsFragment();
             else if (itemId == R.id.nav_student_home) fragment = new StudentHomeFragment();
             else if (itemId == R.id.nav_student_tickets) fragment = new TicketListFragment();
-            // Add placeholders for other student tabs if needed
             else if (itemId == R.id.nav_student_add) fragment = new StudentHomeFragment(); 
             else if (itemId == R.id.nav_student_profile) fragment = new StudentHomeFragment();
 
