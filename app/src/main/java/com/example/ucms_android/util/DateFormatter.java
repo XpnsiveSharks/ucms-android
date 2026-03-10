@@ -23,17 +23,4 @@ public class DateFormatter {
             return isoString;
         }
     }
-
-    public static String formatDate(String isoString) {
-        if (isoString == null) return "";
-        SimpleDateFormat isoSdf = new SimpleDateFormat(ISO_FORMAT, Locale.US);
-        isoSdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        SimpleDateFormat targetSdf = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
-        try {
-            Date date = isoSdf.parse(isoString);
-            return date != null ? targetSdf.format(date) : "";
-        } catch (ParseException e) {
-            return isoString;
-        }
-    }
 }

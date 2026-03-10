@@ -29,15 +29,17 @@ public class MainActivity extends AppCompatActivity {
         // LOGIN BYPASS FOR TESTING
         setContentView(R.layout.activity_main);
 
-        // FORCED TO ADMIN ROLE FOR UI TESTING
+        // UPDATED: Set role to ADMIN to view admin dashboard as requested
         String role = ROLE_ADMIN; 
         isAdmin = ROLE_ADMIN.equalsIgnoreCase(role);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavView);
         
-        // Re-inflate menu specifically for Admin
-        bottomNav.getMenu().clear();
-        bottomNav.inflateMenu(R.menu.menu_admin);
+        // Re-inflate menu based on role if it doesn't match the default XML (admin)
+        if (!isAdmin) {
+            bottomNav.getMenu().clear();
+            bottomNav.inflateMenu(R.menu.menu_student);
+        }
 
         if (savedInstanceState == null) {
             // Load Admin Dashboard by default
@@ -49,12 +51,18 @@ public class MainActivity extends AppCompatActivity {
             Fragment fragment = null;
             int itemId = item.getItemId();
 
-            // Admin Navigation only
+            // Admin items
             if (itemId == R.id.nav_admin_dashboard) fragment = new AdminDashboardFragment();
             else if (itemId == R.id.nav_admin_tickets) fragment = new AdminTicketListFragment();
             else if (itemId == R.id.nav_admin_analytics) fragment = new AnalyticsFragment();
             else if (itemId == R.id.nav_admin_settings) fragment = new SettingsFragment();
             
+            // Student items
+            else if (itemId == R.id.nav_student_home) fragment = new StudentHomeFragment();
+            else if (itemId == R.id.nav_student_tickets) fragment = new TicketListFragment();
+            else if (itemId == R.id.nav_student_add) fragment = new SubmitTicketFragment();
+            else if (itemId == R.id.nav_student_profile) fragment = new StudentProfileFragment();
+
             if (fragment != null) {
                 loadFragment(fragment);
                 return true;

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/spacing_small"
-    app:cardBackgroundColor="@color/colorBackground"
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="@dimen/corner_radius_card"
-    app:cardElevation="2dp">
+    app:cardElevation="0dp"
+    app:strokeColor="@color/colorDivider"
+    app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -26,6 +28,7 @@
             android:paddingBottom="@dimen/spacing_xsmall"
             android:textAppearance="@style/TextAppearance.Material3.BodySmall"
             android:textColor="@color/colorOnPrimary"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="#10149" />
@@ -35,37 +38,44 @@
             android:id="@+id/tvTimeAgo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_small"
             android:textAppearance="@style/TextAppearance.Material3.BodySmall"
             android:textColor="@color/colorTextSecondary"
             app:layout_constraintBottom_toBottomOf="@id/tvTicketNumber"
-            app:layout_constraintEnd_toStartOf="@id/ivChevron"
+            app:layout_constraintStart_toEndOf="@id/tvTicketNumber"
             app:layout_constraintTop_toTopOf="@id/tvTicketNumber"
-            tools:text="2 mins ago" />
+            tools:text="10 mins ago" />
 
         <!-- Chevron -->
         <ImageView
             android:id="@+id/ivChevron"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_button_pill"
+            android:backgroundTint="@color/colorSurface"
             android:contentDescription="@string/view_ticket"
-            android:src="@android:drawable/ic_media_next"
-            app:layout_constraintBottom_toBottomOf="@id/tvTicketNumber"
+            android:padding="8dp"
+            android:src="@drawable/ic_arrow_drop_down"
+            android:rotation="-90"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvTicketNumber" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/colorTextSecondary" />
 
         <!-- Ticket title -->
         <TextView
             android:id="@+id/tvTicketTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xsmall"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:layout_marginEnd="@dimen/spacing_medium"
             android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
             android:textColor="@color/colorTextPrimary"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/ivChevron"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTicketNumber"
-            tools:text="Cannot access student portal" />
+            tools:text="Issue with Subject Pre-requisites" />
 
         <!-- Category -->
         <TextView
@@ -77,8 +87,8 @@
             android:textColor="@color/colorTextSecondary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTicketTitle"
-            tools:text="IT Support" />
+            tools:text="Academic" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

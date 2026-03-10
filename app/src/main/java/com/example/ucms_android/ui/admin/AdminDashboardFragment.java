@@ -68,7 +68,10 @@ public class AdminDashboardFragment extends Fragment {
 
         tvViewDatabase.setOnClickListener(v -> {
             BottomNavigationView bottomNavView = requireActivity().findViewById(R.id.bottomNavView);
-            bottomNavView.setSelectedItemId(R.id.nav_tickets);
+            if (bottomNavView != null) {
+                // Updated to use the correct admin tickets menu ID
+                bottomNavView.setSelectedItemId(R.id.nav_admin_tickets);
+            }
         });
 
         loadTickets();
@@ -88,17 +91,15 @@ public class AdminDashboardFragment extends Fragment {
                 if (!isAdded()) {
                     return;
                 }
-                requireActivity().runOnUiThread(() -> {
-                    if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                        List<Ticket> tickets = response.body().getData();
-                        updateStats(tickets);
-                        updateRecentList(tickets);
-                    } else {
-                        Toast.makeText(requireContext(),
-                                getString(R.string.error_loading_tickets),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    List<Ticket> tickets = response.body().getData();
+                    updateStats(tickets);
+                    updateRecentList(tickets);
+                } else {
+                    Toast.makeText(requireContext(),
+                            getString(R.string.error_loading_tickets),
+                            Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -106,10 +107,9 @@ public class AdminDashboardFragment extends Fragment {
                 if (!isAdded()) {
                     return;
                 }
-                requireActivity().runOnUiThread(() ->
-                        Toast.makeText(requireContext(),
-                                getString(R.string.error_network),
-                                Toast.LENGTH_SHORT).show());
+                Toast.makeText(requireContext(),
+                        getString(R.string.error_network),
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -117,32 +117,31 @@ public class AdminDashboardFragment extends Fragment {
     private void updateStats(List<Ticket> tickets) {
         int total = tickets.size();
         int pending = 0;
-        int resolvedToday = 0;
+        int resolved = 0;
 
         for (Ticket ticket : tickets) {
             if ("PENDING".equalsIgnoreCase(ticket.getStatus())) {
                 pending++;
-            }
-            if ("RESOLVED".equalsIgnoreCase(ticket.getStatus())) {
-                resolvedToday++;
+            } else if ("RESOLVED".equalsIgnoreCase(ticket.getStatus())) {
+                resolved++;
             }
         }
 
         tvTotalTickets.setText(String.valueOf(total));
         tvPendingCount.setText(String.valueOf(pending));
-        tvResolvedCount.setText(String.valueOf(resolvedToday));
+        tvResolvedCount.setText(String.valueOf(resolved));
     }
 
     private void updateRecentList(List<Ticket> tickets) {
-        List<Ticket> pending = new ArrayList<>();
+        List<Ticket> pendingTickets = new ArrayList<>();
         for (Ticket ticket : tickets) {
             if ("PENDING".equalsIgnoreCase(ticket.getStatus())) {
-                pending.add(ticket);
-                if (pending.size() == 5) {
+                pendingTickets.add(ticket);
+                if (pendingTickets.size() == 5) {
                     break;
                 }
             }
         }
-        adapter.updateData(pending);
+        adapter.updateData(pendingTickets);
     }
 }
