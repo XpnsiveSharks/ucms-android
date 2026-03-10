@@ -1,25 +1,29 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme (night — same as light, no dark mode). -->
     <style name="Base.Theme.Ucmsandroid" parent="Theme.Material3.Light.NoActionBar">
-        <!-- Primary -->
+        <!-- Primary (Orange) -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorOnPrimary">@color/colorOnPrimary</item>
-        <item name="colorPrimaryContainer">@color/colorPrimaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/colorOnPrimaryContainer</item>
+        <item name="colorOnPrimary">@color/white</item>
 
-        <!-- Secondary -->
-        <item name="colorSecondary">@color/colorSecondary</item>
-        <item name="colorOnSecondary">@color/colorOnSecondary</item>
-        <item name="colorSecondaryContainer">@color/colorSecondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/colorOnSecondaryContainer</item>
+        <!-- Status Bar -->
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
 
         <!-- Surface & Background -->
-        <item name="colorSurface">@color/colorBackground</item>
-        <item name="colorOnSurface">@color/colorTextPrimary</item>
-        <item name="colorOnBackground">@color/colorTextPrimary</item>
-        <item name="android:colorBackground">@color/colorBackground</item>
-        <item name="android:statusBarColor">@color/colorPrimary</item>
-        <item name="android:textColorPrimary">@color/colorTextPrimary</item>
-        <item name="android:textColorSecondary">@color/colorTextSecondary</item>
+        <item name="colorSurface">@color/colorSurface</item>
+        <item name="android:colorBackground">@color/colorSurface</item>
+
+        <!-- Bottom Nav Customization -->
+        <item name="colorContainer">@android:color/transparent</item>
+        <item name="colorControlNormal">#000000</item>
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
     </style>
+
+    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemActiveIndicatorStyle">@null</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="Theme.Ucmsandroid" parent="Base.Theme.Ucmsandroid" />
 </resources>

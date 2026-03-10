@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,8 +22,7 @@ import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.TicketService;
 import com.example.ucms_android.ui.adapter.TicketAdapter;
-import com.google.android.material.chip.Chip;
-import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +33,10 @@ import retrofit2.Response;
 
 public class AdminTicketListFragment extends Fragment {
 
-    private TextInputEditText etSearch;
-    private Chip chipNeedsAction;
-    private Chip chipInProgress;
-    private Chip chipAll;
+    private EditText etSearch;
+    private MaterialButton btnNeedsAction;
+    private MaterialButton btnInProgress;
+    private MaterialButton btnAll;
     private RecyclerView rvTickets;
     private TicketAdapter adapter;
     private TicketService ticketService;
@@ -56,9 +56,9 @@ public class AdminTicketListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         etSearch = view.findViewById(R.id.etSearch);
-        chipNeedsAction = view.findViewById(R.id.chipNeedsAction);
-        chipInProgress = view.findViewById(R.id.chipInProgress);
-        chipAll = view.findViewById(R.id.chipAll);
+        btnNeedsAction = view.findViewById(R.id.btnNeedsAction);
+        btnInProgress = view.findViewById(R.id.btnInProgress);
+        btnAll = view.findViewById(R.id.btnAll);
         rvTickets = view.findViewById(R.id.rvTickets);
 
         ticketService = ApiClient.getInstance(requireContext()).create(TicketService.class);
@@ -71,7 +71,7 @@ public class AdminTicketListFragment extends Fragment {
         rvTickets.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvTickets.setAdapter(adapter);
 
-        setupChips();
+        setupFilters();
         setupSearch();
         loadTickets();
     }
@@ -82,26 +82,40 @@ public class AdminTicketListFragment extends Fragment {
         loadTickets();
     }
 
-    private void setupChips() {
-        chipAll.setOnClickListener(v -> {
+    private void setupFilters() {
+        btnAll.setOnClickListener(v -> {
             activeFilter = "ALL";
+            updateFilterButtons();
             applyFilter();
         });
-        chipNeedsAction.setOnClickListener(v -> {
+        btnNeedsAction.setOnClickListener(v -> {
             activeFilter = "PENDING";
+            updateFilterButtons();
             applyFilter();
         });
-        chipInProgress.setOnClickListener(v -> {
+        btnInProgress.setOnClickListener(v -> {
             activeFilter = "IN_PROGRESS";
+            updateFilterButtons();
             applyFilter();
         });
+        
+        updateFilterButtons();
+    }
+
+    private void updateFilterButtons() {
+        btnAll.setStrokeColorResource(activeFilter.equals("ALL") ? R.color.colorPrimary : R.color.colorDivider);
+        btnNeedsAction.setStrokeColorResource(activeFilter.equals("PENDING") ? R.color.colorPrimary : R.color.colorDivider);
+        btnInProgress.setStrokeColorResource(activeFilter.equals("IN_PROGRESS") ? R.color.colorPrimary : R.color.colorDivider);
+        
+        btnAll.setTextColor(getResources().getColor(activeFilter.equals("ALL") ? R.color.colorPrimary : R.color.colorTextPrimary, null));
+        btnNeedsAction.setTextColor(getResources().getColor(activeFilter.equals("PENDING") ? R.color.colorPrimary : R.color.colorTextPrimary, null));
+        btnInProgress.setTextColor(getResources().getColor(activeFilter.equals("IN_PROGRESS") ? R.color.colorPrimary : R.color.colorTextPrimary, null));
     }
 
     private void setupSearch() {
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -109,8 +123,7 @@ public class AdminTicketListFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
     }
 
@@ -119,46 +132,32 @@ public class AdminTicketListFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<List<Ticket>>> call,
                                    @NonNull Response<ApiResponse<List<Ticket>>> response) {
-                if (!isAdded()) {
-                    return;
+                if (!isAdded()) return;
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    allTickets = response.body().getData();
+                    applyFilter();
+                } else {
+                    Toast.makeText(requireContext(), getString(R.string.error_loading_tickets), Toast.LENGTH_SHORT).show();
                 }
-                requireActivity().runOnUiThread(() -> {
-                    if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                        allTickets = response.body().getData();
-                        applyFilter();
-                    } else {
-                        Toast.makeText(requireContext(),
-                                getString(R.string.error_loading_tickets),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
             }
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<List<Ticket>>> call, @NonNull Throwable t) {
-                if (!isAdded()) {
-                    return;
-                }
-                requireActivity().runOnUiThread(() ->
-                        Toast.makeText(requireContext(),
-                                getString(R.string.error_network),
-                                Toast.LENGTH_SHORT).show());
+                if (!isAdded()) return;
+                Toast.makeText(requireContext(), getString(R.string.error_network), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void applyFilter() {
-        String query = etSearch.getText() != null
-                ? etSearch.getText().toString().toLowerCase().trim() : "";
+        String query = etSearch.getText() != null ? etSearch.getText().toString().toLowerCase().trim() : "";
         List<Ticket> filtered = new ArrayList<>();
 
         for (Ticket ticket : allTickets) {
-            boolean matchesFilter = activeFilter.equals("ALL")
-                    || activeFilter.equalsIgnoreCase(ticket.getStatus());
+            boolean matchesFilter = activeFilter.equals("ALL") || activeFilter.equalsIgnoreCase(ticket.getStatus());
             boolean matchesSearch = query.isEmpty()
                     || (ticket.getTitle() != null && ticket.getTitle().toLowerCase().contains(query))
-                    || (ticket.getTicketNumber() != null
-                    && ticket.getTicketNumber().toLowerCase().contains(query));
+                    || (ticket.getTicketNumber() != null && ticket.getTicketNumber().toLowerCase().contains(query));
 
             if (matchesFilter && matchesSearch) {
                 filtered.add(ticket);
