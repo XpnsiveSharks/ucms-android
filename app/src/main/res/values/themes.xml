@@ -16,6 +16,13 @@
         <!-- Bottom Nav Customization -->
         <item name="colorContainer">@android:color/transparent</item>
         <item name="colorControlNormal">#000000</item>
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+    </style>
+
+    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemActiveIndicatorStyle">@null</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="android:background">@color/white</item>
     </style>
 
     <style name="Theme.Ucmsandroid" parent="Base.Theme.Ucmsandroid" />

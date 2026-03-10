@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ucms_android.R;
 import com.example.ucms_android.model.Ticket;
+import com.example.ucms_android.util.DateFormatter;
 
 import java.util.List;
 
@@ -36,17 +37,17 @@ public class RecentTicketAdapter extends RecyclerView.Adapter<RecentTicketAdapte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_notification, parent, false);
+                .inflate(R.layout.item_recent_ticket, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Ticket ticket = tickets.get(position);
-        holder.tvTicketId.setText(ticket.getTicketNumber());
-        holder.tvConcernTitle.setText(ticket.getTitle());
-        holder.tvDepartment.setText(ticket.getCategory());
-        holder.tvTimestamp.setText(ticket.getCreatedAt());
+        holder.tvTicketNumber.setText(ticket.getTicketNumber() != null ? ticket.getTicketNumber() : "#" + ticket.getId());
+        holder.tvTicketTitle.setText(ticket.getTitle());
+        holder.tvCategory.setText(ticket.getCategory());
+        holder.tvTimeAgo.setText(DateFormatter.formatRelativeTime(ticket.getCreatedAt()));
         holder.itemView.setOnClickListener(v -> listener.onTicketClick(ticket));
     }
 
@@ -56,14 +57,14 @@ public class RecentTicketAdapter extends RecyclerView.Adapter<RecentTicketAdapte
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTicketId, tvConcernTitle, tvDepartment, tvTimestamp;
+        TextView tvTicketNumber, tvTicketTitle, tvCategory, tvTimeAgo;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvTicketId = itemView.findViewById(R.id.tvTicketId);
-            tvConcernTitle = itemView.findViewById(R.id.tvConcernTitle);
-            tvDepartment = itemView.findViewById(R.id.tvDepartment);
-            tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
+            tvTicketNumber = itemView.findViewById(R.id.tvTicketNumber);
+            tvTicketTitle = itemView.findViewById(R.id.tvTicketTitle);
+            tvCategory = itemView.findViewById(R.id.tvCategory);
+            tvTimeAgo = itemView.findViewById(R.id.tvTimeAgo);
         }
     }
 }
