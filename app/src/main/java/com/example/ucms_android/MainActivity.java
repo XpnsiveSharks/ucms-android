@@ -26,15 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         sessionManager = new SessionManager(this);
         
-        // TEMPORARY: Disabled login check to view dashboard during development
-        /*
-        if (!sessionManager.isLoggedIn()) {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-            return;
-        }
-        */
-
+        // LOGIN BYPASS FOR TESTING
         setContentView(R.layout.activity_main);
 
         // UPDATED: Set role to ADMIN to view admin dashboard as requested
@@ -50,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (savedInstanceState == null) {
-            Fragment defaultFragment = isAdmin ? new AdminDashboardFragment() : new StudentHomeFragment();
-            loadFragment(defaultFragment);
-            bottomNav.setSelectedItemId(isAdmin ? R.id.nav_admin_dashboard : R.id.nav_student_home);
+            // Load Admin Dashboard by default
+            loadFragment(new AdminDashboardFragment());
+            bottomNav.setSelectedItemId(R.id.nav_admin_dashboard);
         }
 
         bottomNav.setOnItemSelectedListener(item -> {

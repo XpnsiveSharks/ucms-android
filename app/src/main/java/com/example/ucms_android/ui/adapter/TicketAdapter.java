@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ucms_android.R;
 import com.example.ucms_android.model.Ticket;
+import com.example.ucms_android.util.DateFormatter;
 
 import java.util.List;
 
@@ -43,27 +44,25 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Ticket ticket = tickets.get(position);
-        holder.tvTicketNumber.setText(ticket.getTicketNumber());
+        holder.tvTicketNumber.setText(ticket.getTicketNumber() != null ? ticket.getTicketNumber() : "#" + ticket.getId());
         holder.tvTicketTitle.setText(ticket.getTitle());
         holder.tvCategory.setText(ticket.getCategory());
-        holder.tvTime.setText(ticket.getCreatedAt());
+        holder.tvTime.setText(DateFormatter.formatRelativeTime(ticket.getCreatedAt()));
         holder.tvStatus.setText(ticket.getStatus());
-        holder.tvStatus.setBackground(getStatusBackground(holder, ticket.getStatus()));
+        holder.tvStatus.setBackgroundResource(getStatusBackgroundResource(ticket.getStatus()));
         holder.itemView.setOnClickListener(v -> listener.onTicketClick(ticket));
     }
 
-    private android.graphics.drawable.Drawable getStatusBackground(ViewHolder holder, String status) {
-        int drawableRes;
+    private int getStatusBackgroundResource(String status) {
         if ("PENDING".equalsIgnoreCase(status)) {
-            drawableRes = R.drawable.bg_badge_pending;
+            return R.drawable.bg_badge_pending;
         } else if ("IN_PROGRESS".equalsIgnoreCase(status)) {
-            drawableRes = R.drawable.bg_badge_inprogress;
+            return R.drawable.bg_badge_inprogress;
         } else if ("RESOLVED".equalsIgnoreCase(status)) {
-            drawableRes = R.drawable.bg_badge_resolved;
+            return R.drawable.bg_badge_resolved;
         } else {
-            drawableRes = R.drawable.bg_badge_closed;
+            return R.drawable.bg_badge_closed;
         }
-        return holder.itemView.getContext().getDrawable(drawableRes);
     }
 
     @Override
