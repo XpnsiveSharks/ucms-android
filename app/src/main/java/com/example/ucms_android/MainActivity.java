@@ -1,11 +1,9 @@
 package com.example.ucms_android;
 
-import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.example.ucms_android.session.SessionManager;
-import com.example.ucms_android.ui.auth.LoginActivity;
 import com.example.ucms_android.ui.admin.AdminDashboardFragment;
 import com.example.ucms_android.ui.admin.AdminTicketListFragment;
 import com.example.ucms_android.ui.common.AnalyticsFragment;
@@ -39,16 +37,15 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        // TEMPORARY: Forced role to STUDENT to view student home
-        String role = "STUDENT"; 
+        // UPDATED: Set role to ADMIN to view admin dashboard as requested
+        String role = ROLE_ADMIN; 
         isAdmin = ROLE_ADMIN.equalsIgnoreCase(role);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavView);
         
-        bottomNav.getMenu().clear();
-        if (isAdmin) {
-            bottomNav.inflateMenu(R.menu.menu_admin);
-        } else {
+        // Re-inflate menu based on role if it doesn't match the default XML (admin)
+        if (!isAdmin) {
+            bottomNav.getMenu().clear();
             bottomNav.inflateMenu(R.menu.menu_student);
         }
 
@@ -62,10 +59,13 @@ public class MainActivity extends AppCompatActivity {
             Fragment fragment = null;
             int itemId = item.getItemId();
 
+            // Admin items
             if (itemId == R.id.nav_admin_dashboard) fragment = new AdminDashboardFragment();
             else if (itemId == R.id.nav_admin_tickets) fragment = new AdminTicketListFragment();
             else if (itemId == R.id.nav_admin_analytics) fragment = new AnalyticsFragment();
             else if (itemId == R.id.nav_admin_settings) fragment = new SettingsFragment();
+            
+            // Student items
             else if (itemId == R.id.nav_student_home) fragment = new StudentHomeFragment();
             else if (itemId == R.id.nav_student_tickets) fragment = new TicketListFragment();
             else if (itemId == R.id.nav_student_add) fragment = new SubmitTicketFragment();
