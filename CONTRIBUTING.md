@@ -151,3 +151,39 @@ Apply labels when creating GitHub issues and PRs. Use one from each relevant gro
 | `backend` | Backend only |
 | `android` | Android only |
 | `infra` | CI/CD, GitHub Actions, secrets |
+
+## Issue Template
+
+Use this format when creating GitHub issues:
+
+```
+### Overview
+<!-- A concise description of what this issue covers and why it's needed. -->
+
+### Blocked on
+<!-- List any issues that must be completed first. Remove this section if not blocked. -->
+
+### Tasks
+<!-- Checklist of concrete implementation steps. One task per line. -->
+- [ ] 
+
+### View IDs
+<!-- List all XML view IDs introduced or used in this issue (Design issues only). -->
+
+### References
+<!-- Link to relevant docs, layouts, or related issues. -->
+- 
+
+### Acceptance Criteria
+<!-- Define what "done" looks like. Each criterion must be independently verifiable. -->
+- 
+```
+
+### Guidelines
+- **Title format:** `[Phase X<letter>-D] Design: <Screen Name>` or `[Phase X<letter>-L] Logic: <Screen Name>`
+- **Design before Logic** — always create and complete the Design issue before starting the Logic issue
+- **One screen per issue** — do not mix unrelated screens
+- **Design tasks** must list all XML layout files, view IDs, and drawable/style references
+- **Logic tasks** must reference view IDs from the Design issue and API endpoints from docs/api-contract.md
+- **Acceptance Criteria** must be testable on a device/emulator — include empty states, error states, and edge cases
+- **Labels** — always apply priority + type + scope

@@ -8,6 +8,10 @@ public class SessionManager {
     private static final String KEY_TOKEN = "access_token";
     private static final String KEY_ROLE = "user_role";
     private static final String KEY_LOGGED_IN = "is_logged_in";
+    private static final String KEY_CACHED_NAME = "cached_name";
+    private static final String KEY_CACHED_STUDENT_ID = "cached_student_id";
+    private static final String KEY_CACHED_COURSE = "cached_course";
+    private static final String KEY_CACHED_YEAR_LEVEL = "cached_year_level";
 
     private final SharedPreferences sharedPreferences;
     private final SharedPreferences.Editor editor;
@@ -22,6 +26,30 @@ public class SessionManager {
         editor.putString(KEY_ROLE, role);
         editor.putBoolean(KEY_LOGGED_IN, true);
         editor.apply();
+    }
+
+    public void saveProfileCache(String name, String studentId, String course, Integer yearLevel) {
+        editor.putString(KEY_CACHED_NAME, name != null ? name : "");
+        editor.putString(KEY_CACHED_STUDENT_ID, studentId != null ? studentId : "");
+        editor.putString(KEY_CACHED_COURSE, course != null ? course : "");
+        editor.putString(KEY_CACHED_YEAR_LEVEL, yearLevel != null ? String.valueOf(yearLevel) : "");
+        editor.apply();
+    }
+
+    public String getCachedName() {
+        return sharedPreferences.getString(KEY_CACHED_NAME, "");
+    }
+
+    public String getCachedStudentId() {
+        return sharedPreferences.getString(KEY_CACHED_STUDENT_ID, "");
+    }
+
+    public String getCachedCourse() {
+        return sharedPreferences.getString(KEY_CACHED_COURSE, "");
+    }
+
+    public String getCachedYearLevel() {
+        return sharedPreferences.getString(KEY_CACHED_YEAR_LEVEL, "");
     }
 
     public String getToken() {

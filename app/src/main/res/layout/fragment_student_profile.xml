@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Rain Louie Robles"
+            android:text=""
             android:textColor="@color/colorTextPrimary"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -152,7 +152,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="16dp"
-                    android:text="20230646-S"
+                    android:text=""
                     android:textColor="#BDBDBD" />
 
                 <ImageView

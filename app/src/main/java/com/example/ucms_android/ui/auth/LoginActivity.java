@@ -19,6 +19,7 @@ import com.example.ucms_android.model.LoginRequest;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.AuthService;
 import com.example.ucms_android.session.SessionManager;
+import com.example.ucms_android.auth.TokenManager;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -93,6 +94,8 @@ public class LoginActivity extends AppCompatActivity {
                         if (authResponse != null && authResponse.getAccessToken() != null) {
                             String role = extractRoleFromJwt(authResponse.getAccessToken());
                             sessionManager.saveSession(authResponse.getAccessToken(), role);
+                            TokenManager.getInstance().saveToken(LoginActivity.this, authResponse.getAccessToken());
+                            TokenManager.getInstance().saveRole(LoginActivity.this, role);
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                             return;

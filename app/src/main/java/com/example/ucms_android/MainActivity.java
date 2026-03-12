@@ -28,31 +28,40 @@ public class MainActivity extends AppCompatActivity {
         
         setContentView(R.layout.activity_main);
 
-        // FORCED TO ADMIN ROLE FOR UI TESTING
-        String role = ROLE_ADMIN; 
+        String role = sessionManager.getRole();
         isAdmin = ROLE_ADMIN.equalsIgnoreCase(role);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavView);
         
-        // Re-inflate menu specifically for Admin
         bottomNav.getMenu().clear();
-        bottomNav.inflateMenu(R.menu.menu_admin);
+        if (isAdmin) {
+            bottomNav.inflateMenu(R.menu.menu_admin);
 
-        if (savedInstanceState == null) {
-            // Load Admin Dashboard by default
-            loadFragment(new AdminDashboardFragment());
-            bottomNav.setSelectedItemId(R.id.nav_admin_dashboard);
+            if (savedInstanceState == null) {
+                loadFragment(new AdminDashboardFragment());
+                bottomNav.setSelectedItemId(R.id.nav_admin_dashboard);
+            }
+        } else {
+            bottomNav.inflateMenu(R.menu.menu_student);
+
+            if (savedInstanceState == null) {
+                loadFragment(new StudentHomeFragment());
+                bottomNav.setSelectedItemId(R.id.nav_student_home);
+            }
         }
 
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment fragment = null;
             int itemId = item.getItemId();
 
-            // Admin Navigation
             if (itemId == R.id.nav_admin_dashboard) fragment = new AdminDashboardFragment();
             else if (itemId == R.id.nav_admin_tickets) fragment = new AdminTicketListFragment();
             else if (itemId == R.id.nav_admin_analytics) fragment = new AnalyticsFragment();
             else if (itemId == R.id.nav_admin_settings) fragment = new SettingsFragment();
+            else if (itemId == R.id.nav_student_home) fragment = new StudentHomeFragment();
+            else if (itemId == R.id.nav_student_tickets) fragment = new TicketListFragment();
+    else if (itemId == R.id.nav_student_add) fragment = new SubmitTicketFragment();
+            else if (itemId == R.id.nav_student_profile) fragment = new StudentProfileFragment();
             
             if (fragment != null) {
                 loadFragment(fragment);
