@@ -59,9 +59,6 @@
         <activity
             android:name=".ui.admin.AdminTicketDetailActivity"
             android:exported="false" />
-        <activity
-            android:name=".ui.admin.AnalyticsActivity"
-            android:exported="false" />
 
         <!-- Student screens -->
         <activity

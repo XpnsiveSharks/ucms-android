@@ -13,13 +13,24 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ucms_android.R;
+import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.Ticket;
+import com.example.ucms_android.model.User;
+import com.example.ucms_android.network.ApiClient;
+import com.example.ucms_android.network.UserService;
+import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.ui.adapter.RecentTicketAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class StudentHomeFragment extends Fragment {
+
+    private SessionManager sessionManager;
 
     @Nullable
     @Override
@@ -30,6 +41,8 @@ public class StudentHomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        sessionManager = new SessionManager(requireContext());
         
         // Setup Submit button listener
         view.findViewById(R.id.btnSubmitNewConcern).setOnClickListener(v -> {
@@ -44,6 +57,36 @@ public class StudentHomeFragment extends Fragment {
         // Setup View All listener
         view.findViewById(R.id.tvViewAll).setOnClickListener(v -> {
             // Navigate to NotificationsActivity
+        });
+
+        String cachedName = sessionManager.getCachedName();
+        if (!cachedName.isEmpty()) {
+            android.widget.TextView tvName = view.findViewById(R.id.tvUserName);
+            if (tvName != null) tvName.setText(cachedName);
+        }
+
+        UserService userService = ApiClient.getInstance(requireContext()).create(UserService.class);
+        userService.getMe().enqueue(new Callback<ApiResponse<User>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<User>> call, @NonNull Response<ApiResponse<User>> response) {
+                if (!response.isSuccessful() || response.body() == null || response.body().getData() == null) {
+                    return;
+                }
+                User user = response.body().getData();
+                String name = user.getName();
+                if (name != null && isAdded() && getActivity() != null) {
+                    String finalName = name;
+                    getActivity().runOnUiThread(() -> {
+                        android.widget.TextView tvName = view.findViewById(R.id.tvUserName);
+                        if (tvName != null) tvName.setText(finalName);
+                    });
+                    sessionManager.saveProfileCache(user.getName(), user.getStudentId(), user.getCourse(), user.getYearLevel());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<User>> call, @NonNull Throwable t) {
+            }
         });
 
         // Setup RecyclerView with dummy data

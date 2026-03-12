@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/screen_padding"
             android:layout_marginEnd="@dimen/spacing_medium"
-            android:text="Robles, Rain Louie"
+            android:text=""
             android:textColor="@color/black"
             android:textSize="26sp"
             android:textStyle="bold"
