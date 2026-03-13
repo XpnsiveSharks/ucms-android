@@ -2,6 +2,7 @@
 
 University Concern Management System — Android mobile client (Java + XML).
 
+[`backend repo`](https://github.com/ikennot/ucms-backend)
 ---
 
 ## Prerequisites
