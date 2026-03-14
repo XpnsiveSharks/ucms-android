@@ -1,5 +1,6 @@
 package com.example.ucms_android.util;
 
+import android.annotation.SuppressLint;
 import android.text.format.DateUtils;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -12,6 +13,8 @@ import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 
+// Desugaring enabled for java.time via coreLibraryDesugaring.
+@SuppressLint("NewApi")
 public class DateFormatter {
     private static final DateTimeFormatter PARSER = new DateTimeFormatterBuilder()
             .appendPattern("yyyy-MM-dd'T'HH:mm:ss")

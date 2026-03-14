@@ -34,6 +34,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -199,7 +200,15 @@ public class SubmitTicketFragment extends Fragment {
                 return;
             }
 
-            byte[] bytes = inputStream.readAllBytes();
+            byte[] bytes;
+            try (ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+                byte[] chunk = new byte[4096];
+                int n;
+                while ((n = inputStream.read(chunk)) != -1) {
+                    buffer.write(chunk, 0, n);
+                }
+                bytes = buffer.toByteArray();
+            }
             inputStream.close();
 
             String filename = selectedFileUri.getLastPathSegment();
