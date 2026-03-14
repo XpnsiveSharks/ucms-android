@@ -8,6 +8,7 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.PUT;
 
 public interface UserService {
@@ -19,4 +20,7 @@ public interface UserService {
 
     @PUT("api/users/me")
     Call<ApiResponse<User>> updateProfile(@Body Map<String, Object> body);
+
+    @PATCH("api/users/me/email/verify")
+    Call<Void> confirmEmailVerified();
 }

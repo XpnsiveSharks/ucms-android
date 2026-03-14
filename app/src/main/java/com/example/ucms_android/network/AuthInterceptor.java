@@ -23,8 +23,16 @@ public class AuthInterceptor implements Interceptor {
     @Override
     public Response intercept(@NonNull Chain chain) throws IOException {
         Request originalRequest = chain.request();
-        String token = TokenManager.getInstance().getToken(appContext);
+        String path = originalRequest.url().encodedPath();
 
+        // Skip auth for public endpoints
+        if (path.contains("/api/auth/login")
+                || path.contains("/api/auth/register")
+                || path.contains("/api/auth/forgot-password")) {
+            return chain.proceed(originalRequest);
+        }
+
+        String token = TokenManager.getInstance().getToken(appContext);
         if (token != null && !token.trim().isEmpty()) {
             Request authRequest = originalRequest.newBuilder()
                     .addHeader("Authorization", "Bearer " + token)

@@ -157,17 +157,16 @@
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Stat Cards Row -->
-            <View
-                android:id="@+id/cvPending"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/spacing_medium"
-                android:layout_marginEnd="@dimen/spacing_small"
-                android:background="@drawable/bg_stat_card"
-                app:layout_constraintDimensionRatio="H,1.6:1"
-                app:layout_constraintEnd_toStartOf="@id/cvResolved"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cvTotalTickets" />
+    <View
+        android:id="@+id/cvPending"
+        android:layout_width="0dp"
+        android:layout_height="132dp"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:background="@drawable/bg_stat_card"
+        app:layout_constraintEnd_toStartOf="@id/cvResolved"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cvTotalTickets" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -200,17 +199,16 @@
                     tools:text="12" />
             </LinearLayout>
 
-            <View
-                android:id="@+id/cvResolved"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/spacing_medium"
-                android:layout_marginStart="@dimen/spacing_small"
-                android:background="@drawable/bg_stat_card"
-                app:layout_constraintDimensionRatio="H,1.6:1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/cvPending"
-                app:layout_constraintTop_toBottomOf="@id/cvTotalTickets" />
+    <View
+        android:id="@+id/cvResolved"
+        android:layout_width="0dp"
+        android:layout_height="132dp"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:background="@drawable/bg_stat_card"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cvPending"
+        app:layout_constraintTop_toBottomOf="@id/cvTotalTickets" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -244,31 +242,17 @@
             </LinearLayout>
 
             <!-- Recent Pending Concerns header -->
-            <TextView
-                android:id="@+id/tvRecentTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_xlarge"
-                android:text="@string/recent_pending_label"
-                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                android:textColor="@color/colorTextPrimary"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cvPending" />
-
-            <TextView
-                android:id="@+id/tvViewDatabase"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:text="@string/view_database"
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                android:textColor="@color/colorTextSecondary"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/tvRecentTitle"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tvRecentTitle" />
+    <TextView
+        android:id="@+id/tvRecentTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xlarge"
+        android:text="@string/recent_pending_label"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+        android:textColor="@color/colorTextPrimary"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cvPending" />
 
             <!-- Recent Tickets RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView

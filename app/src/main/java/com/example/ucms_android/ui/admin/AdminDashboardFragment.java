@@ -20,7 +20,6 @@ import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.TicketService;
 import com.example.ucms_android.ui.adapter.RecentTicketAdapter;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,6 @@ public class AdminDashboardFragment extends Fragment {
     private TextView tvTotalTickets;
     private TextView tvPendingCount;
     private TextView tvResolvedCount;
-    private TextView tvViewDatabase;
     private RecyclerView rvRecentTickets;
     private RecentTicketAdapter adapter;
     private TicketService ticketService;
@@ -53,7 +51,6 @@ public class AdminDashboardFragment extends Fragment {
         tvTotalTickets = view.findViewById(R.id.tvTotalTickets);
         tvPendingCount = view.findViewById(R.id.tvPendingCount);
         tvResolvedCount = view.findViewById(R.id.tvResolvedCount);
-        tvViewDatabase = view.findViewById(R.id.tvViewDatabase);
         rvRecentTickets = view.findViewById(R.id.rvRecentTickets);
 
         ticketService = ApiClient.getInstance(requireContext()).create(TicketService.class);
@@ -65,14 +62,6 @@ public class AdminDashboardFragment extends Fragment {
         });
         rvRecentTickets.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvRecentTickets.setAdapter(adapter);
-
-        tvViewDatabase.setOnClickListener(v -> {
-            BottomNavigationView bottomNavView = requireActivity().findViewById(R.id.bottomNavView);
-            if (bottomNavView != null) {
-                // Updated to use the correct admin tickets menu ID
-                bottomNavView.setSelectedItemId(R.id.nav_admin_tickets);
-            }
-        });
 
         loadTickets();
     }

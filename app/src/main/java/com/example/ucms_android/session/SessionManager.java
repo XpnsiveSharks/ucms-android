@@ -12,6 +12,9 @@ public class SessionManager {
     private static final String KEY_CACHED_STUDENT_ID = "cached_student_id";
     private static final String KEY_CACHED_COURSE = "cached_course";
     private static final String KEY_CACHED_YEAR_LEVEL = "cached_year_level";
+    private static final String KEY_CACHED_TOTAL_TICKETS = "cached_total_tickets";
+    private static final String KEY_CACHED_PENDING_COUNT = "cached_pending_count";
+    private static final String KEY_CACHED_RESOLVED_TODAY = "cached_resolved_today";
 
     private final SharedPreferences sharedPreferences;
     private final SharedPreferences.Editor editor;
@@ -34,6 +37,25 @@ public class SessionManager {
         editor.putString(KEY_CACHED_COURSE, course != null ? course : "");
         editor.putString(KEY_CACHED_YEAR_LEVEL, yearLevel != null ? String.valueOf(yearLevel) : "");
         editor.apply();
+    }
+
+    public void saveTicketStatsCache(int total, int pending, int resolvedToday) {
+        editor.putInt(KEY_CACHED_TOTAL_TICKETS, total);
+        editor.putInt(KEY_CACHED_PENDING_COUNT, pending);
+        editor.putInt(KEY_CACHED_RESOLVED_TODAY, resolvedToday);
+        editor.apply();
+    }
+
+    public int getCachedTotalTickets() {
+        return sharedPreferences.getInt(KEY_CACHED_TOTAL_TICKETS, -1);
+    }
+
+    public int getCachedPendingCount() {
+        return sharedPreferences.getInt(KEY_CACHED_PENDING_COUNT, -1);
+    }
+
+    public int getCachedResolvedToday() {
+        return sharedPreferences.getInt(KEY_CACHED_RESOLVED_TODAY, -1);
     }
 
     public String getCachedName() {

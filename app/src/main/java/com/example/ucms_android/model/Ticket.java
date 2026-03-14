@@ -19,26 +19,14 @@ public class Ticket {
     @SerializedName("status")
     private String status;
 
-    @SerializedName("category")
-    private String category;
-
-    @SerializedName("studentId")
-    private String studentId;
-
-    @SerializedName("studentName")
-    private String studentName;
-
-    @SerializedName("courseYear")
-    private String courseYear;
-
-    @SerializedName("attachmentUrl")
-    private String attachmentUrl;
-
-    @SerializedName("attachmentName")
-    private String attachmentName;
-
     @SerializedName("confirmedResolved")
     private boolean confirmedResolved;
+
+    @SerializedName("categoryId")
+    private Long categoryId;
+
+    @SerializedName("categoryName")
+    private String categoryName;
 
     @SerializedName("createdAt")
     private String createdAt;
@@ -51,18 +39,14 @@ public class Ticket {
     public String getTitle() { return title; }
     public String getDescription() { return description; }
     public String getStatus() { return status; }
-    public String getCategory() { return category; }
-    public String getStudentId() { return studentId; }
-    public String getStudentName() { return studentName; }
-    public String getCourseYear() { return courseYear; }
-    public String getAttachmentUrl() { return attachmentUrl; }
-    public String getAttachmentName() { return attachmentName; }
     public boolean isConfirmedResolved() { return confirmedResolved; }
+    public Long getCategoryId() { return categoryId; }
+    public String getCategoryName() { return categoryName; }
     public String getCreatedAt() { return createdAt; }
     public String getUpdatedAt() { return updatedAt; }
 
+    // Setters kept for legacy use in StudentHomeFragment dummy data removal
     public void setTicketNumber(String ticketNumber) { this.ticketNumber = ticketNumber; }
     public void setTitle(String title) { this.title = title; }
-    public void setCategory(String category) { this.category = category; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
 }
