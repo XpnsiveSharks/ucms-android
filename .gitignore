@@ -38,3 +38,6 @@ logs/
 
 # Generated
 generated/
+
+.project
+.settings/

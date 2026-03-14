@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,7 +23,11 @@ import com.example.ucms_android.network.TicketService;
 import com.example.ucms_android.network.UserService;
 import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.ui.adapter.RecentTicketAdapter;
+import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +39,12 @@ import retrofit2.Response;
 public class StudentHomeFragment extends Fragment {
 
     private SessionManager sessionManager;
+    private Gson gson;
     private RecentTicketAdapter recentTicketAdapter;
     private RecyclerView rvRecentTickets;
     private TextView tvTotalTicketsCount, tvPendingCount, tvResolvedCount;
+    private ShimmerFrameLayout shimmerRecentNotifications;
+    private TextView tvEmptyRecentNotifications;
 
     @Nullable
     @Override
@@ -50,6 +58,7 @@ public class StudentHomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         sessionManager = new SessionManager(requireContext());
+        gson = new Gson();
 
         tvTotalTicketsCount = view.findViewById(R.id.tvTotalTicketsCount);
         tvPendingCount = view.findViewById(R.id.tvPendingCount);
@@ -121,6 +130,10 @@ public class StudentHomeFragment extends Fragment {
         });
         rvRecentTickets.setAdapter(recentTicketAdapter);
 
+        shimmerRecentNotifications = view.findViewById(R.id.shimmerRecentNotifications);
+        tvEmptyRecentNotifications = view.findViewById(R.id.tvEmptyRecentNotifications);
+
+        loadFromCache();
         loadTickets();
     }
 
@@ -128,6 +141,42 @@ public class StudentHomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         loadTickets();
+    }
+
+    private void showRecentState(String state) {
+        shimmerRecentNotifications.setVisibility(View.GONE);
+        shimmerRecentNotifications.stopShimmer();
+        tvEmptyRecentNotifications.setVisibility(View.GONE);
+        rvRecentTickets.setVisibility(View.GONE);
+
+        switch (state) {
+            case "LOADING":
+                shimmerRecentNotifications.setVisibility(View.VISIBLE);
+                shimmerRecentNotifications.startShimmer();
+                break;
+            case "EMPTY":
+                tvEmptyRecentNotifications.setVisibility(View.VISIBLE);
+                break;
+            case "DATA":
+                rvRecentTickets.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
+    private void loadFromCache() {
+        // Stats already loaded above via sessionManager.getCachedTotalTickets() etc.
+        // Load cached recent tickets
+        String cachedJson = sessionManager.getStudentRecentTicketsJson();
+        if (cachedJson != null) {
+            Type type = new TypeToken<List<Ticket>>(){}.getType();
+            List<Ticket> cached = gson.fromJson(cachedJson, type);
+            if (cached != null && !cached.isEmpty()) {
+                recentTicketAdapter.updateTickets(cached);
+                showRecentState("DATA");
+                return;
+            }
+        }
+        showRecentState("LOADING");
     }
 
     private void loadTickets() {
@@ -144,11 +193,22 @@ public class StudentHomeFragment extends Fragment {
                     updateStats(all);
                     List<Ticket> recent = all.size() > 3 ? all.subList(0, 3) : all;
                     recentTicketAdapter.updateTickets(recent);
+                    sessionManager.saveStudentRecentTicketsJson(gson.toJson(recent));
+                    showRecentState(recent.isEmpty() ? "EMPTY" : "DATA");
+                } else {
+                    if (rvRecentTickets.getVisibility() != View.VISIBLE) {
+                        showRecentState("EMPTY");
+                    }
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<ApiResponse<List<Ticket>>> call, @NonNull Throwable t) {}
+            public void onFailure(@NonNull Call<ApiResponse<List<Ticket>>> call, @NonNull Throwable t) {
+                if (!isAdded()) return;
+                if (rvRecentTickets.getVisibility() != View.VISIBLE) {
+                    showRecentState("EMPTY");
+                }
+            }
         });
     }
 

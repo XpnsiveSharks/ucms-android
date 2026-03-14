@@ -2,14 +2,18 @@ package com.example.ucms_android.ui.admin;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 
 import com.example.ucms_android.R;
 import com.example.ucms_android.model.ApiResponse;
+import com.example.ucms_android.model.StatusUpdateRequest;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.TicketService;
@@ -27,8 +31,12 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
     private TextView tvDate, tvTitle, tvDescription, tvAttachmentName, tvActionTitle, tvSelectedCategory;
     private MaterialCardView btnBack, cvAttachment;
     private MaterialButton btnUpdateStatus;
+    private ProgressBar progressBar;
+    private LinearLayout layoutError;
+    private NestedScrollView scrollContent;
     private TicketService ticketService;
     private Long ticketId;
+    private String currentStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +53,7 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
         ticketService = ApiClient.getInstance(this).create(TicketService.class);
         
         btnBack.setOnClickListener(v -> finish());
+        findViewById(R.id.btnRetry).setOnClickListener(v -> loadTicketDetails());
         
         loadTicketDetails();
     }
@@ -65,22 +74,44 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         cvAttachment = findViewById(R.id.cvAttachment);
         btnUpdateStatus = findViewById(R.id.btnUpdateStatus);
+        progressBar = findViewById(R.id.progressBar);
+        layoutError = findViewById(R.id.layoutError);
+        scrollContent = findViewById(R.id.scrollContent);
+    }
+
+    private void showState(String state) {
+        progressBar.setVisibility(View.GONE);
+        layoutError.setVisibility(View.GONE);
+        scrollContent.setVisibility(View.GONE);
+        switch (state) {
+            case "LOADING":
+                progressBar.setVisibility(View.VISIBLE);
+                break;
+            case "ERROR":
+                layoutError.setVisibility(View.VISIBLE);
+                break;
+            case "DATA":
+                scrollContent.setVisibility(View.VISIBLE);
+                break;
+        }
     }
 
     private void loadTicketDetails() {
+        showState("LOADING");
         ticketService.getTicketById(ticketId).enqueue(new Callback<ApiResponse<Ticket>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<Ticket>> call, @NonNull Response<ApiResponse<Ticket>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     displayTicket(response.body().getData());
+                    showState("DATA");
                 } else {
-                    Toast.makeText(AdminTicketDetailActivity.this, "Failed to load ticket", Toast.LENGTH_SHORT).show();
+                    showState("ERROR");
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<Ticket>> call, @NonNull Throwable t) {
-                Toast.makeText(AdminTicketDetailActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                showState("ERROR");
             }
         });
     }
@@ -89,6 +120,8 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
         tvTicketId.setText(ticket.getTicketNumber() != null ? "Ticket " + ticket.getTicketNumber() : "Ticket #" + ticket.getId());
         tvStatus.setText(ticket.getStatus());
         tvStatus.setBackgroundResource(getStatusBackgroundResource(ticket.getStatus()));
+        currentStatus = ticket.getStatus();
+        configureStatusActions();
 
         // Student info not returned by backend — show placeholders
         tvStudentName.setText("Student");
@@ -106,6 +139,68 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
         String categoryName = ticket.getCategoryName() != null ? ticket.getCategoryName() : "N/A";
         tvActionTitle.setText(categoryName + " Actions");
         tvSelectedCategory.setText(categoryName);
+    }
+
+    private String getNextStatus(String current) {
+        if ("PENDING".equalsIgnoreCase(current)) return "IN_PROGRESS";
+        if ("IN_PROGRESS".equalsIgnoreCase(current)) return "RESOLVED";
+        if ("RESOLVED".equalsIgnoreCase(current)) return "CLOSED";
+        return null;
+    }
+
+    private void configureStatusActions() {
+        String nextStatus = getNextStatus(currentStatus);
+
+        if ("RESOLVED".equalsIgnoreCase(currentStatus)) {
+            btnUpdateStatus.setEnabled(false);
+            btnUpdateStatus.setAlpha(0.5f);
+            btnUpdateStatus.setText("Waiting for student confirmation");
+            tvSelectedCategory.setText("CLOSED");
+        } else if (nextStatus == null) {
+            btnUpdateStatus.setEnabled(false);
+            btnUpdateStatus.setAlpha(0.5f);
+            btnUpdateStatus.setText("Update Status");
+            tvSelectedCategory.setText(currentStatus);
+        } else {
+            btnUpdateStatus.setEnabled(true);
+            btnUpdateStatus.setAlpha(1.0f);
+            btnUpdateStatus.setText("Update Status");
+            tvSelectedCategory.setText(nextStatus.replace("_", " "));
+            btnUpdateStatus.setOnClickListener(v -> updateStatus(nextStatus));
+        }
+    }
+
+    private void updateStatus(String newStatus) {
+        btnUpdateStatus.setEnabled(false);
+        btnUpdateStatus.setText("Updating...");
+
+        ticketService.updateTicketStatus(ticketId, new StatusUpdateRequest(newStatus))
+                .enqueue(new Callback<ApiResponse<Ticket>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse<Ticket>> call,
+                                           @NonNull Response<ApiResponse<Ticket>> response) {
+                        btnUpdateStatus.setText("Update Status");
+                        if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                            Toast.makeText(AdminTicketDetailActivity.this,
+                                    "Status updated to " + newStatus.replace("_", " "),
+                                    Toast.LENGTH_SHORT).show();
+                            displayTicket(response.body().getData());
+                            showState("DATA");
+                        } else {
+                            btnUpdateStatus.setEnabled(true);
+                            Toast.makeText(AdminTicketDetailActivity.this,
+                                    "Failed to update status", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse<Ticket>> call, @NonNull Throwable t) {
+                        btnUpdateStatus.setText("Update Status");
+                        btnUpdateStatus.setEnabled(true);
+                        Toast.makeText(AdminTicketDetailActivity.this,
+                                "Network error", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private String getInitials(String name) {

@@ -267,9 +267,51 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginHorizontal="12dp"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/tvRecentHeader"
             tools:itemCount="2"
             tools:listitem="@layout/item_notification" />
+
+        <!-- Loading Skeleton for Recent Notifications -->
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmerRecentNotifications"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="12dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvRecentHeader">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include layout="@layout/layout_skeleton_ticket" />
+                <include layout="@layout/layout_skeleton_ticket" />
+
+            </LinearLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <!-- Empty State for Recent Notifications -->
+        <TextView
+            android:id="@+id/tvEmptyRecentNotifications"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="12dp"
+            android:gravity="center"
+            android:padding="@dimen/spacing_large"
+            android:text="No recent notifications"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@color/colorTextSecondary"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvRecentHeader" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
