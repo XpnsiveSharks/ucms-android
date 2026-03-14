@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,9 +22,14 @@ import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.TicketService;
+import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.ui.adapter.TicketAdapter;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.button.MaterialButton;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +44,13 @@ public class AdminTicketListFragment extends Fragment {
     private MaterialButton btnInProgress;
     private MaterialButton btnAll;
     private RecyclerView rvTickets;
+    private ShimmerFrameLayout shimmerLayout;
+    private LinearLayout layoutEmpty;
+    private LinearLayout layoutError;
     private TicketAdapter adapter;
     private TicketService ticketService;
+    private SessionManager sessionManager;
+    private Gson gson;
 
     private List<Ticket> allTickets = new ArrayList<>();
     private String activeFilter = "ALL";
@@ -60,8 +71,16 @@ public class AdminTicketListFragment extends Fragment {
         btnInProgress = view.findViewById(R.id.btnInProgress);
         btnAll = view.findViewById(R.id.btnAll);
         rvTickets = view.findViewById(R.id.rvTickets);
+        shimmerLayout = view.findViewById(R.id.shimmerLayout);
+        layoutEmpty = view.findViewById(R.id.layoutEmpty);
+        layoutError = view.findViewById(R.id.layoutError);
+
+        view.findViewById(R.id.btnRetry).setOnClickListener(v -> loadTickets());
 
         ticketService = ApiClient.getInstance(requireContext()).create(TicketService.class);
+        sessionManager = new SessionManager(requireContext());
+        gson = new Gson();
+        loadFromCache();
 
         adapter = new TicketAdapter(new ArrayList<>(), ticket -> {
             Intent intent = new Intent(requireActivity(), AdminTicketDetailActivity.class);
@@ -127,6 +146,44 @@ public class AdminTicketListFragment extends Fragment {
         });
     }
 
+    private void showState(String state) {
+        shimmerLayout.setVisibility(View.GONE);
+        shimmerLayout.stopShimmer();
+        layoutEmpty.setVisibility(View.GONE);
+        layoutError.setVisibility(View.GONE);
+        rvTickets.setVisibility(View.GONE);
+
+        switch (state) {
+            case "LOADING":
+                shimmerLayout.setVisibility(View.VISIBLE);
+                shimmerLayout.startShimmer();
+                break;
+            case "EMPTY":
+                layoutEmpty.setVisibility(View.VISIBLE);
+                break;
+            case "ERROR":
+                layoutError.setVisibility(View.VISIBLE);
+                break;
+            case "DATA":
+                rvTickets.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
+    private void loadFromCache() {
+        String cachedJson = sessionManager.getAdminAllTicketsJson();
+        if (cachedJson != null) {
+            Type type = new TypeToken<List<Ticket>>() {}.getType();
+            List<Ticket> cached = gson.fromJson(cachedJson, type);
+            if (cached != null && !cached.isEmpty()) {
+                allTickets = cached;
+                applyFilter();
+                return;
+            }
+        }
+        showState("LOADING");
+    }
+
     private void loadTickets() {
         ticketService.getTickets(null).enqueue(new Callback<ApiResponse<List<Ticket>>>() {
             @Override
@@ -135,16 +192,21 @@ public class AdminTicketListFragment extends Fragment {
                 if (!isAdded()) return;
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     allTickets = response.body().getData();
+                    sessionManager.saveAdminAllTicketsJson(gson.toJson(allTickets));
                     applyFilter();
                 } else {
-                    Toast.makeText(requireContext(), getString(R.string.error_loading_tickets), Toast.LENGTH_SHORT).show();
+                    if (rvTickets.getVisibility() != View.VISIBLE) {
+                        showState("ERROR");
+                    }
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<List<Ticket>>> call, @NonNull Throwable t) {
                 if (!isAdded()) return;
-                Toast.makeText(requireContext(), getString(R.string.error_network), Toast.LENGTH_SHORT).show();
+                if (rvTickets.getVisibility() != View.VISIBLE) {
+                    showState("ERROR");
+                }
             }
         });
     }
@@ -165,5 +227,6 @@ public class AdminTicketListFragment extends Fragment {
         }
 
         adapter.updateData(filtered);
+        showState(filtered.isEmpty() ? "EMPTY" : "DATA");
     }
 }

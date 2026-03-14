@@ -15,6 +15,13 @@ public class SessionManager {
     private static final String KEY_CACHED_TOTAL_TICKETS = "cached_total_tickets";
     private static final String KEY_CACHED_PENDING_COUNT = "cached_pending_count";
     private static final String KEY_CACHED_RESOLVED_TODAY = "cached_resolved_today";
+    private static final String KEY_ADMIN_CACHED_TOTAL = "admin_cached_total";
+    private static final String KEY_ADMIN_CACHED_PENDING = "admin_cached_pending";
+    private static final String KEY_ADMIN_CACHED_RESOLVED = "admin_cached_resolved";
+    private static final String KEY_ADMIN_RECENT_TICKETS_JSON = "admin_recent_tickets_json";
+    private static final String KEY_ADMIN_ALL_TICKETS_JSON = "admin_all_tickets_json";
+    private static final String KEY_STUDENT_RECENT_TICKETS_JSON = "student_recent_tickets_json";
+    private static final String KEY_STUDENT_ALL_TICKETS_JSON = "student_all_tickets_json";
 
     private final SharedPreferences sharedPreferences;
     private final SharedPreferences.Editor editor;
@@ -89,5 +96,53 @@ public class SessionManager {
     public void clearSession() {
         editor.clear();
         editor.apply();
+    }
+
+    // Admin stats cache
+    public void saveAdminStatsCache(int total, int pending, int resolved) {
+        editor.putInt(KEY_ADMIN_CACHED_TOTAL, total);
+        editor.putInt(KEY_ADMIN_CACHED_PENDING, pending);
+        editor.putInt(KEY_ADMIN_CACHED_RESOLVED, resolved);
+        editor.apply();
+    }
+
+    public int getAdminCachedTotal() { return sharedPreferences.getInt(KEY_ADMIN_CACHED_TOTAL, -1); }
+    public int getAdminCachedPending() { return sharedPreferences.getInt(KEY_ADMIN_CACHED_PENDING, -1); }
+    public int getAdminCachedResolved() { return sharedPreferences.getInt(KEY_ADMIN_CACHED_RESOLVED, -1); }
+
+    // Admin recent tickets cache (JSON string)
+    public void saveAdminRecentTicketsJson(String json) {
+        editor.putString(KEY_ADMIN_RECENT_TICKETS_JSON, json);
+        editor.apply();
+    }
+    public String getAdminRecentTicketsJson() {
+        return sharedPreferences.getString(KEY_ADMIN_RECENT_TICKETS_JSON, null);
+    }
+
+    // Admin all tickets cache (JSON string)
+    public void saveAdminAllTicketsJson(String json) {
+        editor.putString(KEY_ADMIN_ALL_TICKETS_JSON, json);
+        editor.apply();
+    }
+    public String getAdminAllTicketsJson() {
+        return sharedPreferences.getString(KEY_ADMIN_ALL_TICKETS_JSON, null);
+    }
+
+    // Student recent tickets cache (JSON string)
+    public void saveStudentRecentTicketsJson(String json) {
+        editor.putString(KEY_STUDENT_RECENT_TICKETS_JSON, json);
+        editor.apply();
+    }
+    public String getStudentRecentTicketsJson() {
+        return sharedPreferences.getString(KEY_STUDENT_RECENT_TICKETS_JSON, null);
+    }
+
+    // Student all tickets cache (JSON string)
+    public void saveStudentAllTicketsJson(String json) {
+        editor.putString(KEY_STUDENT_ALL_TICKETS_JSON, json);
+        editor.apply();
+    }
+    public String getStudentAllTicketsJson() {
+        return sharedPreferences.getString(KEY_STUDENT_ALL_TICKETS_JSON, null);
     }
 }

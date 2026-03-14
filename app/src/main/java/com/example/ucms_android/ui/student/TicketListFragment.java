@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,9 +20,14 @@ import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.TicketService;
+import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.ui.adapter.TicketAdapter;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.button.MaterialButton;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +40,12 @@ public class TicketListFragment extends Fragment {
     private TextView tvEmptyState;
     private RecyclerView rvTickets;
     private MaterialButton btnSubmitTicket;
+    private ShimmerFrameLayout shimmerLayout;
+    private LinearLayout layoutError;
     private TicketAdapter adapter;
     private TicketService ticketService;
+    private SessionManager sessionManager;
+    private Gson gson;
 
     @Nullable
     @Override
@@ -51,8 +61,13 @@ public class TicketListFragment extends Fragment {
         tvEmptyState = view.findViewById(R.id.tvEmptyState);
         rvTickets = view.findViewById(R.id.rvTickets);
         btnSubmitTicket = view.findViewById(R.id.btnSubmitTicket);
+        shimmerLayout = view.findViewById(R.id.shimmerLayout);
+        layoutError = view.findViewById(R.id.layoutError);
+        view.findViewById(R.id.btnRetry).setOnClickListener(v -> loadTickets());
 
         ticketService = ApiClient.getInstance(requireContext()).create(TicketService.class);
+        sessionManager = new SessionManager(requireContext());
+        gson = new Gson();
 
         adapter = new TicketAdapter(new ArrayList<>(), ticket -> {
             Intent intent = new Intent(requireActivity(), TicketDetailActivity.class);
@@ -71,6 +86,7 @@ public class TicketListFragment extends Fragment {
             }
         });
 
+        loadFromCache();
         loadTickets();
     }
 
@@ -80,42 +96,72 @@ public class TicketListFragment extends Fragment {
         loadTickets();
     }
 
+    private void showState(String state) {
+        shimmerLayout.setVisibility(View.GONE);
+        shimmerLayout.stopShimmer();
+        layoutError.setVisibility(View.GONE);
+        rvTickets.setVisibility(View.GONE);
+        tvEmptyState.setVisibility(View.GONE);
+
+        switch (state) {
+            case "LOADING":
+                shimmerLayout.setVisibility(View.VISIBLE);
+                shimmerLayout.startShimmer();
+                break;
+            case "EMPTY":
+                tvEmptyState.setVisibility(View.VISIBLE);
+                break;
+            case "ERROR":
+                layoutError.setVisibility(View.VISIBLE);
+                break;
+            case "DATA":
+                rvTickets.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
+    private void loadFromCache() {
+        String cachedJson = sessionManager.getStudentAllTicketsJson();
+        if (cachedJson != null) {
+            Type type = new TypeToken<List<Ticket>>() {}.getType();
+            List<Ticket> cached = gson.fromJson(cachedJson, type);
+            if (cached != null && !cached.isEmpty()) {
+                adapter.updateData(cached);
+                showState("DATA");
+                return;
+            }
+        }
+        showState("LOADING");
+    }
+
     private void loadTickets() {
         ticketService.getTickets(null).enqueue(new Callback<ApiResponse<List<Ticket>>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<List<Ticket>>> call,
                                    @NonNull Response<ApiResponse<List<Ticket>>> response) {
-                if (!isAdded()) {
-                    return;
-                }
-                requireActivity().runOnUiThread(() -> {
-                    if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                        List<Ticket> tickets = response.body().getData();
-                        if (tickets.isEmpty()) {
-                            rvTickets.setVisibility(View.GONE);
-                            tvEmptyState.setVisibility(View.VISIBLE);
-                        } else {
-                            rvTickets.setVisibility(View.VISIBLE);
-                            tvEmptyState.setVisibility(View.GONE);
-                            adapter.updateData(tickets);
-                        }
+                if (!isAdded()) return;
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    List<Ticket> tickets = response.body().getData();
+                    sessionManager.saveStudentAllTicketsJson(gson.toJson(tickets));
+                    if (tickets.isEmpty()) {
+                        showState("EMPTY");
                     } else {
-                        Toast.makeText(requireContext(),
-                                getString(R.string.error_loading_tickets),
-                                Toast.LENGTH_SHORT).show();
+                        adapter.updateData(tickets);
+                        showState("DATA");
                     }
-                });
+                } else {
+                    if (rvTickets.getVisibility() != View.VISIBLE) {
+                        showState("ERROR");
+                    }
+                }
             }
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<List<Ticket>>> call, @NonNull Throwable t) {
-                if (!isAdded()) {
-                    return;
+                if (!isAdded()) return;
+                if (rvTickets.getVisibility() != View.VISIBLE) {
+                    showState("ERROR");
                 }
-                requireActivity().runOnUiThread(() ->
-                        Toast.makeText(requireContext(),
-                                getString(R.string.error_network),
-                                Toast.LENGTH_SHORT).show());
             }
         });
     }

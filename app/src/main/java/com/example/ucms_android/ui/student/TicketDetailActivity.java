@@ -2,8 +2,12 @@ package com.example.ucms_android.ui.student;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +40,9 @@ public class TicketDetailActivity extends AppCompatActivity {
     private TicketResponseAdapter responseAdapter;
     private TicketService ticketService;
     private Long ticketId;
+    private ProgressBar progressBar;
+    private LinearLayout layoutError;
+    private ScrollView scrollContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,11 @@ public class TicketDetailActivity extends AppCompatActivity {
         ticketService = ApiClient.getInstance(this).create(TicketService.class);
 
         btnBack.setOnClickListener(v -> finish());
+
+        findViewById(R.id.btnRetry).setOnClickListener(v -> {
+            loadTicket();
+            loadResponses();
+        });
 
         responseAdapter = new TicketResponseAdapter(new ArrayList<>());
         rvResponses.setLayoutManager(new LinearLayoutManager(this));
@@ -70,28 +82,46 @@ public class TicketDetailActivity extends AppCompatActivity {
         tvAttachmentName = findViewById(R.id.tvAttachmentName);
         ivAttachmentPreview = findViewById(R.id.ivAttachmentPreview);
         rvResponses = findViewById(R.id.rvResponses);
+        progressBar = findViewById(R.id.progressBar);
+        layoutError = findViewById(R.id.layoutError);
+        scrollContent = findViewById(R.id.scrollContent);
     }
 
     private void loadTicket() {
+        showState("LOADING");
         ticketService.getTicketById(ticketId).enqueue(new Callback<ApiResponse<Ticket>>() {
             @Override
             public void onResponse(Call<ApiResponse<Ticket>> call, Response<ApiResponse<Ticket>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     populateViews(response.body().getData());
+                    showState("DATA");
                 } else {
-                    Toast.makeText(TicketDetailActivity.this,
-                            getString(R.string.error_loading_tickets), Toast.LENGTH_SHORT).show();
-                    finish();
+                    showState("ERROR");
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse<Ticket>> call, Throwable t) {
-                Toast.makeText(TicketDetailActivity.this,
-                        getString(R.string.error_network), Toast.LENGTH_SHORT).show();
-                finish();
+                showState("ERROR");
             }
         });
+    }
+
+    private void showState(String state) {
+        progressBar.setVisibility(View.GONE);
+        layoutError.setVisibility(View.GONE);
+        scrollContent.setVisibility(View.GONE);
+        switch (state) {
+            case "LOADING":
+                progressBar.setVisibility(View.VISIBLE);
+                break;
+            case "ERROR":
+                layoutError.setVisibility(View.VISIBLE);
+                break;
+            case "DATA":
+                scrollContent.setVisibility(View.VISIBLE);
+                break;
+        }
     }
 
     private void populateViews(Ticket ticket) {
