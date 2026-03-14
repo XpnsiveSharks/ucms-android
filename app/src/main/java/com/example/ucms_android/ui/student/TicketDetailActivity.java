@@ -102,15 +102,10 @@ public class TicketDetailActivity extends AppCompatActivity {
         tvDescription.setText(ticket.getDescription());
         tvStatus.setBackground(getStatusDrawable(ticket.getStatus()));
 
-        if (ticket.getAttachmentName() != null && !ticket.getAttachmentName().isEmpty()) {
-            tvAttachmentName.setText(ticket.getAttachmentName());
-            tvAttachmentName.setVisibility(View.VISIBLE);
-            ivAttachmentPreview.setVisibility(View.VISIBLE);
-        } else {
-            tvAttachmentLabel.setVisibility(View.GONE);
-            ivAttachmentPreview.setVisibility(View.GONE);
-            tvAttachmentName.setVisibility(View.GONE);
-        }
+        // Attachment info not in ticket response — hide section
+        tvAttachmentLabel.setVisibility(View.GONE);
+        ivAttachmentPreview.setVisibility(View.GONE);
+        tvAttachmentName.setVisibility(View.GONE);
     }
 
     private void loadResponses() {

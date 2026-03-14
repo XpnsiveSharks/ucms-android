@@ -47,10 +47,7 @@ public class EmailVerificationActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
 
         btnSendVerification.setOnClickListener(v -> sendVerificationEmail());
-        findViewById(R.id.tvSkip).setOnClickListener(v -> {
-            startActivity(new Intent(EmailVerificationActivity.this, MainActivity.class));
-            finish();
-        });
+        findViewById(R.id.tvSkip).setOnClickListener(v -> confirmEmailVerified());
     }
 
     private void sendVerificationEmail() {
@@ -80,6 +77,41 @@ public class EmailVerificationActivity extends AppCompatActivity {
                         return;
                     }
 
+                    ApiError apiError = parseApiError(response);
+                    String message = apiError != null && apiError.getMessage() != null
+                            ? apiError.getMessage()
+                            : getString(R.string.error_register_failed);
+                    showError(message);
+                });
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                runOnUiThread(() -> {
+                    setLoading(false);
+                    showError(getString(R.string.error_register_failed));
+                });
+            }
+        });
+    }
+
+    private void confirmEmailVerified() {
+        setLoading(true);
+        userService.confirmEmailVerified().enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                runOnUiThread(() -> {
+                    setLoading(false);
+                    if (response.isSuccessful()) {
+                        Toast.makeText(
+                                EmailVerificationActivity.this,
+                                "Email verified successfully.",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                        startActivity(new Intent(EmailVerificationActivity.this, MainActivity.class));
+                        finish();
+                        return;
+                    }
                     ApiError apiError = parseApiError(response);
                     String message = apiError != null && apiError.getMessage() != null
                             ? apiError.getMessage()

@@ -1,5 +1,6 @@
 package com.example.ucms_android.ui.student;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,9 +19,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.ucms_android.MainActivity;
 import com.example.ucms_android.R;
 import com.example.ucms_android.auth.EmailVerificationActivity;
 import com.example.ucms_android.model.ApiResponse;
+import com.example.ucms_android.model.AttachmentResponse;
 import com.example.ucms_android.model.Category;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.model.TicketRequest;
@@ -31,9 +34,14 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,11 +59,15 @@ public class SubmitTicketFragment extends Fragment {
     private List<Category> categories = new ArrayList<>();
     private Uri selectedFileUri;
 
-    private final ActivityResultLauncher<String> filePickerLauncher =
-            registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+    private final ActivityResultLauncher<String[]> filePickerLauncher =
+            registerForActivityResult(new ActivityResultContracts.OpenDocument(), uri -> {
                 if (uri != null) {
                     selectedFileUri = uri;
-                    tvAttachmentName.setText(uri.getLastPathSegment());
+                    // Persist permission across process restarts
+                    requireContext().getContentResolver()
+                            .takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    String segment = uri.getLastPathSegment();
+                    tvAttachmentName.setText(segment != null ? segment : "file");
                     tvAttachmentName.setVisibility(View.VISIBLE);
                     tvAttachmentHint.setVisibility(View.GONE);
                 }
@@ -63,7 +75,8 @@ public class SubmitTicketFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_submit_ticket, container, false);
     }
 
@@ -82,7 +95,9 @@ public class SubmitTicketFragment extends Fragment {
         ticketService = ApiClient.getInstance(requireContext()).create(TicketService.class);
         categoryService = ApiClient.getInstance(requireContext()).create(CategoryService.class);
 
-        cvAttachment.setOnClickListener(v -> filePickerLauncher.launch("*/*"));
+        // Restrict to images and PDF only — matches backend allowed MIME types
+        cvAttachment.setOnClickListener(v ->
+                filePickerLauncher.launch(new String[]{"image/jpeg", "image/png", "application/pdf"}));
         btnSubmit.setOnClickListener(v -> submitTicket());
 
         loadCategories();
@@ -91,8 +106,10 @@ public class SubmitTicketFragment extends Fragment {
     private void loadCategories() {
         categoryService.getCategories().enqueue(new Callback<ApiResponse<List<Category>>>() {
             @Override
-            public void onResponse(Call<ApiResponse<List<Category>>> call, Response<ApiResponse<List<Category>>> response) {
-                if (isAdded() && response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+            public void onResponse(Call<ApiResponse<List<Category>>> call,
+                                   Response<ApiResponse<List<Category>>> response) {
+                if (isAdded() && response.isSuccessful() && response.body() != null
+                        && response.body().getData() != null) {
                     categories = response.body().getData();
                     ArrayAdapter<Category> adapter = new ArrayAdapter<>(
                             requireContext(),
@@ -129,38 +146,109 @@ public class SubmitTicketFragment extends Fragment {
             etDescription.setError(getString(R.string.error_description_required));
             valid = false;
         }
+        if (categories.isEmpty()) {
+            Toast.makeText(requireContext(), getString(R.string.error_loading_categories), Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
         if (!valid) return;
 
-        String category = categories.isEmpty() ? "" : categories.get(spinnerCategory.getSelectedItemPosition()).getName();
-        TicketRequest request = new TicketRequest(title, description, category);
+        Long categoryId = categories.get(spinnerCategory.getSelectedItemPosition()).getId();
+        TicketRequest request = new TicketRequest(title, description, categoryId);
+
+        btnSubmit.setEnabled(false);
 
         ticketService.createTicket(request).enqueue(new Callback<ApiResponse<Ticket>>() {
             @Override
             public void onResponse(Call<ApiResponse<Ticket>> call, Response<ApiResponse<Ticket>> response) {
                 if (!isAdded()) return;
-                
+
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    Toast.makeText(requireContext(),
-                            getString(R.string.ticket_submitted), Toast.LENGTH_SHORT).show();
-                    // Go back to Home
-                    if (getActivity() instanceof com.example.ucms_android.MainActivity) {
-                        ((com.example.ucms_android.MainActivity) getActivity()).loadFragment(new StudentHomeFragment());
+                    Ticket ticket = response.body().getData();
+                    if (selectedFileUri != null && ticket != null) {
+                        uploadAttachment(ticket.getId());
+                    } else {
+                        onSubmitComplete();
                     }
                 } else if (response.code() == 403) {
+                    btnSubmit.setEnabled(true);
                     startActivity(new Intent(requireContext(), EmailVerificationActivity.class));
                 } else {
-                    Snackbar.make(btnSubmit,
-                            getString(R.string.error_submit_failed), Snackbar.LENGTH_SHORT).show();
+                    btnSubmit.setEnabled(true);
+                    Snackbar.make(btnSubmit, getString(R.string.error_submit_failed), Snackbar.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse<Ticket>> call, Throwable t) {
                 if (isAdded()) {
-                    Snackbar.make(btnSubmit,
-                            getString(R.string.error_network), Snackbar.LENGTH_SHORT).show();
+                    btnSubmit.setEnabled(true);
+                    Snackbar.make(btnSubmit, getString(R.string.error_network), Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    private void uploadAttachment(Long ticketId) {
+        try {
+            ContentResolver resolver = requireContext().getContentResolver();
+            String mimeType = resolver.getType(selectedFileUri);
+            if (mimeType == null) mimeType = "application/octet-stream";
+
+            InputStream inputStream = resolver.openInputStream(selectedFileUri);
+            if (inputStream == null) {
+                onSubmitComplete(); // ticket created, skip attachment silently
+                return;
+            }
+
+            byte[] bytes;
+            try (ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+                byte[] chunk = new byte[4096];
+                int n;
+                while ((n = inputStream.read(chunk)) != -1) {
+                    buffer.write(chunk, 0, n);
+                }
+                bytes = buffer.toByteArray();
+            }
+            inputStream.close();
+
+            String filename = selectedFileUri.getLastPathSegment();
+            if (filename == null) filename = "file";
+
+            RequestBody requestBody = RequestBody.create(bytes, MediaType.parse(mimeType));
+            MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", filename, requestBody);
+
+            ticketService.uploadAttachment(ticketId, filePart).enqueue(new Callback<ApiResponse<AttachmentResponse>>() {
+                @Override
+                public void onResponse(Call<ApiResponse<AttachmentResponse>> call,
+                                       Response<ApiResponse<AttachmentResponse>> response) {
+                    if (!isAdded()) return;
+                    // Attachment upload result is non-blocking — navigate regardless
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(requireContext(),
+                                "Ticket submitted but attachment failed to upload.", Toast.LENGTH_SHORT).show();
+                    }
+                    onSubmitComplete();
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponse<AttachmentResponse>> call, Throwable t) {
+                    if (!isAdded()) return;
+                    Toast.makeText(requireContext(),
+                            "Ticket submitted but attachment failed to upload.", Toast.LENGTH_SHORT).show();
+                    onSubmitComplete();
+                }
+            });
+
+        } catch (Exception e) {
+            onSubmitComplete(); // ticket created, skip attachment on error
+        }
+    }
+
+    private void onSubmitComplete() {
+        if (!isAdded()) return;
+        Toast.makeText(requireContext(), getString(R.string.ticket_submitted), Toast.LENGTH_SHORT).show();
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).loadFragment(new StudentHomeFragment());
+        }
     }
 }

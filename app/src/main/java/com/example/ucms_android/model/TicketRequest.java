@@ -10,16 +10,16 @@ public class TicketRequest {
     @SerializedName("description")
     private String description;
 
-    @SerializedName("category")
-    private String category;
+    @SerializedName("categoryId")
+    private Long categoryId;
 
-    public TicketRequest(String title, String description, String category) {
+    public TicketRequest(String title, String description, Long categoryId) {
         this.title = title;
         this.description = description;
-        this.category = category;
+        this.categoryId = categoryId;
     }
 
     public String getTitle() { return title; }
     public String getDescription() { return description; }
-    public String getCategory() { return category; }
+    public Long getCategoryId() { return categoryId; }
 }

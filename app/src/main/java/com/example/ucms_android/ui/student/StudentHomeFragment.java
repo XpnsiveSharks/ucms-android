@@ -4,23 +4,26 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ucms_android.MainActivity;
 import com.example.ucms_android.R;
 import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.model.User;
 import com.example.ucms_android.network.ApiClient;
+import com.example.ucms_android.network.TicketService;
 import com.example.ucms_android.network.UserService;
 import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.ui.adapter.RecentTicketAdapter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,10 +34,14 @@ import retrofit2.Response;
 public class StudentHomeFragment extends Fragment {
 
     private SessionManager sessionManager;
+    private RecentTicketAdapter recentTicketAdapter;
+    private RecyclerView rvRecentTickets;
+    private TextView tvTotalTicketsCount, tvPendingCount, tvResolvedCount;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_student_home, container, false);
     }
 
@@ -43,75 +50,132 @@ public class StudentHomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         sessionManager = new SessionManager(requireContext());
-        
-        // Setup Submit button listener
+
+        tvTotalTicketsCount = view.findViewById(R.id.tvTotalTicketsCount);
+        tvPendingCount = view.findViewById(R.id.tvPendingCount);
+        tvResolvedCount = view.findViewById(R.id.tvResolvedCount);
+
+        // Show cached stats immediately (no delay)
+        int cachedTotal = sessionManager.getCachedTotalTickets();
+        int cachedPending = sessionManager.getCachedPendingCount();
+        int cachedResolved = sessionManager.getCachedResolvedToday();
+        if (cachedTotal >= 0) tvTotalTicketsCount.setText(String.valueOf(cachedTotal));
+        if (cachedPending >= 0) tvPendingCount.setText(String.valueOf(cachedPending));
+        if (cachedResolved >= 0) tvResolvedCount.setText(String.valueOf(cachedResolved));
+
+        // Submit button
         view.findViewById(R.id.btnSubmitNewConcern).setOnClickListener(v -> {
-            if (getActivity() instanceof com.example.ucms_android.MainActivity) {
-                ((com.example.ucms_android.MainActivity) getActivity()).loadFragment(new SubmitTicketFragment());
-                // Update bottom nav selection
-                com.google.android.material.bottomnavigation.BottomNavigationView nav = getActivity().findViewById(R.id.bottomNavView);
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).loadFragment(new SubmitTicketFragment());
+                com.google.android.material.bottomnavigation.BottomNavigationView nav =
+                        getActivity().findViewById(R.id.bottomNavView);
                 if (nav != null) nav.setSelectedItemId(R.id.nav_student_add);
             }
         });
-        
-        // Setup View All listener
+
+        // View All — navigate to ticket list
         view.findViewById(R.id.tvViewAll).setOnClickListener(v -> {
-            // Navigate to NotificationsActivity
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).loadFragment(new TicketListFragment());
+                com.google.android.material.bottomnavigation.BottomNavigationView nav =
+                        getActivity().findViewById(R.id.bottomNavView);
+                if (nav != null) nav.setSelectedItemId(R.id.nav_student_tickets);
+            }
         });
 
+        // User name — cached first, then live
         String cachedName = sessionManager.getCachedName();
         if (!cachedName.isEmpty()) {
-            android.widget.TextView tvName = view.findViewById(R.id.tvUserName);
+            TextView tvName = view.findViewById(R.id.tvUserName);
             if (tvName != null) tvName.setText(cachedName);
         }
 
         UserService userService = ApiClient.getInstance(requireContext()).create(UserService.class);
         userService.getMe().enqueue(new Callback<ApiResponse<User>>() {
             @Override
-            public void onResponse(@NonNull Call<ApiResponse<User>> call, @NonNull Response<ApiResponse<User>> response) {
-                if (!response.isSuccessful() || response.body() == null || response.body().getData() == null) {
-                    return;
-                }
+            public void onResponse(@NonNull Call<ApiResponse<User>> call,
+                                   @NonNull Response<ApiResponse<User>> response) {
+                if (!isAdded() || !response.isSuccessful()
+                        || response.body() == null || response.body().getData() == null) return;
                 User user = response.body().getData();
                 String name = user.getName();
-                if (name != null && isAdded() && getActivity() != null) {
-                    String finalName = name;
-                    getActivity().runOnUiThread(() -> {
-                        android.widget.TextView tvName = view.findViewById(R.id.tvUserName);
-                        if (tvName != null) tvName.setText(finalName);
+                if (name != null) {
+                    requireActivity().runOnUiThread(() -> {
+                        TextView tvName = view.findViewById(R.id.tvUserName);
+                        if (tvName != null) tvName.setText(name);
                     });
-                    sessionManager.saveProfileCache(user.getName(), user.getStudentId(), user.getCourse(), user.getYearLevel());
+                    sessionManager.saveProfileCache(user.getName(), user.getStudentId(),
+                            user.getCourse(), user.getYearLevel());
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<ApiResponse<User>> call, @NonNull Throwable t) {
-            }
+            public void onFailure(@NonNull Call<ApiResponse<User>> call, @NonNull Throwable t) {}
         });
 
-        // Setup RecyclerView with dummy data
-        RecyclerView rvNotifications = view.findViewById(R.id.rvRecentNotifications);
-        rvNotifications.setLayoutManager(new LinearLayoutManager(getContext()));
-        
-        List<Ticket> dummyTickets = new ArrayList<>();
-        Ticket t1 = new Ticket();
-        t1.setTicketNumber("#10149");
-        t1.setTitle("Issue with Subject Pre-requisites");
-        t1.setCategory("Academic Dept");
-        t1.setCreatedAt("10 mins ago");
-        
-        Ticket t2 = new Ticket();
-        t2.setTicketNumber("#10150");
-        t2.setTitle("Portal Login Failed");
-        t2.setCategory("IT Support");
-        t2.setCreatedAt("2 hours ago");
-        
-        dummyTickets.add(t1);
-        dummyTickets.add(t2);
-        
-        RecentTicketAdapter adapter = new RecentTicketAdapter(dummyTickets, ticket -> {
-            // Handle ticket click
+        // Recent tickets RecyclerView
+        rvRecentTickets = view.findViewById(R.id.rvRecentNotifications);
+        rvRecentTickets.setLayoutManager(new LinearLayoutManager(getContext()));
+        recentTicketAdapter = new RecentTicketAdapter(new ArrayList<>(), ticket -> {
+            // TODO: open ticket detail
         });
-        rvNotifications.setAdapter(adapter);
+        rvRecentTickets.setAdapter(recentTicketAdapter);
+
+        loadTickets();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadTickets();
+    }
+
+    private void loadTickets() {
+        if (!isAdded()) return;
+        TicketService ticketService = ApiClient.getInstance(requireContext()).create(TicketService.class);
+        ticketService.getTickets(null).enqueue(new Callback<ApiResponse<List<Ticket>>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<List<Ticket>>> call,
+                                   @NonNull Response<ApiResponse<List<Ticket>>> response) {
+                if (!isAdded()) return;
+                if (response.isSuccessful() && response.body() != null
+                        && response.body().getData() != null) {
+                    List<Ticket> all = response.body().getData();
+                    updateStats(all);
+                    List<Ticket> recent = all.size() > 3 ? all.subList(0, 3) : all;
+                    recentTicketAdapter.updateTickets(recent);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<List<Ticket>>> call, @NonNull Throwable t) {}
+        });
+    }
+
+    private void updateStats(List<Ticket> tickets) {
+        int total = tickets.size();
+        int pending = 0;
+        int resolvedToday = 0;
+        String today = LocalDate.now().toString(); // "yyyy-MM-dd"
+
+        for (Ticket ticket : tickets) {
+            String status = ticket.getStatus();
+            if ("PENDING".equalsIgnoreCase(status) || "IN_PROGRESS".equalsIgnoreCase(status)) {
+                pending++;
+            }
+            if ("RESOLVED".equalsIgnoreCase(status) || "CLOSED".equalsIgnoreCase(status)) {
+                String updatedAt = ticket.getUpdatedAt();
+                if (updatedAt != null && updatedAt.startsWith(today)) {
+                    resolvedToday++;
+                }
+            }
+        }
+
+        tvTotalTicketsCount.setText(String.valueOf(total));
+        tvPendingCount.setText(String.valueOf(pending));
+        tvResolvedCount.setText(String.valueOf(resolvedToday));
+
+        // Save to cache for next launch
+        sessionManager.saveTicketStatsCache(total, pending, resolvedToday);
     }
 }

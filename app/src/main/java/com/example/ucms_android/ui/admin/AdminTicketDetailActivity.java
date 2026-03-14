@@ -89,26 +89,23 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
         tvTicketId.setText(ticket.getTicketNumber() != null ? "Ticket " + ticket.getTicketNumber() : "Ticket #" + ticket.getId());
         tvStatus.setText(ticket.getStatus());
         tvStatus.setBackgroundResource(getStatusBackgroundResource(ticket.getStatus()));
-        
-        String studentName = ticket.getStudentName() != null ? ticket.getStudentName() : "Unknown Student";
-        tvStudentName.setText(studentName);
-        tvAvatarInitials.setText(getInitials(studentName));
-        tvStudentId.setText("School ID: " + (ticket.getStudentId() != null ? ticket.getStudentId() : "N/A"));
-        tvStudentCourse.setText(ticket.getCourseYear() != null ? ticket.getCourseYear() : "N/A");
-        
+
+        // Student info not returned by backend — show placeholders
+        tvStudentName.setText("Student");
+        tvAvatarInitials.setText("?");
+        tvStudentId.setText("School ID: N/A");
+        tvStudentCourse.setText("N/A");
+
         tvDate.setText(DateFormatter.formatDate(ticket.getCreatedAt()));
         tvTitle.setText(ticket.getTitle());
         tvDescription.setText(ticket.getDescription());
-        
-        if (ticket.getAttachmentUrl() != null && !ticket.getAttachmentUrl().isEmpty()) {
-            cvAttachment.setVisibility(View.VISIBLE);
-            tvAttachmentName.setText(ticket.getAttachmentName() != null ? ticket.getAttachmentName() : "Attached File");
-        } else {
-            cvAttachment.setVisibility(View.GONE);
-        }
-        
-        tvActionTitle.setText(ticket.getCategory() + " Actions");
-        tvSelectedCategory.setText(ticket.getCategory());
+
+        // Attachment section hidden — fetched separately via GET /api/tickets/{id}/attachments
+        cvAttachment.setVisibility(View.GONE);
+
+        String categoryName = ticket.getCategoryName() != null ? ticket.getCategoryName() : "N/A";
+        tvActionTitle.setText(categoryName + " Actions");
+        tvSelectedCategory.setText(categoryName);
     }
 
     private String getInitials(String name) {

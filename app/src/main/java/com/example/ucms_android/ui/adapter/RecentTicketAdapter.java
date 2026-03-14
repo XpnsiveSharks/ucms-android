@@ -28,6 +28,12 @@ public class RecentTicketAdapter extends RecyclerView.Adapter<RecentTicketAdapte
         this.listener = listener;
     }
 
+    public void updateTickets(List<Ticket> newTickets) {
+        this.tickets.clear();
+        this.tickets.addAll(newTickets);
+        notifyDataSetChanged();
+    }
+
     public void updateData(List<Ticket> newTickets) {
         this.tickets = newTickets;
         notifyDataSetChanged();
@@ -46,7 +52,7 @@ public class RecentTicketAdapter extends RecyclerView.Adapter<RecentTicketAdapte
         Ticket ticket = tickets.get(position);
         holder.tvTicketNumber.setText(ticket.getTicketNumber() != null ? ticket.getTicketNumber() : "#" + ticket.getId());
         holder.tvTicketTitle.setText(ticket.getTitle());
-        holder.tvCategory.setText(ticket.getCategory());
+        holder.tvCategory.setText(ticket.getCategoryName());
         holder.tvTimeAgo.setText(DateFormatter.formatRelativeTime(ticket.getCreatedAt()));
         holder.itemView.setOnClickListener(v -> listener.onTicketClick(ticket));
     }

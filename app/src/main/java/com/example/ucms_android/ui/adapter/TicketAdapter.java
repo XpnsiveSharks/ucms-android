@@ -46,7 +46,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
         Ticket ticket = tickets.get(position);
         holder.tvTicketNumber.setText(ticket.getTicketNumber() != null ? ticket.getTicketNumber() : "#" + ticket.getId());
         holder.tvTicketTitle.setText(ticket.getTitle());
-        holder.tvCategory.setText(ticket.getCategory());
+        holder.tvCategory.setText(ticket.getCategoryName());
         holder.tvTime.setText(DateFormatter.formatRelativeTime(ticket.getCreatedAt()));
         holder.tvStatus.setText(ticket.getStatus());
         holder.tvStatus.setBackgroundResource(getStatusBackgroundResource(ticket.getStatus()));

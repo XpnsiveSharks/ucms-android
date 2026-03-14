@@ -1,6 +1,7 @@
 package com.example.ucms_android.network;
 
 import com.example.ucms_android.model.ApiResponse;
+import com.example.ucms_android.model.AttachmentResponse;
 import com.example.ucms_android.model.StatusUpdateRequest;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.model.TicketRequest;
@@ -8,11 +9,14 @@ import com.example.ucms_android.model.TicketResponse;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -32,4 +36,11 @@ public interface TicketService {
 
     @GET("api/tickets/{id}/responses")
     Call<ApiResponse<List<TicketResponse>>> getTicketResponses(@Path("id") Long id);
+
+    @Multipart
+    @POST("api/tickets/{id}/attachments")
+    Call<ApiResponse<AttachmentResponse>> uploadAttachment(
+            @Path("id") Long id,
+            @Part MultipartBody.Part file
+    );
 }
