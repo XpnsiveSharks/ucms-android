@@ -2,6 +2,7 @@ package com.example.ucms_android.network;
 
 import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.AttachmentResponse;
+import com.example.ucms_android.model.CreateResponseRequest;
 import com.example.ucms_android.model.StatusUpdateRequest;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.model.TicketRequest;
@@ -34,8 +35,17 @@ public interface TicketService {
     @PATCH("api/tickets/{id}/status")
     Call<ApiResponse<Ticket>> updateTicketStatus(@Path("id") Long id, @Body StatusUpdateRequest request);
 
+    @PATCH("api/tickets/{id}/confirm-resolved")
+    Call<ApiResponse<Ticket>> confirmResolved(@Path("id") Long id);
+
     @GET("api/tickets/{id}/responses")
     Call<ApiResponse<List<TicketResponse>>> getTicketResponses(@Path("id") Long id);
+
+    @POST("api/tickets/{id}/responses")
+    Call<ApiResponse<TicketResponse>> postResponse(@Path("id") Long id, @Body CreateResponseRequest request);
+
+    @GET("api/tickets/{id}/attachments")
+    Call<ApiResponse<List<AttachmentResponse>>> getAttachments(@Path("id") Long id);
 
     @Multipart
     @POST("api/tickets/{id}/attachments")

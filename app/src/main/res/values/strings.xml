@@ -3,7 +3,7 @@
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="student_id">Student ID</string>
-    <string name="student_id_label">Student-ID</string>
+    <string name="student_id_label">User-ID / Student-ID</string>
     <string name="password">Password</string>
     <string name="full_name">Full Name</string>
     <string name="course">Course</string>
@@ -101,4 +101,7 @@
     <string name="error_description_required">Description is required</string>
     <string name="ticket_submitted">Ticket submitted successfully</string>
     <string name="error_submit_failed">Failed to submit ticket. Please try again.</string>
+    <string name="close_ticket">Close Ticket</string>
+    <string name="closing">Closing…</string>
+    <string name="error_close_ticket">Failed to close ticket. Please try again.</string>
 </resources>

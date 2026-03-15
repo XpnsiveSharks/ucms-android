@@ -80,7 +80,6 @@ public class AdminTicketListFragment extends Fragment {
         ticketService = ApiClient.getInstance(requireContext()).create(TicketService.class);
         sessionManager = new SessionManager(requireContext());
         gson = new Gson();
-        loadFromCache();
 
         adapter = new TicketAdapter(new ArrayList<>(), ticket -> {
             Intent intent = new Intent(requireActivity(), AdminTicketDetailActivity.class);
@@ -89,6 +88,8 @@ public class AdminTicketListFragment extends Fragment {
         });
         rvTickets.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvTickets.setAdapter(adapter);
+
+        loadFromCache();
 
         setupFilters();
         setupSearch();

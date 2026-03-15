@@ -77,6 +77,30 @@
 
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Submission progress -->
+        <ProgressBar
+            android:id="@+id/progressSubmit"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:indeterminateTint="@color/colorPrimary"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cvAttachment" />
+
+        <TextView
+            android:id="@+id/tvSubmitStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+            android:textColor="@color/colorTextSecondary"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/progressSubmit" />
+
         <!-- Subject/Title Label -->
         <TextView
             android:id="@+id/tvSubjectLabel"
@@ -226,7 +250,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cvAttachment"
+            app:layout_constraintTop_toBottomOf="@id/tvSubmitStatus"
             app:layout_constraintWidth_percent="0.9" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
