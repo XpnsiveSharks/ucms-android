@@ -1,9 +1,11 @@
 package com.example.ucms_android.ui.student;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,13 +18,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ucms_android.MainActivity;
 import com.example.ucms_android.R;
 import com.example.ucms_android.model.ApiResponse;
+import com.example.ucms_android.model.Notification;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.model.User;
 import com.example.ucms_android.network.ApiClient;
+import com.example.ucms_android.network.NotificationService;
 import com.example.ucms_android.network.TicketService;
 import com.example.ucms_android.network.UserService;
 import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.ui.adapter.RecentTicketAdapter;
+import com.example.ucms_android.ui.student.NotificationsActivity;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -45,6 +50,7 @@ public class StudentHomeFragment extends Fragment {
     private TextView tvTotalTicketsCount, tvPendingCount, tvResolvedCount;
     private ShimmerFrameLayout shimmerRecentNotifications;
     private TextView tvEmptyRecentNotifications;
+    private ImageView ivNotificationBell;
 
     @Nullable
     @Override
@@ -63,6 +69,10 @@ public class StudentHomeFragment extends Fragment {
         tvTotalTicketsCount = view.findViewById(R.id.tvTotalTicketsCount);
         tvPendingCount = view.findViewById(R.id.tvPendingCount);
         tvResolvedCount = view.findViewById(R.id.tvResolvedCount);
+        ivNotificationBell = view.findViewById(R.id.ivNotificationBell);
+        ivNotificationBell.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), NotificationsActivity.class));
+        });
 
         // Show cached stats immediately (no delay)
         int cachedTotal = sessionManager.getCachedTotalTickets();
@@ -126,7 +136,10 @@ public class StudentHomeFragment extends Fragment {
         rvRecentTickets = view.findViewById(R.id.rvRecentNotifications);
         rvRecentTickets.setLayoutManager(new LinearLayoutManager(getContext()));
         recentTicketAdapter = new RecentTicketAdapter(new ArrayList<>(), ticket -> {
-            // TODO: open ticket detail
+            android.content.Intent intent = new android.content.Intent(requireContext(),
+                    com.example.ucms_android.ui.student.TicketDetailActivity.class);
+            intent.putExtra("ticketId", ticket.getId());
+            startActivity(intent);
         });
         rvRecentTickets.setAdapter(recentTicketAdapter);
 
@@ -135,12 +148,42 @@ public class StudentHomeFragment extends Fragment {
 
         loadFromCache();
         loadTickets();
+        loadUnreadCount();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         loadTickets();
+        loadUnreadCount();
+    }
+
+    private void loadUnreadCount() {
+        if (!isAdded()) return;
+        NotificationService notificationService = ApiClient.getInstance(requireContext())
+                .create(NotificationService.class);
+        notificationService.getNotifications().enqueue(new Callback<ApiResponse<List<Notification>>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<List<Notification>>> call,
+                                   @NonNull Response<ApiResponse<List<Notification>>> response) {
+                if (!isAdded()) return;
+                if (response.isSuccessful() && response.body() != null
+                        && response.body().getData() != null) {
+                    long unread = response.body().getData().stream()
+                            .filter(n -> !n.isRead()).count();
+                    requireActivity().runOnUiThread(() -> {
+                        if (unread > 0) {
+                            ivNotificationBell.setImageResource(R.drawable.ic_notifications_active);
+                        } else {
+                            ivNotificationBell.setImageResource(R.drawable.ic_notifications);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<List<Notification>>> call, @NonNull Throwable t) {}
+        });
     }
 
     private void showRecentState(String state) {

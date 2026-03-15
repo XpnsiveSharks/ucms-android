@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorSurface">
 
+    <!-- Loading -->
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="48dp"
@@ -13,6 +14,7 @@
         android:layout_gravity="center"
         android:visibility="visible" />
 
+    <!-- Error State -->
     <LinearLayout
         android:id="@+id/layoutError"
         android:layout_width="wrap_content"
@@ -42,6 +44,7 @@
 
     </LinearLayout>
 
+    <!-- Content -->
     <ScrollView
         android:id="@+id/scrollContent"
         android:layout_width="match_parent"
@@ -49,193 +52,228 @@
         android:background="@color/colorSurface"
         android:visibility="gone">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/screen_padding">
+            android:orientation="vertical">
 
-            <!-- Header: Back button -->
-            <ImageButton
-                android:id="@+id/btnBack"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/back"
-                android:src="@android:drawable/ic_media_previous"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <!-- Header: Ticket number -->
-            <TextView
-                android:id="@+id/tvTicketNumber"
-                android:layout_width="0dp"
+            <!-- Top bar -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_small"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textColor="@color/colorTextPrimary"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/btnBack"
-                app:layout_constraintEnd_toStartOf="@id/tvStatus"
-                app:layout_constraintStart_toEndOf="@id/btnBack"
-                app:layout_constraintTop_toTopOf="@id/btnBack"
-                tools:text="#10149" />
+                android:padding="@dimen/screen_padding">
 
-            <!-- Header: Status badge -->
-            <TextView
-                android:id="@+id/tvStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="@dimen/spacing_small"
-                android:paddingEnd="@dimen/spacing_small"
-                android:paddingTop="@dimen/spacing_xsmall"
-                android:paddingBottom="@dimen/spacing_xsmall"
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                android:textColor="@color/colorOnPrimary"
-                app:layout_constraintBottom_toBottomOf="@id/btnBack"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/btnBack"
-                tools:background="@drawable/bg_badge_pending"
-                tools:text="Pending" />
-
-            <!-- Date chip -->
-            <TextView
-                android:id="@+id/tvDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_medium"
-                android:background="@drawable/bg_card"
-                android:paddingStart="@dimen/spacing_small"
-                android:paddingEnd="@dimen/spacing_small"
-                android:paddingTop="@dimen/spacing_xsmall"
-                android:paddingBottom="@dimen/spacing_xsmall"
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                android:textColor="@color/colorTextSecondary"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btnBack"
-                tools:text="Feb 27, 2026" />
-
-            <!-- Ticket title -->
-            <TextView
-                android:id="@+id/tvTicketTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_medium"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textColor="@color/colorTextPrimary"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvDate"
-                tools:text="Cannot access student portal" />
-
-            <!-- Description card -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cvDescription"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_small"
-                app:cardBackgroundColor="@color/colorBackground"
-                app:cardCornerRadius="@dimen/corner_radius_card"
-                app:cardElevation="2dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvTicketTitle">
-
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxHeight="160dp">
-
-                    <TextView
-                        android:id="@+id/tvDescription"
-                        style="@style/Style.Text.Scrollable"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/spacing_medium"
-                        tools:text="I have been trying to access the student portal for the past 3 days but keep getting an error message." />
-
-                </ScrollView>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Attachment card -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cvAttachment"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_medium"
-                app:cardBackgroundColor="@color/colorBackground"
-                app:cardCornerRadius="@dimen/corner_radius_card"
-                app:cardElevation="2dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cvDescription">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/spacing_medium">
-
-                    <TextView
-                        android:id="@+id/tvAttachmentLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/attached_file"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                        android:textColor="@color/colorTextSecondary"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnBack"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
-                        android:id="@+id/ivAttachmentPreview"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="@dimen/spacing_small"
-                        android:contentDescription="@string/attachment_preview"
-                        android:src="@android:drawable/ic_menu_gallery"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvAttachmentLabel" />
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_arrow_back"
+                        android:contentDescription="@string/back" />
 
-                    <TextView
-                        android:id="@+id/tvAttachmentName"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/spacing_small"
-                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                        android:textColor="@color/colorTextPrimary"
-                        app:layout_constraintBottom_toBottomOf="@id/ivAttachmentPreview"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/ivAttachmentPreview"
-                        app:layout_constraintTop_toTopOf="@id/ivAttachmentPreview"
-                        tools:text="screenshot.png" />
+                </com.google.android.material.card.MaterialCardView>
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
+                <TextView
+                    android:id="@+id/tvTicketNumber"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_small"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/tvCategoryName"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/btnBack"
+                    app:layout_constraintTop_toTopOf="@id/btnBack"
+                    tools:text="Ticket #10149" />
 
-            <!-- Responses section -->
-            <TextView
-                android:id="@+id/tvResponsesTitle"
-                android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/tvCategoryName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_small"
+                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                    android:textColor="@color/colorTextSecondary"
+                    app:layout_constraintBottom_toBottomOf="@id/btnBack"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/btnBack"
+                    app:layout_constraintTop_toBottomOf="@id/tvTicketNumber"
+                    tools:text="Academic Department" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Ticket content card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:text="@string/responses_title"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textColor="@color/colorTextPrimary"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cvAttachment" />
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/corner_radius_card"
+                app:cardElevation="2dp"
+                app:strokeColor="@color/colorDivider"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_medium">
+
+                    <!-- Title -->
+                    <TextView
+                        android:id="@+id/tvTicketTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textStyle="bold"
+                        tools:text="Issue with Subject Pre-requisites" />
+
+                    <!-- Description -->
+                    <TextView
+                        android:id="@+id/tvDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_small"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                        android:textColor="@color/colorTextSecondary"
+                        tools:text="The course registration system is incorrectly blocking students..." />
+
+                    <!-- Attachment card inside content -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cvAttachment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_medium"
+                        android:visibility="visible"
+                        app:cardBackgroundColor="@color/colorBackground"
+                        app:cardCornerRadius="@dimen/corner_radius_card"
+                        app:cardElevation="0dp"
+                        app:strokeColor="@color/colorDivider"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/spacing_small">
+
+                            <com.facebook.shimmer.ShimmerFrameLayout
+                                android:id="@+id/shimmerAttachment"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:visibility="visible">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal">
+
+                                    <View
+                                        android:layout_width="32dp"
+                                        android:layout_height="32dp"
+                                        android:background="#E0E0E0" />
+
+                                    <View
+                                        android:layout_width="100dp"
+                                        android:layout_height="10dp"
+                                        android:layout_marginStart="@dimen/spacing_small"
+                                        android:background="#E0E0E0" />
+
+                                </LinearLayout>
+
+                            </com.facebook.shimmer.ShimmerFrameLayout>
+
+                            <LinearLayout
+                                android:id="@+id/layoutAttachmentContent"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
+
+                                <ImageView
+                                    android:id="@+id/ivAttachmentPreview"
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:contentDescription="@string/attachment_preview"
+                                    android:src="@drawable/ic_attachment" />
+
+                                <TextView
+                                    android:id="@+id/tvAttachmentName"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/spacing_small"
+                                    android:layout_weight="1"
+                                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                                    android:textColor="@color/colorTextPrimary"
+                                    tools:text="screenshot.jpg" />
+
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:src="@drawable/ic_arrow_drop_down"
+                                    android:rotation="-90"
+                                    android:contentDescription="@null"
+                                    app:tint="@color/colorTextSecondary" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Tracking Timeline section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                android:layout_marginBottom="@dimen/spacing_small"
+                android:text="TRACKING TIMELINE"
+                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                android:textColor="@color/colorTextSecondary"
+                android:letterSpacing="0.1" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvResponses"
-                android:layout_width="0dp"
+                android:id="@+id/rvTimeline"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_small"
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                android:layout_marginBottom="@dimen/spacing_large"
                 android:nestedScrollingEnabled="false"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvResponsesTitle" />
+                tools:itemCount="3"
+                tools:listitem="@layout/item_timeline_event" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCloseTicket"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                android:layout_marginBottom="@dimen/spacing_large"
+                android:text="@string/close_ticket"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                app:backgroundTint="@color/colorPrimary"
+                app:cornerRadius="@dimen/corner_radius_button" />
+
+        </LinearLayout>
+
     </ScrollView>
 
 </FrameLayout>

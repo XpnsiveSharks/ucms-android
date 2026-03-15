@@ -145,4 +145,14 @@ public class SessionManager {
     public String getStudentAllTicketsJson() {
         return sharedPreferences.getString(KEY_STUDENT_ALL_TICKETS_JSON, null);
     }
+
+    // Per-ticket detail cache (keyed by ticket ID)
+    public void saveTicketDetailJson(Long ticketId, String json) {
+        editor.putString("ticket_detail_" + ticketId, json);
+        editor.apply();
+    }
+
+    public String getTicketDetailJson(Long ticketId) {
+        return sharedPreferences.getString("ticket_detail_" + ticketId, null);
+    }
 }

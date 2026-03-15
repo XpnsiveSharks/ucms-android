@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +54,8 @@ public class SubmitTicketFragment extends Fragment {
     private MaterialCardView cvAttachment;
     private MaterialButton btnSubmit;
     private TextView tvAttachmentName, tvAttachmentHint;
+    private ProgressBar progressSubmit;
+    private TextView tvSubmitStatus;
 
     private TicketService ticketService;
     private CategoryService categoryService;
@@ -91,6 +94,8 @@ public class SubmitTicketFragment extends Fragment {
         btnSubmit = view.findViewById(R.id.btnSubmit);
         tvAttachmentName = view.findViewById(R.id.tvAttachmentName);
         tvAttachmentHint = view.findViewById(R.id.tvAttachmentHint);
+        progressSubmit = view.findViewById(R.id.progressSubmit);
+        tvSubmitStatus = view.findViewById(R.id.tvSubmitStatus);
 
         ticketService = ApiClient.getInstance(requireContext()).create(TicketService.class);
         categoryService = ApiClient.getInstance(requireContext()).create(CategoryService.class);
@@ -101,6 +106,31 @@ public class SubmitTicketFragment extends Fragment {
         btnSubmit.setOnClickListener(v -> submitTicket());
 
         loadCategories();
+    }
+
+    private void setSubmitState(String state) {
+        switch (state) {
+            case "IDLE":
+                btnSubmit.setEnabled(true);
+                btnSubmit.setText(getString(R.string.submit_new_concern));
+                progressSubmit.setVisibility(View.GONE);
+                tvSubmitStatus.setVisibility(View.GONE);
+                break;
+            case "SUBMITTING":
+                btnSubmit.setEnabled(false);
+                btnSubmit.setText("Submitting...");
+                progressSubmit.setVisibility(View.VISIBLE);
+                tvSubmitStatus.setVisibility(View.VISIBLE);
+                tvSubmitStatus.setText("Creating your ticket...");
+                break;
+            case "UPLOADING":
+                btnSubmit.setEnabled(false);
+                btnSubmit.setText("Submitting...");
+                progressSubmit.setVisibility(View.VISIBLE);
+                tvSubmitStatus.setVisibility(View.VISIBLE);
+                tvSubmitStatus.setText("Uploading attachment...");
+                break;
+        }
     }
 
     private void loadCategories() {
@@ -152,10 +182,28 @@ public class SubmitTicketFragment extends Fragment {
         }
         if (!valid) return;
 
+        if (selectedFileUri != null) {
+            ContentResolver resolver = requireContext().getContentResolver();
+            android.database.Cursor cursor = resolver.query(selectedFileUri, null, null, null, null);
+            if (cursor != null) {
+                int sizeIndex = cursor.getColumnIndex(android.provider.OpenableColumns.SIZE);
+                cursor.moveToFirst();
+                long fileSize = cursor.getLong(sizeIndex);
+                cursor.close();
+                long maxSize = 10 * 1024 * 1024; // 10MB
+                if (fileSize > maxSize) {
+                    Snackbar.make(btnSubmit,
+                            "File is too large. Maximum allowed size is 10MB.",
+                            Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+            }
+        }
+
         Long categoryId = categories.get(spinnerCategory.getSelectedItemPosition()).getId();
         TicketRequest request = new TicketRequest(title, description, categoryId);
 
-        btnSubmit.setEnabled(false);
+        setSubmitState("SUBMITTING");
 
         ticketService.createTicket(request).enqueue(new Callback<ApiResponse<Ticket>>() {
             @Override
@@ -170,10 +218,10 @@ public class SubmitTicketFragment extends Fragment {
                         onSubmitComplete();
                     }
                 } else if (response.code() == 403) {
-                    btnSubmit.setEnabled(true);
+                    setSubmitState("IDLE");
                     startActivity(new Intent(requireContext(), EmailVerificationActivity.class));
                 } else {
-                    btnSubmit.setEnabled(true);
+                    setSubmitState("IDLE");
                     Snackbar.make(btnSubmit, getString(R.string.error_submit_failed), Snackbar.LENGTH_SHORT).show();
                 }
             }
@@ -181,7 +229,7 @@ public class SubmitTicketFragment extends Fragment {
             @Override
             public void onFailure(Call<ApiResponse<Ticket>> call, Throwable t) {
                 if (isAdded()) {
-                    btnSubmit.setEnabled(true);
+                    setSubmitState("IDLE");
                     Snackbar.make(btnSubmit, getString(R.string.error_network), Snackbar.LENGTH_SHORT).show();
                 }
             }
@@ -189,6 +237,7 @@ public class SubmitTicketFragment extends Fragment {
     }
 
     private void uploadAttachment(Long ticketId) {
+        setSubmitState("UPLOADING");
         try {
             ContentResolver resolver = requireContext().getContentResolver();
             String mimeType = resolver.getType(selectedFileUri);
@@ -227,6 +276,7 @@ public class SubmitTicketFragment extends Fragment {
                         Toast.makeText(requireContext(),
                                 "Ticket submitted but attachment failed to upload.", Toast.LENGTH_SHORT).show();
                     }
+                    setSubmitState("IDLE");
                     onSubmitComplete();
                 }
 
@@ -235,6 +285,7 @@ public class SubmitTicketFragment extends Fragment {
                     if (!isAdded()) return;
                     Toast.makeText(requireContext(),
                             "Ticket submitted but attachment failed to upload.", Toast.LENGTH_SHORT).show();
+                    setSubmitState("IDLE");
                     onSubmitComplete();
                 }
             });
