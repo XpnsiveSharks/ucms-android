@@ -155,4 +155,14 @@ public class SessionManager {
     public String getTicketDetailJson(Long ticketId) {
         return sharedPreferences.getString("ticket_detail_" + ticketId, null);
     }
+
+    // Per-ticket responses cache (keyed by ticket ID)
+    public void saveTicketResponsesJson(Long ticketId, String json) {
+        editor.putString("ticket_responses_" + ticketId, json);
+        editor.apply();
+    }
+
+    public String getTicketResponsesJson(Long ticketId) {
+        return sharedPreferences.getString("ticket_responses_" + ticketId, null);
+    }
 }

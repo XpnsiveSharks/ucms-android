@@ -249,6 +249,27 @@
                 android:textColor="@color/colorTextSecondary"
                 android:letterSpacing="0.1" />
 
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerTimeline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/item_skeleton_timeline" />
+                    <include layout="@layout/item_skeleton_timeline" />
+                    <include layout="@layout/item_skeleton_timeline" />
+
+                </LinearLayout>
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvTimeline"
                 android:layout_width="match_parent"
@@ -256,6 +277,7 @@
                 android:layout_marginHorizontal="@dimen/screen_padding"
                 android:layout_marginBottom="@dimen/spacing_large"
                 android:nestedScrollingEnabled="false"
+                android:visibility="gone"
                 tools:itemCount="3"
                 tools:listitem="@layout/item_timeline_event" />
 

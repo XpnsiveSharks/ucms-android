@@ -28,7 +28,9 @@ import com.example.ucms_android.util.DateFormatter;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.card.MaterialCardView;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +46,7 @@ public class TicketDetailActivity extends AppCompatActivity {
     private MaterialCardView cvAttachment;
     private LinearLayout layoutAttachmentContent;
     private ShimmerFrameLayout shimmerAttachment;
+    private ShimmerFrameLayout shimmerTimeline;
     private RecyclerView rvTimeline;
     private TimelineAdapter timelineAdapter;
     private ProgressBar progressBar;
@@ -98,11 +101,24 @@ public class TicketDetailActivity extends AppCompatActivity {
         cvAttachment = findViewById(R.id.cvAttachment);
         layoutAttachmentContent = findViewById(R.id.layoutAttachmentContent);
         shimmerAttachment = findViewById(R.id.shimmerAttachment);
+        shimmerTimeline = findViewById(R.id.shimmerTimeline);
         rvTimeline = findViewById(R.id.rvTimeline);
         progressBar = findViewById(R.id.progressBar);
         layoutError = findViewById(R.id.layoutError);
         scrollContent = findViewById(R.id.scrollContent);
         btnCloseTicket = findViewById(R.id.btnCloseTicket);
+    }
+
+    private void showTimelineShimmer() {
+        shimmerTimeline.setVisibility(View.VISIBLE);
+        shimmerTimeline.startShimmer();
+        rvTimeline.setVisibility(View.GONE);
+    }
+
+    private void hideTimelineShimmer() {
+        shimmerTimeline.stopShimmer();
+        shimmerTimeline.setVisibility(View.GONE);
+        rvTimeline.setVisibility(View.VISIBLE);
     }
 
     private void loadFromCache() {
@@ -113,6 +129,20 @@ public class TicketDetailActivity extends AppCompatActivity {
                 currentTicket = cached;
                 populateViews(cached);
                 showState("DATA");
+
+                String cachedResponses = sessionManager.getTicketResponsesJson(ticketId);
+                if (cachedResponses != null) {
+                    Type type = new TypeToken<List<TicketResponse>>(){}.getType();
+                    List<TicketResponse> responses = gson.fromJson(cachedResponses, type);
+                    if (responses != null) {
+                        currentResponses = responses;
+                        buildTimeline();
+                        hideTimelineShimmer();
+                    }
+                } else {
+                    showTimelineShimmer();
+                }
+
                 loadAttachments();
             }
         }
@@ -143,18 +173,25 @@ public class TicketDetailActivity extends AppCompatActivity {
     }
 
     private void loadResponses() {
+        if (sessionManager.getTicketResponsesJson(ticketId) == null) {
+            showTimelineShimmer();
+        }
         ticketService.getTicketResponses(ticketId).enqueue(new Callback<ApiResponse<List<TicketResponse>>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<List<TicketResponse>>> call,
                                    @NonNull Response<ApiResponse<List<TicketResponse>>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     currentResponses = response.body().getData();
+                    sessionManager.saveTicketResponsesJson(ticketId, gson.toJson(currentResponses));
                     buildTimeline();
                 }
+                hideTimelineShimmer();
             }
 
             @Override
-            public void onFailure(@NonNull Call<ApiResponse<List<TicketResponse>>> call, @NonNull Throwable t) {}
+            public void onFailure(@NonNull Call<ApiResponse<List<TicketResponse>>> call, @NonNull Throwable t) {
+                hideTimelineShimmer();
+            }
         });
     }
 
