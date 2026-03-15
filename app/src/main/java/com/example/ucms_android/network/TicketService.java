@@ -1,7 +1,9 @@
 package com.example.ucms_android.network;
 
 import com.example.ucms_android.model.ApiResponse;
+import com.example.ucms_android.model.AnalyticsSummary;
 import com.example.ucms_android.model.AttachmentResponse;
+import com.example.ucms_android.model.CategoryCount;
 import com.example.ucms_android.model.CreateResponseRequest;
 import com.example.ucms_android.model.StatusUpdateRequest;
 import com.example.ucms_android.model.Ticket;
@@ -46,6 +48,12 @@ public interface TicketService {
 
     @GET("api/tickets/{id}/attachments")
     Call<ApiResponse<List<AttachmentResponse>>> getAttachments(@Path("id") Long id);
+
+    @GET("api/analytics/summary")
+    Call<ApiResponse<AnalyticsSummary>> getAnalyticsSummary();
+
+    @GET("api/analytics/by-category")
+    Call<ApiResponse<List<CategoryCount>>> getAnalyticsByCategory();
 
     @Multipart
     @POST("api/tickets/{id}/attachments")
