@@ -1,6 +1,7 @@
 package com.example.ucms_android;
 
 import android.os.Bundle;
+import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.example.ucms_android.session.SessionManager;
@@ -76,5 +77,12 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)
                 .commit();
+    }
+
+    public void setBottomNavVisible(boolean visible) {
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavView);
+        if (bottomNav != null) {
+            bottomNav.setVisibility(visible ? View.VISIBLE : View.GONE);
+        }
     }
 }
