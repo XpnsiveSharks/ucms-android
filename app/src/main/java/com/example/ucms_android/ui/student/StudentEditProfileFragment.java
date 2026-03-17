@@ -56,14 +56,19 @@ public class StudentEditProfileFragment extends Fragment {
         etFullName = view.findViewById(R.id.etFullName);
         etCourse = view.findViewById(R.id.etCourse);
         etYearLevel = view.findViewById(R.id.etYearLevel);
+        android.widget.TextView tvStudentNameHeader = view.findViewById(R.id.tvStudentNameHeader);
+        android.widget.TextView tvStudentNumber = view.findViewById(R.id.tvStudentNumber);
         btnSaveChanges = view.findViewById(R.id.btnSaveChanges);
 
-        String name = sessionManager.getCachedName();
+        String cachedName = sessionManager.getCachedName();
+        String cachedStudentId = sessionManager.getCachedStudentId();
         String course = sessionManager.getCachedCourse();
         String yearLevel = sessionManager.getCachedYearLevel();
-        if (!name.isEmpty()) {
-            etFullName.setText(name);
+        if (!cachedName.isEmpty()) {
+            etFullName.setText(cachedName);
         }
+        if (tvStudentNameHeader != null && !cachedName.isEmpty()) tvStudentNameHeader.setText(cachedName);
+        if (tvStudentNumber != null && !cachedStudentId.isEmpty()) tvStudentNumber.setText(cachedStudentId);
         if (!course.isEmpty()) {
             etCourse.setText(course);
         }

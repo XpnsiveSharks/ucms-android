@@ -28,10 +28,10 @@ import retrofit2.Response;
 public class StudentProfileFragment extends Fragment {
 
     private TextView tvStudentNameHeader;
-    private TextView tvStudentNumber;
+    private TextView tvStudentSubtitle;
     private MaterialCardView cvEditProfile;
     private MaterialCardView cvChangePassword;
-    private MaterialCardView cvLogout;
+    private View cvLogout;
     private SessionManager sessionManager;
     private UserService userService;
 
@@ -50,18 +50,27 @@ public class StudentProfileFragment extends Fragment {
         userService = ApiClient.getInstance(requireContext()).create(UserService.class);
 
         tvStudentNameHeader = view.findViewById(R.id.tvStudentNameHeader);
-        tvStudentNumber = view.findViewById(R.id.tvStudentNumber);
+        tvStudentSubtitle = view.findViewById(R.id.tvStudentSubtitle);
         cvEditProfile = view.findViewById(R.id.cvEditProfile);
         cvChangePassword = view.findViewById(R.id.cvChangePassword);
         cvLogout = view.findViewById(R.id.cvLogout);
 
         String cachedName = sessionManager.getCachedName();
         String cachedStudentId = sessionManager.getCachedStudentId();
+        String cachedCourse = sessionManager.getCachedCourse();
+        String cachedYearLevel = sessionManager.getCachedYearLevel();
         if (!cachedName.isEmpty()) {
             tvStudentNameHeader.setText(cachedName);
         }
-        if (!cachedStudentId.isEmpty()) {
-            tvStudentNumber.setText(cachedStudentId);
+        if (tvStudentSubtitle != null && !cachedStudentId.isEmpty()) {
+            StringBuilder subtitleBuilder = new StringBuilder(cachedStudentId);
+            if (!cachedCourse.isEmpty()) {
+                subtitleBuilder.append(" \u2022 ").append(cachedCourse);
+            }
+            if (!cachedYearLevel.isEmpty()) {
+                subtitleBuilder.append(" \u2022 Year ").append(cachedYearLevel);
+            }
+            tvStudentSubtitle.setText(subtitleBuilder.toString());
         }
 
         userService.getMe().enqueue(new Callback<ApiResponse<User>>() {
@@ -74,7 +83,25 @@ public class StudentProfileFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     User user = response.body().getData();
                     tvStudentNameHeader.setText(user.getName());
-                    tvStudentNumber.setText(user.getStudentId());
+                    StringBuilder subtitleBuilder = new StringBuilder();
+                    if (user.getStudentId() != null && !user.getStudentId().isEmpty()) {
+                        subtitleBuilder.append(user.getStudentId());
+                    }
+                    if (user.getCourse() != null && !user.getCourse().isEmpty()) {
+                        if (subtitleBuilder.length() > 0) {
+                            subtitleBuilder.append(" \u2022 ");
+                        }
+                        subtitleBuilder.append(user.getCourse());
+                    }
+                    if (user.getYearLevel() != null) {
+                        if (subtitleBuilder.length() > 0) {
+                            subtitleBuilder.append(" \u2022 ");
+                        }
+                        subtitleBuilder.append("Year ").append(user.getYearLevel());
+                    }
+                    if (tvStudentSubtitle != null) {
+                        tvStudentSubtitle.setText(subtitleBuilder.toString());
+                    }
                     sessionManager.saveProfileCache(user.getName(), user.getStudentId(),
                             user.getCourse(), user.getYearLevel());
                 }

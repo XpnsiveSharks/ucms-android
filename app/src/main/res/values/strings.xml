@@ -105,6 +105,10 @@
     <string name="closing">Closing…</string>
     <string name="error_close_ticket">Failed to close ticket. Please try again.</string>
     <string name="settings_title">Settings</string>
+    <string name="system_configuration_label">System Configuration</string>
+    <string name="configuration_directory_label">Configuration Directory</string>
+    <string name="update_profile_label">Update Profile</string>
+    <string name="security_authentication_label">Security &amp; Authentication</string>
     <string name="edit_profile_label">Edit Profile</string>
     <string name="admin_role_badge">ADMIN</string>
     <string name="profile_updated">Profile updated successfully</string>

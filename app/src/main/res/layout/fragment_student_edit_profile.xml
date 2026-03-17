@@ -20,8 +20,8 @@
 
             <ImageView
                 android:id="@+id/btnBack"
-                android:layout_width="@dimen/back_button_size"
-                android:layout_height="@dimen/back_button_size"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:contentDescription="@string/back"
                 android:src="@drawable/ic_arrow_back"
                 app:tint="@color/colorTextPrimary" />
@@ -29,54 +29,127 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_medium"
-                android:text="@string/edit_profile_label"
-                android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                android:layout_marginStart="@dimen/spacing_small"
+                android:text="@string/my_profile_title"
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
                 android:textColor="@color/colorTextPrimary"
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            app:cardBackgroundColor="@color/colorSurface"
+            app:cardCornerRadius="50dp"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/colorDivider"
+            app:strokeWidth="1dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:padding="20dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_profile"
+                app:tint="@color/colorTextSecondary" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/tvStudentNameHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            android:textColor="@color/colorTextPrimary" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginTop="@dimen/spacing_xlarge"
             android:text="@string/full_name_label"
-            android:textColor="@color/colorTextSecondary"
-            android:textSize="@dimen/text_size_label"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="13sp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/etFullName"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/login_input_height"
+            android:layout_height="52dp"
             android:layout_marginTop="@dimen/spacing_xsmall"
             android:background="@drawable/sel_input_bg"
-            android:elevation="@dimen/elevation_xsmall"
             android:hint="@string/full_name_label"
             android:inputType="textPersonName"
-            android:paddingHorizontal="@dimen/input_horizontal_padding"
+            android:paddingHorizontal="16dp"
             android:textColor="@color/colorTextPrimary"
             android:textColorHint="@color/colorTextSecondary" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/student_number_label"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cannot_be_changed_hint"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="@dimen/spacing_xsmall"
+            app:cardBackgroundColor="@color/colorSurface"
+            app:cardCornerRadius="@dimen/corner_radius_card"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/colorDivider"
+            app:strokeWidth="1dp">
+
+            <TextView
+                android:id="@+id/tvStudentNumber"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="16dp"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="15sp" />
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_medium"
             android:text="@string/course_program_label"
-            android:textColor="@color/colorTextSecondary"
-            android:textSize="@dimen/text_size_label"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="13sp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/etCourse"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/login_input_height"
+            android:layout_height="52dp"
             android:layout_marginTop="@dimen/spacing_xsmall"
             android:background="@drawable/sel_input_bg"
-            android:elevation="@dimen/elevation_xsmall"
             android:hint="@string/course_program_label"
             android:inputType="text"
-            android:paddingHorizontal="@dimen/input_horizontal_padding"
+            android:paddingHorizontal="16dp"
             android:textColor="@color/colorTextPrimary"
             android:textColorHint="@color/colorTextSecondary" />
 
@@ -85,38 +158,38 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_medium"
             android:text="@string/year_level_label"
-            android:textColor="@color/colorTextSecondary"
-            android:textSize="@dimen/text_size_label"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="13sp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/etYearLevel"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/login_input_height"
+            android:layout_height="52dp"
             android:layout_marginTop="@dimen/spacing_xsmall"
             android:background="@drawable/sel_input_bg"
-            android:elevation="@dimen/elevation_xsmall"
             android:hint="@string/year_level_label"
             android:inputType="number"
-            android:paddingHorizontal="@dimen/input_horizontal_padding"
+            android:paddingHorizontal="16dp"
             android:textColor="@color/colorTextPrimary"
             android:textColorHint="@color/colorTextSecondary" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSaveChanges"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/button_large_height"
+            android:layout_height="56dp"
             android:layout_marginTop="@dimen/spacing_xlarge"
             android:text="@string/save_changes"
             android:textAllCaps="false"
-            android:textSize="@dimen/text_size_button"
+            android:textColor="@color/white"
+            android:textSize="16sp"
             android:textStyle="bold"
-            app:backgroundTint="@color/colorPrimary"
-            app:cornerRadius="@dimen/corner_radius_button" />
+            app:backgroundTint="@color/colorSecondary"
+            app:cornerRadius="50dp" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/footer_spacer_height" />
+            android:layout_height="40dp" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
