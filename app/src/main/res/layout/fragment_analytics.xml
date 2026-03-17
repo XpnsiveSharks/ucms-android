@@ -8,9 +8,11 @@
     tools:context=".ui.common.AnalyticsFragment">
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:visibility="gone">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -39,7 +41,7 @@
                 android:layout_marginStart="@dimen/spacing_small"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="@id/tvAvatar"
-                app:layout_constraintEnd_toStartOf="@id/flNotification"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tvAvatar"
                 app:layout_constraintTop_toTopOf="@id/tvAvatar">
 
@@ -59,33 +61,6 @@
                     android:textStyle="bold"
                     tools:text="Admin User" />
             </LinearLayout>
-
-            <FrameLayout
-                android:id="@+id/flNotification"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                app:layout_constraintBottom_toBottomOf="@id/tvAvatar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tvAvatar">
-
-                <ImageView
-                    android:id="@+id/ivNotification"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/notifications"
-                    android:src="@drawable/ic_notifications"
-                    app:tint="@color/black" />
-
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_gravity="top|end"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="2dp"
-                    android:background="@drawable/bg_button_pill"
-                    android:backgroundTint="@color/colorPrimary" />
-            </FrameLayout>
 
             <!-- Screen Title -->
             <TextView
@@ -233,7 +208,7 @@
                             android:backgroundTint="@color/colorPrimary" />
 
                         <TextView
-                            android:id="@+id/tvPendingLegend"
+                            android:id="@+id/tvPendingCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
@@ -250,7 +225,7 @@
                             android:backgroundTint="@color/colorSecondary" />
 
                         <TextView
-                            android:id="@+id/tvInProgressLegend"
+                            android:id="@+id/tvInProgressCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
@@ -297,12 +272,265 @@
                         android:id="@+id/rvCategories"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_medium"
-                        android:nestedScrollingEnabled="false"
-                        tools:itemCount="3"
-                        tools:listitem="@layout/item_category_count" />
+                        android:layout_marginTop="24dp">
+
+                        <TextView
+                            android:id="@+id/tvRank1"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:background="@drawable/bg_button_pill"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:gravity="center"
+                            android:text="1"
+                            android:textColor="@color/white"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvCat1Name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_toEndOf="@id/tvRank1"
+                            android:text="Academic (Enrollment)"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvCat1Percent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="45%"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textStyle="bold" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="4dp"
+                            android:layout_below="@id/tvRank1"
+                            android:layout_marginTop="12dp"
+                            android:background="@color/colorSurface" />
+
+                        <View
+                            android:id="@+id/vCat1Bar"
+                            android:layout_width="160dp"
+                            android:layout_height="4dp"
+                            android:layout_below="@id/tvRank1"
+                            android:layout_marginTop="12dp"
+                            android:background="@color/colorPrimary" />
+                    </RelativeLayout>
+
+                    <!-- Item 2 -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp">
+
+                        <TextView
+                            android:id="@+id/tvRank2"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:background="@drawable/bg_button_pill"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:gravity="center"
+                            android:alpha="0.6"
+                            android:text="2"
+                            android:textColor="@color/white"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvCat2Name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_toEndOf="@id/tvRank2"
+                            android:text="IT Services(Wifi/Portal)"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvCat2Percent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="30%"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textStyle="bold" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="4dp"
+                            android:layout_below="@id/tvRank2"
+                            android:layout_marginTop="12dp"
+                            android:background="@color/colorSurface" />
+
+                        <View
+                            android:id="@+id/vCat2Bar"
+                            android:layout_width="100dp"
+                            android:layout_height="4dp"
+                            android:layout_below="@id/tvRank2"
+                            android:layout_marginTop="12dp"
+                            android:background="@color/colorPrimary"
+                            android:alpha="0.6" />
+                    </RelativeLayout>
+
+                    <!-- Item 3 -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp">
+
+                        <TextView
+                            android:id="@+id/tvRank3"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:background="@drawable/bg_button_pill"
+                            android:backgroundTint="@color/colorSecondary"
+                            android:gravity="center"
+                            android:text="3"
+                            android:textColor="@color/white"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvCat3Name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_toEndOf="@id/tvRank3"
+                            android:text="Facilities(Maintenance)"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvCat3Percent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="15%"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textStyle="bold" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="4dp"
+                            android:layout_below="@id/tvRank3"
+                            android:layout_marginTop="12dp"
+                            android:background="@color/colorSurface" />
+
+                        <View
+                            android:id="@+id/vCat3Bar"
+                            android:layout_width="50dp"
+                            android:layout_height="4dp"
+                            android:layout_below="@id/tvRank3"
+                            android:layout_marginTop="12dp"
+                            android:background="@color/colorSecondary" />
+                    </RelativeLayout>
 
                 </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Card 3: Category Trends -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvCategoryTrends"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/corner_radius_card"
+                app:cardElevation="2dp"
+                app:strokeColor="@color/colorDivider"
+                app:strokeWidth="1dp"
+                app:layout_constraintTop_toBottomOf="@id/cvCommonConcerns">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/tvTrendsLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CATEGORY TRENDS"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                        android:textColor="@color/colorTextSecondary"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <!-- Mock Bar Chart -->
+                    <LinearLayout
+                        android:id="@+id/llBarChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:baselineAligned="false"
+                        android:layout_marginTop="24dp"
+                        android:orientation="horizontal"
+                        android:paddingBottom="20dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvTrendsLabel">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="10dp"
+                            android:layout_weight="1"
+                            android:layout_marginHorizontal="8dp"
+                            android:background="@color/colorSecondary"
+                            android:alpha="0.3" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="80dp"
+                            android:layout_weight="1"
+                            android:layout_marginHorizontal="8dp"
+                            android:background="@color/colorSecondary"
+                            android:alpha="0.6" />
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="160dp"
+                            android:layout_weight="1"
+                            android:layout_marginHorizontal="8dp">
+                            
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/colorSecondary" />
+                                
+                            <TextView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="top|center_horizontal"
+                                android:layout_marginTop="-12dp"
+                                android:background="@drawable/bg_button_pill"
+                                android:backgroundTint="@color/colorSecondary"
+                                android:gravity="center"
+                                android:text="92"
+                                android:textColor="@color/white"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
+                        </FrameLayout>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="80dp"
+                            android:layout_weight="1"
+                            android:layout_marginHorizontal="8dp"
+                            android:background="@color/colorPrimary" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="5dp"
+                            android:layout_weight="1"
+                            android:layout_marginHorizontal="8dp"
+                            android:background="@color/colorPrimary"
+                            android:alpha="0.3" />
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Extra padding -->
@@ -313,5 +541,19 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include layout="@layout/shimmer_analytics" />
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
