@@ -20,6 +20,8 @@ import androidx.core.widget.NestedScrollView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ucms_android.R;
 import com.example.ucms_android.model.ApiResponse;

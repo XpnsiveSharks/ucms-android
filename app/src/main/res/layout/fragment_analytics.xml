@@ -27,14 +27,13 @@
                 android:background="@drawable/bg_button_pill"
                 android:backgroundTint="@color/colorPrimary"
                 android:gravity="center"
-                android:text="AU"
+                android:text="@string/avatar_initials"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Header: Welcome text -->
             <LinearLayout
                 android:id="@+id/llWelcome"
                 android:layout_width="0dp"
@@ -49,7 +48,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Welcome,"
+                    android:text="@string/welcome_label"
                     android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                     android:textColor="@color/colorTextSecondary" />
 
@@ -69,12 +68,36 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_xlarge"
-                android:text="Analytics &amp; Reports"
+                android:text="@string/analytics_title"
                 android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
                 android:textColor="@color/colorTextPrimary"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvAvatar" />
+
+            <!-- Shimmer for summary card -->
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerSummary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:visibility="visible"
+                app:layout_constraintTop_toBottomOf="@id/tvScreenTitle">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <View android:layout_width="match_parent" android:layout_height="120dp" android:background="#E0E0E0" android:layout_marginBottom="12dp"/>
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+                        <View android:layout_width="0dp" android:layout_height="80dp" android:layout_weight="1" android:background="#E0E0E0" android:layout_marginEnd="8dp"/>
+                        <View android:layout_width="0dp" android:layout_height="80dp" android:layout_weight="1" android:background="#E0E0E0"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
 
             <!-- Card 1: Unresolved Tickets -->
             <com.google.android.material.card.MaterialCardView
@@ -82,6 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_medium"
+                android:visibility="gone"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="@dimen/corner_radius_card"
                 app:cardElevation="2dp"
@@ -92,13 +116,13 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="20dp">
+                    android:padding="@dimen/spacing_large">
 
                     <TextView
                         android:id="@+id/tvUnresolvedLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="UNRESOLVED TICKETS"
+                        android:text="@string/unresolved_tickets_label"
                         android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                         android:textColor="@color/colorTextSecondary"
                         app:layout_constraintStart_toStartOf="parent"
@@ -109,14 +133,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="34"
                         android:textColor="@color/colorTextPrimary"
                         android:textSize="48sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvUnresolvedLabel" />
+                        app:layout_constraintTop_toBottomOf="@id/tvUnresolvedLabel"
+                        tools:text="34" />
 
+                    <!-- Resolved % badge -->
                     <LinearLayout
+                        android:id="@+id/llResolvedBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
@@ -129,44 +155,39 @@
                         app:layout_constraintStart_toEndOf="@id/tvTotalUnresolved"
                         app:layout_constraintTop_toTopOf="@id/tvTotalUnresolved">
 
-                        <ImageView
-                            android:layout_width="12dp"
-                            android:layout_height="12dp"
-                            android:src="@drawable/ic_arrow_up"
-                            app:tint="@color/colorTextSecondary" />
-
                         <TextView
+                            android:id="@+id/tvResolvedPct"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="12% vs Last Week"
                             android:textSize="10sp"
                             android:textColor="@color/colorTextSecondary"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:text="72% resolved" />
                     </LinearLayout>
 
-                    <!-- Dual Progress Bar Container -->
+                    <!-- Progress bar: pending vs in-progress -->
                     <LinearLayout
                         android:id="@+id/llProgressBar"
                         android:layout_width="match_parent"
                         android:layout_height="12dp"
                         android:layout_marginTop="24dp"
                         android:orientation="horizontal"
-                        android:weightSum="34"
                         app:layout_constraintTop_toBottomOf="@id/tvTotalUnresolved">
 
                         <View
+                            android:id="@+id/viewPendingBar"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="11"
+                            android:layout_weight="1"
                             android:background="@drawable/bg_badge_pending"
                             android:backgroundTint="@color/colorPrimary" />
 
                         <View
+                            android:id="@+id/viewInProgressBar"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_marginStart="4dp"
-                            android:layout_weight="23"
+                            android:layout_weight="1"
                             android:background="@drawable/bg_badge_inprogress"
                             android:backgroundTint="@color/colorSecondary" />
                     </LinearLayout>
@@ -191,9 +212,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
-                            android:text="11 Pending"
                             android:textSize="10sp"
-                            android:textColor="@color/colorTextSecondary" />
+                            android:textColor="@color/colorTextSecondary"
+                            tools:text="11 Pending" />
 
                         <View
                             android:layout_width="8dp"
@@ -208,9 +229,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
-                            android:text="23 In - Progress"
                             android:textSize="10sp"
-                            android:textColor="@color/colorTextSecondary" />
+                            android:textColor="@color/colorTextSecondary"
+                            tools:text="23 In-Progress" />
                     </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -221,7 +242,8 @@
                 android:id="@+id/cvCommonConcerns"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:visibility="gone"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="@dimen/corner_radius_card"
                 app:cardElevation="2dp"
@@ -233,21 +255,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="@dimen/spacing_large">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_common_concerns_header"
-                        android:text="MOST COMMON CONCERNS"
+                        android:text="@string/most_common_concerns_label"
                         android:paddingHorizontal="8dp"
                         android:paddingVertical="4dp"
                         android:textSize="12sp"
                         android:textColor="@color/colorTextPrimary"
                         android:textStyle="bold" />
 
-                    <!-- Item 1 -->
-                    <RelativeLayout
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvCategories"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp">
@@ -515,7 +537,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                app:layout_constraintTop_toBottomOf="@id/cvCategoryTrends" />
+                app:layout_constraintTop_toBottomOf="@id/cvCommonConcerns" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

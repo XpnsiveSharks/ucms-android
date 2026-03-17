@@ -165,4 +165,23 @@ public class SessionManager {
     public String getTicketResponsesJson(Long ticketId) {
         return sharedPreferences.getString("ticket_responses_" + ticketId, null);
     }
+
+    // Analytics cache
+    public void saveAnalyticsSummaryJson(String json) {
+        editor.putString("analytics_summary", json);
+        editor.apply();
+    }
+
+    public String getAnalyticsSummaryJson() {
+        return sharedPreferences.getString("analytics_summary", null);
+    }
+
+    public void saveAnalyticsByCategoryJson(String json) {
+        editor.putString("analytics_by_category", json);
+        editor.apply();
+    }
+
+    public String getAnalyticsByCategoryJson() {
+        return sharedPreferences.getString("analytics_by_category", null);
+    }
 }
