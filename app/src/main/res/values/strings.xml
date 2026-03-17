@@ -104,4 +104,9 @@
     <string name="close_ticket">Close Ticket</string>
     <string name="closing">Closing…</string>
     <string name="error_close_ticket">Failed to close ticket. Please try again.</string>
+    <string name="analytics_title">Analytics &amp; Reports</string>
+    <string name="unresolved_tickets_label">UNRESOLVED TICKETS</string>
+    <string name="most_common_concerns_label">MOST COMMON CONCERNS</string>
+    <string name="avatar_initials">AU</string>
+    <string name="welcome_label">Welcome,</string>
 </resources>
