@@ -61,35 +61,6 @@
                     tools:text="Admin User" />
             </LinearLayout>
 
-            <!-- Header: Notification bell with badge -->
-            <FrameLayout
-                android:id="@+id/flNotification"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                app:layout_constraintBottom_toBottomOf="@id/tvAvatar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tvAvatar">
-
-                <ImageView
-                    android:id="@+id/ivNotification"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/notifications"
-                    android:src="@drawable/ic_notifications"
-                    app:tint="@color/black" />
-
-                <!-- Badge dot -->
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_gravity="top|end"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="2dp"
-                    android:background="@drawable/bg_button_pill"
-                    android:backgroundTint="@color/colorPrimary" />
-            </FrameLayout>
-
             <!-- Overview Label -->
             <TextView
                 android:id="@+id/tvOverview"

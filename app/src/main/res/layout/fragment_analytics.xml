@@ -8,9 +8,11 @@
     tools:context=".ui.common.AnalyticsFragment">
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:visibility="gone">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -40,7 +42,7 @@
                 android:layout_marginStart="@dimen/spacing_small"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="@id/tvAvatar"
-                app:layout_constraintEnd_toStartOf="@id/flNotification"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tvAvatar"
                 app:layout_constraintTop_toTopOf="@id/tvAvatar">
 
@@ -60,34 +62,6 @@
                     android:textStyle="bold"
                     tools:text="Admin User" />
             </LinearLayout>
-
-            <!-- Header: Notification bell with badge -->
-            <FrameLayout
-                android:id="@+id/flNotification"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                app:layout_constraintBottom_toBottomOf="@id/tvAvatar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tvAvatar">
-
-                <ImageView
-                    android:id="@+id/ivNotification"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/notifications"
-                    android:src="@drawable/ic_notifications"
-                    app:tint="@color/black" />
-
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_gravity="top|end"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="2dp"
-                    android:background="@drawable/bg_button_pill"
-                    android:backgroundTint="@color/colorPrimary" />
-            </FrameLayout>
 
             <!-- Screen Title -->
             <TextView
@@ -213,6 +187,7 @@
                             android:backgroundTint="@color/colorPrimary" />
 
                         <TextView
+                            android:id="@+id/tvPendingCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
@@ -229,6 +204,7 @@
                             android:backgroundTint="@color/colorSecondary" />
 
                         <TextView
+                            android:id="@+id/tvInProgressCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
@@ -289,6 +265,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tvCat1Name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
@@ -298,6 +275,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tvCat1Percent"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
@@ -313,6 +291,7 @@
                             android:background="@color/colorSurface" />
 
                         <View
+                            android:id="@+id/vCat1Bar"
                             android:layout_width="160dp"
                             android:layout_height="4dp"
                             android:layout_below="@id/tvRank1"
@@ -340,6 +319,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tvCat2Name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
@@ -349,6 +329,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tvCat2Percent"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
@@ -364,6 +345,7 @@
                             android:background="@color/colorSurface" />
 
                         <View
+                            android:id="@+id/vCat2Bar"
                             android:layout_width="100dp"
                             android:layout_height="4dp"
                             android:layout_below="@id/tvRank2"
@@ -391,6 +373,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tvCat3Name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
@@ -400,6 +383,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tvCat3Percent"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
@@ -415,6 +399,7 @@
                             android:background="@color/colorSurface" />
 
                         <View
+                            android:id="@+id/vCat3Bar"
                             android:layout_width="50dp"
                             android:layout_height="4dp"
                             android:layout_below="@id/tvRank3"
@@ -453,44 +438,13 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:cardBackgroundColor="#F5F5F5"
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="0dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingHorizontal="8dp"
-                            android:paddingVertical="4dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="This Month"
-                                android:textSize="12sp"
-                                android:textColor="@color/colorTextPrimary" />
-
-                            <ImageView
-                                android:layout_width="16dp"
-                                android:layout_height="16dp"
-                                android:src="@drawable/ic_arrow_drop_down"
-                                app:tint="@color/colorTextSecondary" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
                     <!-- Mock Bar Chart -->
                     <LinearLayout
+                        android:id="@+id/llBarChart"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:baselineAligned="false"
                         android:layout_marginTop="24dp"
-                        android:gravity="bottom"
                         android:orientation="horizontal"
                         android:paddingBottom="20dp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -565,5 +519,19 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include layout="@layout/shimmer_analytics" />
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
