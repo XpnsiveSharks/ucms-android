@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,24 +19,26 @@ import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.UserService;
 import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.ui.auth.LoginActivity;
-import com.google.android.material.button.MaterialButton;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.google.android.material.card.MaterialCardView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 public class StudentProfileFragment extends Fragment {
 
-    private EditText etFullName, etCourse, etYearLevel;
-    private MaterialButton btnLogout, btnSaveChanges, btnChangePassword;
+    private TextView tvStudentNameHeader;
+    private TextView tvStudentSubtitle;
+    private MaterialCardView cvEditProfile;
+    private MaterialCardView cvChangePassword;
+    private View cvLogout;
     private SessionManager sessionManager;
     private UserService userService;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_student_profile, container, false);
     }
 
@@ -45,49 +47,63 @@ public class StudentProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         sessionManager = new SessionManager(requireContext());
+        userService = ApiClient.getInstance(requireContext()).create(UserService.class);
 
-        etFullName = view.findViewById(R.id.etFullName);
-        etCourse = view.findViewById(R.id.etCourse);
-        etYearLevel = view.findViewById(R.id.etYearLevel);
-        btnLogout = view.findViewById(R.id.btnLogout);
-        btnSaveChanges = view.findViewById(R.id.btnSaveChanges);
-        btnChangePassword = view.findViewById(R.id.btnChangePassword);
+        tvStudentNameHeader = view.findViewById(R.id.tvStudentNameHeader);
+        tvStudentSubtitle = view.findViewById(R.id.tvStudentSubtitle);
+        cvEditProfile = view.findViewById(R.id.cvEditProfile);
+        cvChangePassword = view.findViewById(R.id.cvChangePassword);
+        cvLogout = view.findViewById(R.id.cvLogout);
 
         String cachedName = sessionManager.getCachedName();
         String cachedStudentId = sessionManager.getCachedStudentId();
         String cachedCourse = sessionManager.getCachedCourse();
         String cachedYearLevel = sessionManager.getCachedYearLevel();
-
         if (!cachedName.isEmpty()) {
-            etFullName.setText(cachedName);
-            ((android.widget.TextView) view.findViewById(R.id.tvStudentNameHeader)).setText(cachedName);
+            tvStudentNameHeader.setText(cachedName);
         }
-        if (!cachedStudentId.isEmpty()) {
-            ((android.widget.TextView) view.findViewById(R.id.tvStudentNumber)).setText(cachedStudentId);
+        if (tvStudentSubtitle != null && !cachedStudentId.isEmpty()) {
+            StringBuilder subtitleBuilder = new StringBuilder(cachedStudentId);
+            if (!cachedCourse.isEmpty()) {
+                subtitleBuilder.append(" \u2022 ").append(cachedCourse);
+            }
+            if (!cachedYearLevel.isEmpty()) {
+                subtitleBuilder.append(" \u2022 Year ").append(cachedYearLevel);
+            }
+            tvStudentSubtitle.setText(subtitleBuilder.toString());
         }
-        if (!cachedCourse.isEmpty()) etCourse.setText(cachedCourse);
-        if (!cachedYearLevel.isEmpty()) etYearLevel.setText(cachedYearLevel);
-
-        userService = ApiClient.getInstance(requireContext()).create(UserService.class);
 
         userService.getMe().enqueue(new Callback<ApiResponse<User>>() {
             @Override
-            public void onResponse(@NonNull Call<ApiResponse<User>> call, @NonNull Response<ApiResponse<User>> response) {
-                if (!response.isSuccessful() || response.body() == null || response.body().getData() == null) {
+            public void onResponse(@NonNull Call<ApiResponse<User>> call,
+                                   @NonNull Response<ApiResponse<User>> response) {
+                if (!isAdded()) {
                     return;
                 }
-
-                User user = response.body().getData();
-                if (isAdded() && getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        etFullName.setText(user.getName());
-                        ((android.widget.TextView) view.findViewById(R.id.tvStudentNameHeader)).setText(user.getName());
-                        ((android.widget.TextView) view.findViewById(R.id.tvStudentNumber)).setText(user.getStudentId());
-                        etCourse.setText(user.getCourse() != null ? user.getCourse() : "");
-                        Integer yearLevel = user.getYearLevel();
-                        etYearLevel.setText(yearLevel != null ? String.valueOf(yearLevel) : "");
-                    });
-                    sessionManager.saveProfileCache(user.getName(), user.getStudentId(), user.getCourse(), user.getYearLevel());
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    User user = response.body().getData();
+                    tvStudentNameHeader.setText(user.getName());
+                    StringBuilder subtitleBuilder = new StringBuilder();
+                    if (user.getStudentId() != null && !user.getStudentId().isEmpty()) {
+                        subtitleBuilder.append(user.getStudentId());
+                    }
+                    if (user.getCourse() != null && !user.getCourse().isEmpty()) {
+                        if (subtitleBuilder.length() > 0) {
+                            subtitleBuilder.append(" \u2022 ");
+                        }
+                        subtitleBuilder.append(user.getCourse());
+                    }
+                    if (user.getYearLevel() != null) {
+                        if (subtitleBuilder.length() > 0) {
+                            subtitleBuilder.append(" \u2022 ");
+                        }
+                        subtitleBuilder.append("Year ").append(user.getYearLevel());
+                    }
+                    if (tvStudentSubtitle != null) {
+                        tvStudentSubtitle.setText(subtitleBuilder.toString());
+                    }
+                    sessionManager.saveProfileCache(user.getName(), user.getStudentId(),
+                            user.getCourse(), user.getYearLevel());
                 }
             }
 
@@ -96,55 +112,23 @@ public class StudentProfileFragment extends Fragment {
             }
         });
 
-        btnLogout.setOnClickListener(v -> logout());
-        
-        btnSaveChanges.setOnClickListener(v -> {
-            Map<String, Object> body = new HashMap<>();
-            body.put("name", etFullName.getText().toString().trim());
-            body.put("course", etCourse.getText().toString().trim());
-
-            String yearLevelText = etYearLevel.getText().toString().trim();
-            if (!yearLevelText.isEmpty()) {
-                try {
-                    body.put("yearLevel", Integer.parseInt(yearLevelText));
-                } catch (NumberFormatException ignored) {
-                }
-            }
-
-            userService.updateProfile(body).enqueue(new Callback<ApiResponse<User>>() {
-                @Override
-                public void onResponse(@NonNull Call<ApiResponse<User>> call, @NonNull Response<ApiResponse<User>> response) {
-                    if (isAdded() && getActivity() != null) {
-                        getActivity().runOnUiThread(() -> {
-                            if (response.isSuccessful()) {
-                                Toast.makeText(requireContext(), "Profile updated", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(requireContext(), "Failed to update profile", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<ApiResponse<User>> call, @NonNull Throwable t) {
-                    if (isAdded() && getActivity() != null) {
-                        getActivity().runOnUiThread(() ->
-                                Toast.makeText(requireContext(), "Failed to update profile", Toast.LENGTH_SHORT).show());
-                    }
-                }
-            });
+        cvEditProfile.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer, new StudentEditProfileFragment())
+                    .addToBackStack(null)
+                    .commit();
         });
 
-        btnChangePassword.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "Redirecting to Change Password...", Toast.LENGTH_SHORT).show();
-        });
-    }
+        cvChangePassword.setOnClickListener(v ->
+                Toast.makeText(requireContext(), getString(R.string.coming_soon), Toast.LENGTH_SHORT).show());
 
-    private void logout() {
-        sessionManager.clearSession();
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        requireActivity().finish();
+        cvLogout.setOnClickListener(v -> {
+            sessionManager.clearSession();
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            requireActivity().finish();
+        });
     }
 }
