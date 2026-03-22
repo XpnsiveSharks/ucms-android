@@ -8,18 +8,36 @@
     android:padding="@dimen/screen_padding"
     tools:context=".TicketListActivity">
 
-    <!-- Screen title -->
-    <TextView
-        android:id="@+id/tvTitle"
+    <LinearLayout
+        android:id="@+id/layoutHeader"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/my_tickets_title"
-        android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
-        android:textColor="@color/colorTextPrimary"
-        android:textStyle="bold"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/my_tickets_title"
+            android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+            android:textColor="@color/colorTextPrimary"
+            android:textStyle="bold" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnFilter"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:contentDescription="@string/filter"
+            app:icon="@drawable/ic_filter"
+            app:iconTint="@color/colorPrimary"
+            app:strokeColor="@color/colorPrimary" />
+    </LinearLayout>
 
     <!-- Loading Skeleton -->
     <com.facebook.shimmer.ShimmerFrameLayout
@@ -31,7 +49,7 @@
         app:layout_constraintBottom_toTopOf="@id/btnSubmitTicket"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle">
+        app:layout_constraintTop_toBottomOf="@id/layoutHeader">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -57,7 +75,7 @@
         app:layout_constraintBottom_toTopOf="@id/btnSubmitTicket"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle">
+        app:layout_constraintTop_toBottomOf="@id/layoutHeader">
 
         <TextView
             android:layout_width="wrap_content"
@@ -98,7 +116,7 @@
         app:layout_constraintBottom_toTopOf="@id/btnSubmitTicket"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintTop_toBottomOf="@id/layoutHeader"
         tools:listitem="@layout/item_ticket" />
 
     <!-- Empty state -->
@@ -114,7 +132,7 @@
         app:layout_constraintBottom_toTopOf="@id/btnSubmitTicket"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintTop_toBottomOf="@id/layoutHeader"
         tools:visibility="visible" />
 
     <!-- Submit ticket button -->
