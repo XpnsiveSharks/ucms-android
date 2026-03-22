@@ -167,11 +167,20 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
         currentStatus = ticket.getStatus();
         configureStatusActions();
 
-        // Student info not returned by backend — show placeholders
-        tvStudentName.setText("Student");
-        tvAvatarInitials.setText("?");
-        tvStudentId.setText("School ID: N/A");
-        tvStudentCourse.setText("N/A");
+        String studentName = ticket.getStudentName() != null && !ticket.getStudentName().trim().isEmpty()
+                ? ticket.getStudentName().trim()
+                : "Student";
+        String studentId = ticket.getStudentId() != null && !ticket.getStudentId().trim().isEmpty()
+                ? ticket.getStudentId().trim()
+                : "N/A";
+        String studentCourse = ticket.getStudentCourse() != null && !ticket.getStudentCourse().trim().isEmpty()
+                ? ticket.getStudentCourse().trim()
+                : "N/A";
+
+        tvStudentName.setText(studentName);
+        tvAvatarInitials.setText(getInitials(studentName));
+        tvStudentId.setText("School ID: " + studentId);
+        tvStudentCourse.setText(studentCourse);
 
         tvDate.setText(DateFormatter.formatDate(ticket.getCreatedAt()));
         tvTitle.setText(ticket.getTitle());
