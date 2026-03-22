@@ -268,8 +268,8 @@
                         android:textColor="@color/colorTextPrimary"
                         android:textStyle="bold" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvCategories"
+                    <!-- Item 1 -->
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp">
