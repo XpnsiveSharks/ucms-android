@@ -20,6 +20,7 @@ import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.UserService;
 import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.ui.auth.LoginActivity;
+import com.example.ucms_android.ui.common.DialogUtils;
 import com.google.android.material.button.MaterialButton;
 
 import java.io.IOException;
@@ -81,7 +82,7 @@ public class StudentEditProfileFragment extends Fragment {
         }
 
         view.findViewById(R.id.btnBack).setOnClickListener(v -> goBack());
-        btnSaveChanges.setOnClickListener(v -> saveProfile());
+        btnSaveChanges.setOnClickListener(v -> showSaveConfirmation());
     }
 
     @Override
@@ -144,8 +145,12 @@ public class StudentEditProfileFragment extends Fragment {
                     User user = response.body().getData();
                     sessionManager.saveProfileCache(user.getName(), user.getStudentId(),
                             user.getCourse(), user.getYearLevel());
-                    Toast.makeText(requireContext(), getString(R.string.profile_updated), Toast.LENGTH_SHORT).show();
-                    goBack();
+                    DialogUtils.showSuccessDialog(
+                            requireContext(),
+                            getString(R.string.dialog_success_title),
+                            getString(R.string.profile_updated),
+                            StudentEditProfileFragment.this::goBack
+                    );
                     return;
                 }
 
@@ -161,6 +166,15 @@ public class StudentEditProfileFragment extends Fragment {
                 Toast.makeText(requireContext(), getString(R.string.error_no_connection), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void showSaveConfirmation() {
+        DialogUtils.showConfirmationDialog(
+                requireContext(),
+                getString(R.string.confirm_profile_update_title),
+                getString(R.string.confirm_profile_update_message),
+                this::saveProfile
+        );
     }
 
     private void goBack() {

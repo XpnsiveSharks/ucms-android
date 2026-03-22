@@ -116,6 +116,12 @@
     <string name="profile_updated">Profile updated successfully.</string>
     <string name="error_update_profile">Failed to update profile. Please try again.</string>
     <string name="error_no_connection">No connection. Please check your network.</string>
+    <string name="dialog_confirm">Confirm</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_success_title">Success</string>
+    <string name="confirm_profile_update_title">Save profile changes?</string>
+    <string name="confirm_profile_update_message">Are you sure you want to update your profile information?</string>
     <string name="coming_soon">Coming soon</string>
 
     <string name="analytics_title">Analytics &amp; Reports</string>
