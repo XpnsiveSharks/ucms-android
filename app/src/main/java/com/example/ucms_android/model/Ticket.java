@@ -28,6 +28,15 @@ public class Ticket {
     @SerializedName("categoryName")
     private String categoryName;
 
+    @SerializedName("studentName")
+    private String studentName;
+
+    @SerializedName("studentId")
+    private String studentId;
+
+    @SerializedName("studentCourse")
+    private String studentCourse;
+
     @SerializedName("createdAt")
     private String createdAt;
 
@@ -42,6 +51,9 @@ public class Ticket {
     public boolean isConfirmedResolved() { return confirmedResolved; }
     public Long getCategoryId() { return categoryId; }
     public String getCategoryName() { return categoryName; }
+    public String getStudentName() { return studentName; }
+    public String getStudentId() { return studentId; }
+    public String getStudentCourse() { return studentCourse; }
     public String getCreatedAt() { return createdAt; }
     public String getUpdatedAt() { return updatedAt; }
 
