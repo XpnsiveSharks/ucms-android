@@ -37,6 +37,9 @@ public class Ticket {
     @SerializedName("studentCourse")
     private String studentCourse;
 
+    @SerializedName("hasAdminResponse")
+    private boolean hasAdminResponse;
+
     @SerializedName("createdAt")
     private String createdAt;
 
@@ -54,6 +57,7 @@ public class Ticket {
     public String getStudentName() { return studentName; }
     public String getStudentId() { return studentId; }
     public String getStudentCourse() { return studentCourse; }
+    public boolean hasAdminResponse() { return hasAdminResponse; }
     public String getCreatedAt() { return createdAt; }
     public String getUpdatedAt() { return updatedAt; }
 
