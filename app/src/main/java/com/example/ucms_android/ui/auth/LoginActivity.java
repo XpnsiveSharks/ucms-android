@@ -60,9 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         
         View tvForgot = findViewById(R.id.tvForgotPassword);
         if (tvForgot != null) {
-            tvForgot.setOnClickListener(v -> {
-                // Implementation for Forgot Password
-            });
+            tvForgot.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class)));
         }
     }
 

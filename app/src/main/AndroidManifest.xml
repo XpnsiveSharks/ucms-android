@@ -58,6 +58,9 @@
             android:name=".ui.auth.ForgotPasswordActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.common.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
