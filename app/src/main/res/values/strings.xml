@@ -24,10 +24,12 @@
     <string name="error_register_failed">Registration failed. Please try again.</string>
     <string name="success_register">Registered successfully. Please login.</string>
     <string name="forgot_password_title">Forgot Password</string>
-    <string name="forgot_password_message">Enter your email address and we\'ll send you a link to reset your password.</string>
+    <string name="forgot_password_message">Enter your student ID and we\'ll send a password reset link to your verified email.</string>
     <string name="send_reset_email">Send Reset Email</string>
+    <string name="send_reset_link">Send Reset Link</string>
+    <string name="student_id_or_id_hint">Enter your Student ID (e.g. 20230733-N)</string>
     <string name="back_to_login">Back to Login</string>
-    <string name="success_reset_email">Reset email sent. Check your inbox.</string>
+    <string name="success_reset_email">If your account is eligible, a reset link has been sent to your verified email.</string>
     <string name="error_reset_failed">Failed to send reset email. Please try again.</string>
     <string name="error_invalid_email">Please enter a valid email address.</string>
     <string name="reset_password_title">Reset Password</string>
@@ -40,6 +42,9 @@
     <string name="error_passwords_do_not_match">Passwords do not match.</string>
     <string name="error_password_too_short">Password must be at least 8 characters.</string>
     <string name="error_invalid_reset_link">Invalid or expired reset link.</string>
+    <string name="error_current_password_required">Current password is required.</string>
+    <string name="error_current_password_incorrect">Current password is incorrect.</string>
+    <string name="error_password_change_failed">Failed to change password. Please try again.</string>
     <string name="nav_dashboard">Dashboard</string>
     <string name="nav_tickets">Tickets</string>
     <string name="nav_analytics">Analytics</string>
@@ -80,6 +85,13 @@
     <string name="submit">Submit</string>
     <string name="submit_new_concern">Submit New Concern</string>
     <string name="my_profile_title">My Profile</string>
+    <string name="settings_title">Settings</string>
+    <string name="system_configuration_label">System Configuration</string>
+    <string name="configuration_directory_label">Configuration Directory</string>
+    <string name="update_profile_label">Update Profile</string>
+    <string name="edit_profile_label">Edit Profile</string>
+    <string name="security_authentication_label">Security &amp; Authentication</string>
+    <string name="admin_role_badge">ADMIN</string>
     <string name="active_student_badge">Active Student</string>
     <string name="full_name_label">Full Name</string>
     <string name="student_number_label">Student Number</string>
@@ -89,6 +101,8 @@
     <string name="logout">Logout</string>
     <string name="save_changes">Save Changes</string>
     <string name="change_password">Change Password</string>
+    <string name="current_password">Current Password</string>
+    <string name="password_changed_success">Password changed successfully.</string>
     <string name="responses_title">Responses</string>
     <string name="error_loading_tickets">Failed to load tickets</string>
     <string name="error_network">Network error. Please try again.</string>
@@ -104,6 +118,18 @@
     <string name="close_ticket">Close Ticket</string>
     <string name="closing">Closing…</string>
     <string name="error_close_ticket">Failed to close ticket. Please try again.</string>
+    <string name="access_denied">Access denied.</string>
+    <string name="account_limited_prompt">Your account is limited. Add and verify your email to continue.</string>
+    <string name="profile_updated">Profile updated successfully.</string>
+    <string name="error_update_profile">Failed to update profile. Please try again.</string>
+    <string name="error_no_connection">No connection. Please check your network.</string>
+    <string name="coming_soon">Coming soon</string>
+    <string name="dialog_confirm">Confirm</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_success_title">Success</string>
+    <string name="confirm_profile_update_title">Save profile changes?</string>
+    <string name="confirm_profile_update_message">Are you sure you want to update your profile information?</string>
 
     <string name="analytics_title">Analytics &amp; Reports</string>
     <string name="unresolved_tickets_label">UNRESOLVED TICKETS</string>

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +18,7 @@ import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.UserService;
 import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.ui.auth.LoginActivity;
+import com.example.ucms_android.ui.common.ChangePasswordActivity;
 import com.google.android.material.card.MaterialCardView;
 
 import retrofit2.Call;
@@ -121,7 +121,7 @@ public class StudentProfileFragment extends Fragment {
         });
 
         cvChangePassword.setOnClickListener(v ->
-                Toast.makeText(requireContext(), getString(R.string.coming_soon), Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(requireContext(), ChangePasswordActivity.class)));
 
         cvLogout.setOnClickListener(v -> {
             sessionManager.clearSession();

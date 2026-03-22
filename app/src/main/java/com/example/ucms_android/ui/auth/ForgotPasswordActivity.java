@@ -2,9 +2,7 @@ package com.example.ucms_android.ui.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -12,13 +10,15 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.ucms_android.R;
-import com.example.ucms_android.api.request.PasswordRecoverRequest;
-import com.example.ucms_android.network.SupabaseApiClient;
-import com.example.ucms_android.network.SupabaseAuthService;
+import com.example.ucms_android.network.ApiClient;
+import com.example.ucms_android.network.AuthService;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,7 +34,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private TextView tvBackToLogin;
     private ProgressBar progressBar;
 
-    private SupabaseAuthService supabaseAuthService;
+    private AuthService authService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         tvBackToLogin = findViewById(R.id.tvBackToLogin);
         progressBar = findViewById(R.id.progressBar);
 
-        supabaseAuthService = SupabaseApiClient.getAuthService();
+        authService = ApiClient.getInstance(this).create(AuthService.class);
 
         btnSendReset.setOnClickListener(v -> handleSendReset());
 
@@ -58,31 +58,27 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     private void handleSendReset() {
-        String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
+        String studentId = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
 
         tilEmail.setError(null);
 
-        if (TextUtils.isEmpty(email)) {
-            tilEmail.setError(getString(R.string.error_invalid_email));
-            return;
-        }
-
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            tilEmail.setError(getString(R.string.error_invalid_email));
+        if (studentId.isEmpty()) {
+            tilEmail.setError(getString(R.string.error_invalid_student_id));
             return;
         }
 
         setLoading(true);
 
-        PasswordRecoverRequest request = new PasswordRecoverRequest(email, "ucms://reset-password");
+        Map<String, String> body = new HashMap<>();
+        body.put("studentId", studentId);
 
-        supabaseAuthService.recoverPassword(SupabaseApiClient.ANON_KEY, request)
+        authService.forgotPassword(body)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         setLoading(false);
                         if (response.isSuccessful()) {
-                            Log.d(TAG, "Recovery email sent successfully");
+                            Log.d(TAG, "Forgot-password request submitted");
                             Snackbar.make(btnSendReset, getString(R.string.success_reset_email), Snackbar.LENGTH_LONG).show();
                             btnSendReset.setEnabled(false);
                         } else {

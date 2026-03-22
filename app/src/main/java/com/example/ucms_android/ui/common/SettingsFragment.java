@@ -85,7 +85,7 @@ public class SettingsFragment extends Fragment {
                 Toast.makeText(requireContext(), getString(R.string.coming_soon), Toast.LENGTH_SHORT).show());
 
         cvChangePassword.setOnClickListener(v ->
-                Toast.makeText(requireContext(), getString(R.string.coming_soon), Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(requireContext(), ChangePasswordActivity.class)));
 
         cvLogout.setOnClickListener(v -> {
             sessionManager.clearSession();

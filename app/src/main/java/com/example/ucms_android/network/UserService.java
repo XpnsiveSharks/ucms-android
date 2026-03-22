@@ -21,6 +21,9 @@ public interface UserService {
     @PUT("api/users/me")
     Call<ApiResponse<User>> updateProfile(@Body Map<String, Object> body);
 
+    @PUT("api/users/me/password")
+    Call<ApiResponse<Void>> changePassword(@Body Map<String, String> body);
+
     @PATCH("api/users/me/email/verify")
     Call<Void> confirmEmailVerified();
 }
