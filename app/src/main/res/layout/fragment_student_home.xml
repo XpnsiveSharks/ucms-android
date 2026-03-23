@@ -4,243 +4,248 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSurface">
+    android:background="@drawable/bg_grid"
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="@dimen/screen_padding">
+        android:padding="24dp">
 
-        <!-- Header (With Horizontal Padding) -->
+        <!-- Authenticated Session Label -->
         <TextView
-            android:id="@+id/tvWelcomeBack"
+            android:id="@+id/tvSessionLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="@dimen/screen_padding"
-            android:text="Welcome Back"
-            android:textColor="@color/colorTextSecondary"
-            android:textSize="16sp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.1"
+            android:text="AUTHENTICATED SESSION"
+            android:textColor="@color/colorOrange"
+            android:textSize="12sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- User Name -->
         <TextView
             android:id="@+id/tvUserName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/screen_padding"
-            android:layout_marginEnd="@dimen/spacing_medium"
-            android:text=""
+            android:layout_marginTop="4dp"
             android:textColor="@color/black"
-            android:textSize="26sp"
+            android:textSize="32sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/ivNotificationBell"
+            app:layout_constraintEnd_toStartOf="@id/flNotificationContainer"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvWelcomeBack" />
+            app:layout_constraintTop_toBottomOf="@id/tvSessionLabel"
+            tools:text="Marynelle Aban" />
 
-        <ImageView
-            android:id="@+id/ivNotificationBell"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="@dimen/screen_padding"
-            android:background="@drawable/bg_badge_pending"
-            android:backgroundTint="@color/white"
-            android:padding="12dp"
-            android:src="@drawable/ic_notifications"
+        <!-- Notification Bell Container -->
+        <FrameLayout
+            android:id="@+id/flNotificationContainer"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_square_box"
+            android:clickable="true"
+            android:focusable="true"
             app:layout_constraintBottom_toBottomOf="@id/tvUserName"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvWelcomeBack" />
+            app:layout_constraintTop_toTopOf="@id/tvSessionLabel">
 
-        <!-- Overview Section -->
+            <ImageView
+                android:id="@+id/ivNotificationBell"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_notifications"
+                app:tint="@color/black" />
+
+            <!-- Red Dot Badge -->
+            <View
+                android:id="@+id/viewNotificationBadge"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_gravity="top|end"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/bg_button_pill"
+                android:backgroundTint="@color/colorOrange"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </FrameLayout>
+
+        <!-- System Overview Label -->
         <TextView
             android:id="@+id/tvOverviewTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
-            android:layout_marginStart="@dimen/screen_padding"
-            android:text="Overview"
-            android:textColor="@color/black"
-            android:textSize="22sp"
-            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:text="[ SYSTEM OVERVIEW ]"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvUserName" />
 
         <!-- Total Tickets Card -->
-        <com.google.android.material.card.MaterialCardView
+        <LinearLayout
             android:id="@+id/cardTotalTickets"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:minHeight="140dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginHorizontal="@dimen/screen_padding"
-            app:cardBackgroundColor="@color/colorSecondary"
-            app:cardCornerRadius="@dimen/corner_radius_card"
-            app:cardElevation="0dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_card_orange_tint"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvOverviewTitle">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="24dp">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvTotalTicketsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total Tickets"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:fontFamily="monospace"
+                    android:letterSpacing="0.1"
+                    android:text="TOTAL TICKETS"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvTotalTicketsCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="24"
-                    android:textColor="@color/white"
-                    android:textSize="40sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvTotalTicketsLabel" />
+                    android:text="0"
+                    android:textColor="@color/black"
+                    android:textSize="48sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-                <View
-                    android:id="@+id/viewIconBg"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:background="@drawable/bg_badge_pending"
-                    android:backgroundTint="#B6EE56"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <FrameLayout
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:background="@drawable/bg_square_box">
 
                 <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center"
                     android:src="@drawable/ic_database"
-                    app:layout_constraintBottom_toBottomOf="@id/viewIconBg"
-                    app:layout_constraintEnd_toEndOf="@id/viewIconBg"
-                    app:layout_constraintHorizontal_bias="0.475"
-                    app:layout_constraintStart_toStartOf="@id/viewIconBg"
-                    app:layout_constraintTop_toTopOf="@id/viewIconBg"
-                    app:layout_constraintVertical_bias="0.425"
-                    app:tint="@color/black" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
+                    app:tint="@color/colorOrange" />
+            </FrameLayout>
+        </LinearLayout>
 
-        <!-- Stat Cards Row -->
+        <!-- Stats Row -->
         <LinearLayout
             android:id="@+id/layoutStats"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:minHeight="110dp"
+            android:layout_height="130dp"
             android:layout_marginTop="16dp"
-            android:layout_marginHorizontal="@dimen/screen_padding"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cardTotalTickets">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:background="@drawable/bg_stat_card"
+                android:background="@drawable/bg_card_orange_border"
+                android:orientation="vertical"
                 android:padding="16dp">
 
                 <TextView
-                    android:id="@+id/tvPendingLabel"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Required Pending / Action"
+                    android:fontFamily="monospace"
+                    android:letterSpacing="0.05"
+                    android:text="REQUIRED PENDING\nACTION"
                     android:textColor="@color/colorTextSecondary"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvPendingCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="12"
+                    android:text="0"
                     android:textColor="@color/black"
-                    android:textSize="28sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvPendingLabel" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:textSize="40sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:background="@drawable/bg_stat_card"
+                android:background="@drawable/bg_card_green_border"
+                android:orientation="vertical"
                 android:padding="16dp">
 
                 <TextView
-                    android:id="@+id/tvResolvedLabel"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Resolved Today"
+                    android:fontFamily="monospace"
+                    android:letterSpacing="0.05"
+                    android:text="RESOLVED\nTODAY"
                     android:textColor="@color/colorTextSecondary"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvResolvedCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="18"
+                    android:text="0"
                     android:textColor="@color/black"
-                    android:textSize="28sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvResolvedLabel" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:textSize="40sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Submit Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSubmitNewConcern"
             android:layout_width="0dp"
-            android:layout_height="64dp"
+            android:layout_height="72dp"
             android:layout_marginTop="32dp"
-            android:layout_marginHorizontal="@dimen/screen_padding"
-            android:text="Submit New Concern"
-            android:textAllCaps="false"
-            android:textSize="18sp"
+            app:backgroundTint="@color/colorOrange"
+            app:cornerRadius="4dp"
+            android:text="SUBMIT NEW CONCERN"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="16sp"
             android:textStyle="bold"
-            app:backgroundTint="@color/colorSecondary"
-            app:cornerRadius="@dimen/corner_radius_button"
-            app:icon="@drawable/ic_add_box"
+            app:icon="@drawable/ic_add"
             app:iconGravity="textStart"
-            app:iconPadding="12dp"
+            app:iconPadding="16dp"
+            app:iconSize="24dp"
+            app:iconTint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layoutStats" />
 
-        <!-- Recent Notification Header -->
+        <!-- Recent Logs Header -->
         <TextView
             android:id="@+id/tvRecentHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginStart="@dimen/screen_padding"
-            android:text="Recent Tickets"
-            android:textColor="@color/black"
-            android:textSize="22sp"
+            android:layout_marginTop="48dp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.2"
+            android:text="RECENT LOGS"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btnSubmitNewConcern" />
@@ -249,10 +254,11 @@
             android:id="@+id/tvViewAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/screen_padding"
-            android:text="View All"
-            android:textColor="@color/colorTextSecondary"
-            android:textSize="14sp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.2"
+            android:text="VIEW ALL"
+            android:textColor="@color/colorOrange"
+            android:textSize="12sp"
             android:textStyle="bold"
             android:clickable="true"
             android:focusable="true"
@@ -260,25 +266,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tvRecentHeader" />
 
-        <!-- Notification List (Wider - Smaller Side Margins) -->
+        <!-- Recent Tickets List -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvRecentNotifications"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginHorizontal="12dp"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/tvRecentHeader"
-            tools:itemCount="2"
-            tools:listitem="@layout/item_notification" />
+            tools:itemCount="3"
+            tools:listitem="@layout/item_recent_ticket" />
 
-        <!-- Loading Skeleton for Recent Notifications -->
+        <!-- Loading Skeleton -->
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmerRecentNotifications"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginHorizontal="12dp"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -296,17 +300,17 @@
 
         </com.facebook.shimmer.ShimmerFrameLayout>
 
-        <!-- Empty State for Recent Notifications -->
+        <!-- Empty State -->
         <TextView
             android:id="@+id/tvEmptyRecentNotifications"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginHorizontal="12dp"
             android:gravity="center"
-            android:padding="@dimen/spacing_large"
-            android:text="No recent tickets"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:padding="24dp"
+            android:background="@drawable/bg_square_box"
+            android:text="No recent tickets found."
+            android:fontFamily="monospace"
             android:textColor="@color/colorTextSecondary"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"

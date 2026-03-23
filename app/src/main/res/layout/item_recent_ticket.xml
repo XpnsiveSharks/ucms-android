@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/spacing_small"
+    android:layout_marginBottom="12dp"
     app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="@dimen/corner_radius_card"
+    app:cardCornerRadius="0dp"
     app:cardElevation="0dp"
     app:strokeColor="@color/colorDivider"
     app:strokeWidth="1dp">
@@ -14,101 +14,90 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/spacing_medium">
+        android:padding="20dp">
 
-        <!-- Ticket number badge -->
+        <!-- Ticket ID Badge -->
         <TextView
             android:id="@+id/tvTicketNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_badge_pending"
-            android:paddingStart="@dimen/spacing_small"
-            android:paddingEnd="@dimen/spacing_small"
-            android:paddingTop="@dimen/spacing_xsmall"
-            android:paddingBottom="@dimen/spacing_xsmall"
-            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-            android:textColor="@color/colorOnPrimary"
+            android:background="@drawable/bg_badge_orange_solid"
+            android:fontFamily="monospace"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:textColor="@color/white"
+            android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="#10149" />
+            tools:text="TKT-20260315-0003" />
 
-        <!-- Time ago -->
+        <!-- Status Badge -->
         <TextView
-            android:id="@+id/tvTimeAgo"
+            android:id="@+id/tvStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_small"
-            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-            android:textColor="@color/colorTextSecondary"
-            app:layout_constraintBottom_toBottomOf="@id/tvTicketNumber"
-            app:layout_constraintStart_toEndOf="@id/tvTicketNumber"
-            app:layout_constraintTop_toTopOf="@id/tvTicketNumber"
-            tools:text="10 mins ago" />
-
-        <!-- Priority badge -->
-        <TextView
-            android:id="@+id/tvUrgency"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_small"
-            android:background="@drawable/bg_badge_urgent"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:text="@string/urgent"
-            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-            android:textColor="@color/white"
+            android:background="@drawable/bg_badge_orange_outline"
+            android:fontFamily="monospace"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:textColor="@color/colorOrange"
+            android:textSize="12sp"
             android:textStyle="bold"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/tvTimeAgo"
-            app:layout_constraintStart_toEndOf="@id/tvTimeAgo"
-            app:layout_constraintTop_toTopOf="@id/tvTimeAgo"
-            tools:visibility="visible" />
-
-        <!-- Chevron -->
-        <ImageView
-            android:id="@+id/ivChevron"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_button_pill"
-            android:backgroundTint="@color/colorSurface"
-            android:contentDescription="@string/view_ticket"
-            android:padding="8dp"
-            android:src="@drawable/ic_arrow_drop_down"
-            android:rotation="-90"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/colorTextSecondary" />
+            tools:text="PENDING" />
 
-        <!-- Ticket title -->
+        <!-- Ticket Title -->
         <TextView
             android:id="@+id/tvTicketTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_medium"
-            android:layout_marginEnd="@dimen/spacing_medium"
-            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-            android:textColor="@color/colorTextPrimary"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/ivChevron"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTicketNumber"
-            tools:text="Issue with Subject Pre-requisites" />
+            tools:text="lost id" />
 
         <!-- Category -->
         <TextView
             android:id="@+id/tvCategory"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xsmall"
-            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+            android:layout_marginTop="16dp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.1"
             android:textColor="@color/colorTextSecondary"
+            android:textSize="11sp"
+            app:layout_constraintEnd_toStartOf="@id/tvTimeAgo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTicketTitle"
-            tools:text="Academic" />
+            tools:text="ACADEMIC-RELATED" />
+
+        <!-- Time Ago -->
+        <TextView
+            android:id="@+id/tvTimeAgo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toBottomOf="@id/tvCategory"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvCategory"
+            tools:text="6 hours ago" />
+
+        <!-- Hidden Urgency view to avoid crashes if referenced -->
+        <TextView
+            android:id="@+id/tvUrgency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvCategory" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
