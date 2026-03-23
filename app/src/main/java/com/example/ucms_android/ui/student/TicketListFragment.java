@@ -53,6 +53,8 @@ public class TicketListFragment extends Fragment {
     private MaterialButton btnSubmitTicket;
     private ShimmerFrameLayout shimmerLayout;
     private LinearLayout layoutError;
+    private TextView tabAll, tabInProgress, tabResolved;
+    private View tabIndicator;
     private TicketAdapter adapter;
     private TicketService ticketService;
     private SessionManager sessionManager;
@@ -82,6 +84,10 @@ public class TicketListFragment extends Fragment {
         btnSubmitTicket = view.findViewById(R.id.btnSubmitTicket);
         shimmerLayout = view.findViewById(R.id.shimmerLayout);
         layoutError = view.findViewById(R.id.layoutError);
+        tabAll = view.findViewById(R.id.tabAll);
+        tabInProgress = view.findViewById(R.id.tabInProgress);
+        tabResolved = view.findViewById(R.id.tabResolved);
+        tabIndicator = view.findViewById(R.id.tabIndicator);
         view.findViewById(R.id.btnRetry).setOnClickListener(v -> loadTickets());
 
         ticketService = ApiClient.getInstance(requireContext()).create(TicketService.class);
@@ -107,8 +113,48 @@ public class TicketListFragment extends Fragment {
             }
         });
 
+        setupTabs();
         loadFromCache();
         loadTickets();
+    }
+
+    private void setupTabs() {
+        tabAll.setOnClickListener(v -> {
+            statusFilter = "ALL";
+            updateTabs();
+            applyFilters();
+        });
+        tabInProgress.setOnClickListener(v -> {
+            statusFilter = "IN_PROGRESS";
+            updateTabs();
+            applyFilters();
+        });
+        tabResolved.setOnClickListener(v -> {
+            statusFilter = "RESOLVED";
+            updateTabs();
+            applyFilters();
+        });
+        updateTabs();
+    }
+
+    private void updateTabs() {
+        int colorPrimary = getResources().getColor(R.color.colorPrimary, null);
+        int colorSecondary = getResources().getColor(R.color.colorTextSecondary, null);
+
+        tabAll.setTextColor("ALL".equals(statusFilter) ? colorPrimary : colorSecondary);
+        tabInProgress.setTextColor("IN_PROGRESS".equals(statusFilter) ? colorPrimary : colorSecondary);
+        tabResolved.setTextColor("RESOLVED".equals(statusFilter) ? colorPrimary : colorSecondary);
+
+        tabIndicator.post(() -> {
+            TextView activeTab = tabAll;
+            if ("IN_PROGRESS".equals(statusFilter)) activeTab = tabInProgress;
+            else if ("RESOLVED".equals(statusFilter)) activeTab = tabResolved;
+
+            android.widget.RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) tabIndicator.getLayoutParams();
+            params.width = activeTab.getWidth();
+            params.leftMargin = activeTab.getLeft();
+            tabIndicator.setLayoutParams(params);
+        });
     }
 
     @Override
