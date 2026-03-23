@@ -92,4 +92,11 @@
         <item name="android:ellipsize">none</item>
     </style>
 
+    <!-- ===== Bottom Navigation ===== -->
+    <style name="TextAppearance.App.BottomNav" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:letterSpacing">0.1</item>
+    </style>
+
 </resources>

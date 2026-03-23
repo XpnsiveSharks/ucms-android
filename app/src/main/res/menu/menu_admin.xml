@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_admin_dashboard"
-        android:icon="@drawable/sel_nav_admin_dashboard"
-        android:title="Dashboard" />
-    <item
-        android:id="@+id/nav_admin_tickets"
-        android:icon="@drawable/sel_nav_admin_tickets"
-        android:title="Tickets" />
+        android:icon="@drawable/sel_nav_home"
+        android:title="HOME" />
     <item
         android:id="@+id/nav_admin_analytics"
         android:icon="@drawable/sel_nav_admin_analytics"
-        android:title="Analytics" />
+        android:title="ANALYTICS" />
+    <item
+        android:id="@+id/nav_admin_tickets"
+        android:icon="@drawable/sel_nav_tickets"
+        android:title="TICKETS" />
     <item
         android:id="@+id/nav_admin_settings"
         android:icon="@drawable/sel_nav_admin_settings"
-        android:title="Settings" />
+        android:title="SETTINGS" />
 </menu>
