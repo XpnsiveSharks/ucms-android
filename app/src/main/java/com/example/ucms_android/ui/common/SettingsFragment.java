@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.ucms_android.MainActivity;
 import com.example.ucms_android.R;
 import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.User;
@@ -19,6 +20,7 @@ import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.UserService;
 import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.ui.auth.LoginActivity;
+import com.example.ucms_android.ui.student.StudentEditProfileFragment;
 import com.google.android.material.card.MaterialCardView;
 
 import retrofit2.Call;
@@ -67,8 +69,15 @@ public class SettingsFragment extends Fragment {
         fetchLiveData();
 
         if (cvEditProfile != null) {
-            cvEditProfile.setOnClickListener(v ->
-                    Toast.makeText(requireContext(), getString(R.string.coming_soon), Toast.LENGTH_SHORT).show());
+            cvEditProfile.setOnClickListener(v -> {
+                if (isAdmin) {
+                    Toast.makeText(requireContext(), getString(R.string.coming_soon), Toast.LENGTH_SHORT).show();
+                } else {
+                    if (getActivity() instanceof MainActivity) {
+                        ((MainActivity) getActivity()).loadFragment(new StudentEditProfileFragment(), true);
+                    }
+                }
+            });
         }
 
         if (cvChangePassword != null) {
