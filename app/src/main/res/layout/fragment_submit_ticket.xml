@@ -4,114 +4,96 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSurface"
+    android:background="@drawable/bg_grid"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/screen_padding">
+        android:padding="24dp">
+
+        <!-- System Label -->
+        <TextView
+            android:id="@+id/tvSystemLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.2"
+            android:text="SYSTEM INPUT"
+            android:textColor="@color/colorPrimary"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Screen title -->
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:text="@string/submit_ticket_title"
             android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
             android:textColor="@color/colorTextPrimary"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/tvSystemLabel" />
 
         <!-- Category Label -->
         <TextView
             android:id="@+id/tvCategoryLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xxlarge"
-            android:layout_marginStart="@dimen/spacing_xsmall"
-            android:text="@string/category_label"
+            android:layout_marginTop="32dp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.1"
+            android:text="CATEGORY"
             android:textColor="@color/colorTextSecondary"
-            android:textSize="14sp"
-            android:textStyle="bold"
+            android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
         <!-- Category dropdown container -->
-        <com.google.android.material.card.MaterialCardView
+        <FrameLayout
             android:id="@+id/cvCategory"
             android:layout_width="0dp"
-            android:layout_height="@dimen/login_input_height"
-            android:layout_marginTop="@dimen/spacing_xsmall"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/corner_radius_input"
-            app:cardElevation="0dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/colorDivider"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_input_rect"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvCategoryLabel">
 
-            <FrameLayout
+            <Spinner
+                android:id="@+id/spinnerCategory"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:paddingHorizontal="16dp"
+                tools:listitem="@android:layout/simple_spinner_dropdown_item" />
 
-                <Spinner
-                    android:id="@+id/spinnerCategory"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@null"
-                    android:paddingHorizontal="@dimen/spacing_medium"
-                    tools:listitem="@android:layout/simple_spinner_dropdown_item" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|center_vertical"
-                    android:layout_marginEnd="@dimen/spacing_medium"
-                    android:src="@drawable/ic_arrow_drop_down"
-                    android:contentDescription="@null" />
-            </FrameLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Submission progress -->
-        <ProgressBar
-            android:id="@+id/progressSubmit"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:indeterminateTint="@color/colorPrimary"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cvAttachment" />
-
-        <TextView
-            android:id="@+id/tvSubmitStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_small"
-            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-            android:textColor="@color/colorTextSecondary"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/progressSubmit" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_arrow_drop_down"
+                android:contentDescription="@null"
+                app:tint="@color/colorTextSecondary" />
+        </FrameLayout>
 
         <!-- Subject/Title Label -->
         <TextView
             android:id="@+id/tvSubjectLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:layout_marginStart="@dimen/spacing_xsmall"
-            android:text="@string/subject_title_label"
+            android:layout_marginTop="24dp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.1"
+            android:text="SUBJECT / TITLE"
             android:textColor="@color/colorTextSecondary"
-            android:textSize="14sp"
-            android:textStyle="bold"
+            android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cvCategory" />
 
@@ -119,16 +101,17 @@
         <EditText
             android:id="@+id/etTitle"
             android:layout_width="0dp"
-            android:layout_height="@dimen/login_input_height"
-            android:layout_marginTop="@dimen/spacing_xsmall"
-            android:background="@drawable/bg_input"
-            android:elevation="@dimen/elevation_low"
-            android:hint="@string/subject_title_hint"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_input_rect"
+            android:fontFamily="monospace"
+            android:hint="Brief summary of concern"
             android:inputType="text"
             android:maxLines="1"
-            android:paddingHorizontal="@dimen/spacing_medium"
+            android:paddingHorizontal="16dp"
             android:textColor="@color/colorTextPrimary"
             android:textColorHint="@color/colorTextSecondary"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvSubjectLabel" />
@@ -138,12 +121,12 @@
             android:id="@+id/tvDescriptionLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:layout_marginStart="@dimen/spacing_xsmall"
-            android:text="@string/detailed_description_label"
+            android:layout_marginTop="24dp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.1"
+            android:text="DETAILED DESCRIPTION"
             android:textColor="@color/colorTextSecondary"
-            android:textSize="14sp"
-            android:textStyle="bold"
+            android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/etTitle" />
 
@@ -152,16 +135,17 @@
             android:id="@+id/etDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xsmall"
-            android:background="@drawable/bg_input"
-            android:elevation="@dimen/elevation_low"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_input_rect"
+            android:fontFamily="monospace"
             android:gravity="top"
-            android:hint="@string/detailed_description_hint"
+            android:hint="Explain your concern here..."
             android:inputType="textMultiLine"
             android:minLines="6"
-            android:padding="@dimen/spacing_medium"
+            android:padding="16dp"
             android:textColor="@color/colorTextPrimary"
             android:textColorHint="@color/colorTextSecondary"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvDescriptionLabel" />
@@ -171,26 +155,22 @@
             android:id="@+id/tvAttachmentLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:layout_marginStart="@dimen/spacing_xsmall"
-            android:text="@string/attachment_label"
+            android:layout_marginTop="24dp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.1"
+            android:text="ATTACHMENT (OPTIONAL)"
             android:textColor="@color/colorTextSecondary"
-            android:textSize="14sp"
-            android:textStyle="bold"
+            android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/etDescription" />
 
         <!-- Attachment Area -->
-        <com.google.android.material.card.MaterialCardView
+        <FrameLayout
             android:id="@+id/cvAttachment"
             android:layout_width="0dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="@dimen/spacing_xsmall"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/corner_radius_card"
-            app:cardElevation="@dimen/elevation_low"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/colorDivider"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_attachment_dashed"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvAttachmentLabel">
@@ -203,55 +183,85 @@
 
                 <ImageView
                     android:id="@+id/ivAttachmentIcon"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/ic_attachment"
-                    android:contentDescription="@null" />
+                    android:contentDescription="@null"
+                    app:tint="@color/colorTextSecondary" />
 
                 <TextView
                     android:id="@+id/tvAttachmentHint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:text="@string/attachment_hint"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="monospace"
+                    android:text="TAP TO UPLOAD PHOTO OR FILE"
                     android:textColor="@color/colorTextSecondary"
-                    android:textSize="14sp" />
+                    android:textSize="11sp" />
 
                 <TextView
                     android:id="@+id/tvAttachmentName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_xsmall"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="monospace"
                     android:textColor="@color/colorPrimary"
                     android:textStyle="bold"
+                    android:textSize="11sp"
                     android:visibility="gone"
                     tools:text="my_document.pdf"
                     tools:visibility="visible" />
 
             </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+        </FrameLayout>
 
         <!-- Submit button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSubmit"
             android:layout_width="0dp"
-            android:layout_height="@dimen/login_button_height"
-            android:layout_marginTop="@dimen/spacing_xxlarge"
-            android:layout_marginBottom="@dimen/spacing_large"
-            app:backgroundTint="@color/colorSecondary"
-            app:cornerRadius="@dimen/corner_radius_button"
-            android:elevation="@dimen/elevation_medium"
-            android:text="@string/submit_new_concern"
-            android:textAllCaps="false"
+            android:layout_height="56dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="24dp"
+            app:backgroundTint="@color/colorPrimary"
+            app:cornerRadius="4dp"
+            android:text="SUBMIT NEW CONCERN"
+            android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="14sp"
             android:textStyle="bold"
+            app:icon="@drawable/ic_chevron_right"
+            app:iconGravity="end"
+            app:iconPadding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvSubmitStatus"
-            app:layout_constraintWidth_percent="0.9" />
+            app:layout_constraintTop_toBottomOf="@id/cvAttachment" />
+
+        <!-- Submission progress -->
+        <ProgressBar
+            android:id="@+id/progressSubmit"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:indeterminateTint="@color/colorPrimary"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/btnSubmit"
+            app:layout_constraintEnd_toEndOf="@id/btnSubmit"
+            app:layout_constraintStart_toStartOf="@id/btnSubmit"
+            app:layout_constraintTop_toTopOf="@id/btnSubmit" />
+
+        <TextView
+            android:id="@+id/tvSubmitStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="monospace"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="10sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnSubmit" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

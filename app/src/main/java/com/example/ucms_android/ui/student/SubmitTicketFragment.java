@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,7 +33,6 @@ import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.CategoryService;
 import com.example.ucms_android.network.TicketService;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.ByteArrayOutputStream;
@@ -51,7 +51,7 @@ public class SubmitTicketFragment extends Fragment {
 
     private Spinner spinnerCategory;
     private EditText etTitle, etDescription;
-    private MaterialCardView cvAttachment;
+    private FrameLayout cvAttachment;
     private MaterialButton btnSubmit;
     private TextView tvAttachmentName, tvAttachmentHint;
     private ProgressBar progressSubmit;
@@ -112,20 +112,23 @@ public class SubmitTicketFragment extends Fragment {
         switch (state) {
             case "IDLE":
                 btnSubmit.setEnabled(true);
-                btnSubmit.setText(getString(R.string.submit_new_concern));
+                btnSubmit.setText("SUBMIT NEW CONCERN");
+                btnSubmit.setIconResource(R.drawable.ic_chevron_right);
                 progressSubmit.setVisibility(View.GONE);
                 tvSubmitStatus.setVisibility(View.GONE);
                 break;
             case "SUBMITTING":
                 btnSubmit.setEnabled(false);
-                btnSubmit.setText("Submitting...");
+                btnSubmit.setText("");
+                btnSubmit.setIcon(null);
                 progressSubmit.setVisibility(View.VISIBLE);
                 tvSubmitStatus.setVisibility(View.VISIBLE);
                 tvSubmitStatus.setText("Creating your ticket...");
                 break;
             case "UPLOADING":
                 btnSubmit.setEnabled(false);
-                btnSubmit.setText("Submitting...");
+                btnSubmit.setText("");
+                btnSubmit.setIcon(null);
                 progressSubmit.setVisibility(View.VISIBLE);
                 tvSubmitStatus.setVisibility(View.VISIBLE);
                 tvSubmitStatus.setText("Uploading attachment...");
@@ -200,7 +203,12 @@ public class SubmitTicketFragment extends Fragment {
             }
         }
 
-        Long categoryId = categories.get(spinnerCategory.getSelectedItemPosition()).getId();
+        int selectedPos = spinnerCategory.getSelectedItemPosition();
+        if (selectedPos < 0 || selectedPos >= categories.size()) {
+            Toast.makeText(requireContext(), "Please select a category", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Long categoryId = categories.get(selectedPos).getId();
         TicketRequest request = new TicketRequest(title, description, categoryId);
 
         setSubmitState("SUBMITTING");
@@ -297,9 +305,27 @@ public class SubmitTicketFragment extends Fragment {
 
     private void onSubmitComplete() {
         if (!isAdded()) return;
-        Toast.makeText(requireContext(), getString(R.string.ticket_submitted), Toast.LENGTH_SHORT).show();
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).loadFragment(new StudentHomeFragment());
+        showSuccessDialog();
+    }
+
+    private void showSuccessDialog() {
+        android.app.Dialog dialog = new android.app.Dialog(requireContext());
+        dialog.setContentView(R.layout.dialog_success);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.setCancelable(false);
+
+        MaterialButton btnAcknowledge = dialog.findViewById(R.id.btnAcknowledge);
+        btnAcknowledge.setOnClickListener(v -> {
+            dialog.dismiss();
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).loadFragment(new StudentHomeFragment());
+            }
+        });
+
+        dialog.show();
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setLayout(android.view.ViewGroup.LayoutParams.MATCH_PARENT, 
+                                       android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }
 }

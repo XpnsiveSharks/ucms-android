@@ -4,12 +4,12 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Brand — Primary (Orange) -->
-    <color name="colorPrimary">#FFAA33</color>
-    <color name="colorPrimaryDark">#F78914</color>
+    <!-- Brand — Primary (Create Ticket orange) -->
+    <color name="colorPrimary">@color/colorOrange</color>
+    <color name="colorPrimaryDark">#E63E00</color>
     <color name="colorOnPrimary">#FFFFFF</color>
-    <color name="colorPrimaryContainer">#FFE0A0</color>
-    <color name="colorOnPrimaryContainer">#1A1A1A</color>
+    <color name="colorPrimaryContainer">#FFE2D8</color>
+    <color name="colorOnPrimaryContainer">#2B130A</color>
 
     <!-- Brand — Secondary (Green) -->
     <color name="colorSecondary">#92CD28</color>
@@ -45,6 +45,12 @@
     <!-- Custom -->
     <color name="colorAccentBlue">#2196F3</color>
     <color name="colorError">#D32F2F</color>
+    <color name="colorOrange">#FF4500</color>
+    <color name="colorGrid">#E0E0E0</color>
+    <color name="colorSuccess">#10B981</color>
+    <color name="colorSuccessContainer">#D1FAE5</color>
+
+    <color name="colorGridSubtle">#1AE0E0E0</color>
 
 
 </resources>
