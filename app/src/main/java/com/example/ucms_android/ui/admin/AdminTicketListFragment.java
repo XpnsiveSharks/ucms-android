@@ -30,8 +30,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -227,7 +232,82 @@ public class AdminTicketListFragment extends Fragment {
             }
         }
 
+        filtered.sort((left, right) -> {
+            int leftRank = priorityRank(left);
+            int rightRank = priorityRank(right);
+            if (leftRank != rightRank) {
+                return Integer.compare(leftRank, rightRank);
+            }
+            return Long.compare(ticketTimestamp(right), ticketTimestamp(left));
+        });
+
         adapter.updateData(filtered);
         showState(filtered.isEmpty() ? "EMPTY" : "DATA");
+    }
+
+    private int priorityRank(Ticket ticket) {
+        if (ticket == null) {
+            return 5;
+        }
+
+        String priority = resolvePriorityLevel(ticket);
+        if ("CRITICAL".equals(priority)) {
+            return 0;
+        }
+        if ("HIGH".equals(priority)) {
+            return 1;
+        }
+        if ("LOW".equals(priority)) {
+            return 2;
+        }
+        if ("MUTED".equals(priority)) {
+            return 3;
+        }
+        return 4;
+    }
+
+    private String resolvePriorityLevel(Ticket ticket) {
+        String label = ticket.getUrgencyLabel();
+        if (label != null && !label.trim().isEmpty()) {
+            String normalized = label.trim().toUpperCase(Locale.ROOT);
+            if ("MEDIUM".equals(normalized)) {
+                return "LOW";
+            }
+            if ("CRITICAL".equals(normalized) || "HIGH".equals(normalized)
+                    || "LOW".equals(normalized) || "MUTED".equals(normalized)) {
+                return normalized;
+            }
+        }
+
+        Integer score = ticket.getUrgencyScore();
+        if (score != null) {
+            if (score >= 80) return "CRITICAL";
+            if (score >= 55) return "HIGH";
+            if (score >= 25) return "LOW";
+            return "MUTED";
+        }
+
+        if (ticket.isUrgent()) {
+            return "HIGH";
+        }
+        return null;
+    }
+
+    private long ticketTimestamp(Ticket ticket) {
+        String raw = ticket.getCreatedAt();
+        if (raw == null || raw.trim().isEmpty()) {
+            return 0L;
+        }
+
+        try {
+            return OffsetDateTime.parse(raw).toInstant().toEpochMilli();
+        } catch (DateTimeParseException ignored) {
+        }
+
+        try {
+            return LocalDateTime.parse(raw).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        } catch (DateTimeParseException ignored) {
+        }
+        return 0L;
     }
 }

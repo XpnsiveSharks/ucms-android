@@ -91,7 +91,7 @@
                     android:textColor="@color/colorTextPrimary"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@id/tvCategoryName"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/tvUrgency"
                     app:layout_constraintStart_toEndOf="@id/btnBack"
                     app:layout_constraintTop_toTopOf="@id/btnBack"
                     tools:text="Ticket #10149" />
@@ -104,10 +104,44 @@
                     android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                     android:textColor="@color/colorTextSecondary"
                     app:layout_constraintBottom_toBottomOf="@id/btnBack"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/tvUrgency"
                     app:layout_constraintStart_toEndOf="@id/btnBack"
                     app:layout_constraintTop_toBottomOf="@id/tvTicketNumber"
                     tools:text="Academic Department" />
+
+                <TextView
+                    android:id="@+id/tvUrgency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_badge_urgent"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/urgent"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@id/btnBack"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/btnBack"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tvUrgencyReason"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="4"
+                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                    android:textColor="@color/colorTextSecondary"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvUrgency"
+                    tools:text="Repeated unresolved reports and no admin response"
+                    tools:visibility="visible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

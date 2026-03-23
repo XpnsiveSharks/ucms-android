@@ -95,6 +95,40 @@
             tools:background="@drawable/bg_badge_pending"
             tools:text="PENDING" />
 
+        <TextView
+            android:id="@+id/tvUrgency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xsmall"
+            android:background="@drawable/bg_badge_urgent"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/urgent"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvStatus"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tvUrgencyReason"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="4"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+            android:textColor="@color/colorTextSecondary"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvUrgency"
+            tools:text="Direct threat language and imminent risk"
+            tools:visibility="visible" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Orange accent line -->
@@ -723,9 +757,78 @@
                          android:textAllCaps="true"
                          android:letterSpacing="0.1"
                          android:textSize="13sp"
-                         android:textStyle="bold"
-                         app:backgroundTint="@color/colorPrimary"
-                         app:cornerRadius="0dp" />
+                          android:textStyle="bold"
+                          app:backgroundTint="@color/colorPrimary"
+                          app:cornerRadius="0dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/spacing_medium"
+                            android:background="@color/colorDivider" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_medium"
+                            android:text="OVERRIDE URGENCY"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.15"
+                            android:textColor="@color/colorTextSecondary" />
+
+                        <AutoCompleteTextView
+                            android:id="@+id/dropUrgencyLevel"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:layout_marginTop="@dimen/spacing_xsmall"
+                            android:background="@color/colorSurface"
+                            android:hint="Select priority"
+                            android:inputType="none"
+                            android:paddingStart="@dimen/spacing_medium"
+                            android:paddingEnd="@dimen/spacing_medium"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textColorHint="@color/colorTextSecondary" />
+
+                        <EditText
+                            android:id="@+id/etUrgencyOverrideReason"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_small"
+                            android:background="@color/colorSurface"
+                            android:hint="Reason (optional)"
+                            android:inputType="textMultiLine"
+                            android:maxLines="3"
+                            android:minLines="2"
+                            android:padding="@dimen/spacing_medium"
+                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textColorHint="@color/colorTextSecondary" />
+
+                        <TextView
+                            android:id="@+id/tvOverrideState"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xsmall"
+                            android:textColor="@color/colorTextSecondary"
+                            android:textSize="11sp"
+                            android:visibility="gone"
+                            tools:text="Currently overridden by admin"
+                            tools:visibility="visible" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnOverrideUrgency"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:layout_marginTop="@dimen/spacing_small"
+                            android:text="APPLY URGENCY OVERRIDE"
+                            android:textAllCaps="true"
+                            android:letterSpacing="0.1"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:backgroundTint="@color/colorSecondary"
+                            app:cornerRadius="0dp" />
 
                     </LinearLayout>
 

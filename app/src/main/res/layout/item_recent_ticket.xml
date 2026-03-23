@@ -46,6 +46,27 @@
             app:layout_constraintTop_toTopOf="@id/tvTicketNumber"
             tools:text="10 mins ago" />
 
+        <!-- Priority badge -->
+        <TextView
+            android:id="@+id/tvUrgency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_small"
+            android:background="@drawable/bg_badge_urgent"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:text="@string/urgent"
+            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/tvTimeAgo"
+            app:layout_constraintStart_toEndOf="@id/tvTimeAgo"
+            app:layout_constraintTop_toTopOf="@id/tvTimeAgo"
+            tools:visibility="visible" />
+
         <!-- Chevron -->
         <ImageView
             android:id="@+id/ivChevron"

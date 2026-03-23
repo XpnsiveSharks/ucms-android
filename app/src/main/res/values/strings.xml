@@ -5,6 +5,8 @@
     <string name="student_id">Student ID</string>
     <string name="student_id_label">User-ID / Student-ID</string>
     <string name="password">Password</string>
+    <string name="show_password">Show</string>
+    <string name="hide_password">Hide</string>
     <string name="full_name">Full Name</string>
     <string name="course">Course</string>
     <string name="year_level">Year Level</string>
@@ -132,6 +134,8 @@
     <string name="error_loading_tickets">Failed to load tickets</string>
     <string name="error_network">Network error. Please try again.</string>
     <string name="status_updated">Status updated successfully</string>
+    <string name="urgent">URGENT</string>
+    <string name="urgency_signals_prefix">Signals: %1$s</string>
     <string name="error_invalid_transition">Invalid status transition</string>
     <string name="error_student_not_confirmed">Student has not confirmed resolution yet</string>
     <string name="error_update_failed">Failed to update status</string>

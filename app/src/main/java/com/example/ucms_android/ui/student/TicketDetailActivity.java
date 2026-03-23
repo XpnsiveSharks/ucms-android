@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,6 +34,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,7 +43,7 @@ import retrofit2.Response;
 public class TicketDetailActivity extends AppCompatActivity {
 
     private MaterialCardView btnBack;
-    private TextView tvTicketNumber, tvCategoryName, tvTicketTitle, tvDescription, tvAttachmentName;
+    private TextView tvTicketNumber, tvCategoryName, tvTicketTitle, tvDescription, tvAttachmentName, tvUrgency, tvUrgencyReason;
     private ImageView ivAttachmentPreview;
     private MaterialCardView cvAttachment;
     private LinearLayout layoutAttachmentContent;
@@ -94,6 +96,8 @@ public class TicketDetailActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         tvTicketNumber = findViewById(R.id.tvTicketNumber);
         tvCategoryName = findViewById(R.id.tvCategoryName);
+        tvUrgency = findViewById(R.id.tvUrgency);
+        tvUrgencyReason = findViewById(R.id.tvUrgencyReason);
         tvTicketTitle = findViewById(R.id.tvTicketTitle);
         tvDescription = findViewById(R.id.tvDescription);
         tvAttachmentName = findViewById(R.id.tvAttachmentName);
@@ -198,6 +202,15 @@ public class TicketDetailActivity extends AppCompatActivity {
     private void populateViews(Ticket ticket) {
         tvTicketNumber.setText(ticket.getTicketNumber() != null ? "Ticket " + ticket.getTicketNumber() : "Ticket #" + ticket.getId());
         tvCategoryName.setText(ticket.getCategoryName() != null ? ticket.getCategoryName() : "");
+        String priorityLevel = resolvePriorityLevel(ticket);
+        boolean showUrgent = priorityLevel != null;
+        applyPriorityBadge(tvUrgency, priorityLevel);
+        String urgencyDetails = buildUrgencyDetails(ticket);
+        boolean showReason = showUrgent && urgencyDetails != null && !urgencyDetails.trim().isEmpty();
+        tvUrgencyReason.setVisibility(showReason ? View.VISIBLE : View.GONE);
+        if (showReason) {
+            tvUrgencyReason.setText(urgencyDetails);
+        }
         tvTicketTitle.setText(ticket.getTitle());
         tvDescription.setText(ticket.getDescription());
         layoutAttachmentContent.setVisibility(View.GONE);
@@ -386,5 +399,86 @@ public class TicketDetailActivity extends AppCompatActivity {
                 cvAttachment.setVisibility(View.GONE);
             }
         });
+    }
+
+    private String resolvePriorityLevel(Ticket ticket) {
+        if (ticket == null) {
+            return null;
+        }
+
+        String label = ticket.getUrgencyLabel();
+        if (label != null && !label.trim().isEmpty()) {
+            String normalized = label.trim().toUpperCase(Locale.ROOT);
+            if ("CRITICAL".equals(normalized) || "HIGH".equals(normalized)
+                    || "LOW".equals(normalized) || "MUTED".equals(normalized)) {
+                return normalized;
+            }
+            if ("MEDIUM".equals(normalized)) {
+                return "LOW";
+            }
+        }
+
+        Integer score = ticket.getUrgencyScore();
+        if (score != null) {
+            if (score >= 80) return "CRITICAL";
+            if (score >= 55) return "HIGH";
+            if (score >= 25) return "LOW";
+            return "MUTED";
+        }
+
+        if (ticket.isUrgent()) {
+            return "HIGH";
+        }
+        return null;
+    }
+
+    private void applyPriorityBadge(TextView badgeView, String priorityLevel) {
+        if (priorityLevel == null) {
+            badgeView.setVisibility(View.GONE);
+            return;
+        }
+
+        badgeView.setVisibility(View.VISIBLE);
+        badgeView.setText(priorityLevel);
+        switch (priorityLevel) {
+            case "CRITICAL":
+                badgeView.setBackgroundResource(R.drawable.bg_badge_urgent);
+                badgeView.setTextColor(ContextCompat.getColor(this, R.color.white));
+                break;
+            case "HIGH":
+                badgeView.setBackgroundResource(R.drawable.bg_badge_priority_high);
+                badgeView.setTextColor(ContextCompat.getColor(this, R.color.colorTextPrimary));
+                break;
+            case "LOW":
+                badgeView.setBackgroundResource(R.drawable.bg_badge_priority_low);
+                badgeView.setTextColor(ContextCompat.getColor(this, R.color.white));
+                break;
+            default:
+                badgeView.setBackgroundResource(R.drawable.bg_badge_priority_muted);
+                badgeView.setTextColor(ContextCompat.getColor(this, R.color.white));
+                break;
+        }
+    }
+
+    private String buildUrgencyDetails(Ticket ticket) {
+        if (ticket == null) {
+            return null;
+        }
+
+        String reason = ticket.getUrgencyReason();
+        String signals = ticket.getUrgencySignals();
+        String normalizedReason = reason == null ? "" : reason.trim();
+        String normalizedSignals = signals == null ? "" : signals.trim();
+
+        if (normalizedReason.isEmpty() && normalizedSignals.isEmpty()) {
+            return null;
+        }
+        if (normalizedSignals.isEmpty()) {
+            return normalizedReason;
+        }
+        if (normalizedReason.isEmpty()) {
+            return getString(R.string.urgency_signals_prefix, normalizedSignals);
+        }
+        return normalizedReason + "\n" + getString(R.string.urgency_signals_prefix, normalizedSignals);
     }
 }
