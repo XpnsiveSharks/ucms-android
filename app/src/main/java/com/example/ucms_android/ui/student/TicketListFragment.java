@@ -50,7 +50,7 @@ public class TicketListFragment extends Fragment {
     private TextView tvEmptyState;
     private RecyclerView rvTickets;
     private MaterialButton btnFilter;
-    private MaterialButton btnSubmitTicket;
+    private View btnSubmitTicket;
     private ShimmerFrameLayout shimmerLayout;
     private LinearLayout layoutError;
     private TextView tabAll, tabInProgress, tabResolved;
