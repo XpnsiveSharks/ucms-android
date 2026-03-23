@@ -50,8 +50,6 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
         holder.tvTicketTitle.setText(ticket.getTitle());
         holder.tvCategory.setText(ticket.getCategoryName());
         holder.tvTime.setText(DateFormatter.formatRelativeTime(ticket.getCreatedAt()));
-        holder.tvStatus.setText(ticket.getStatus());
-        holder.tvStatus.setBackgroundResource(getStatusBackgroundResource(ticket.getStatus()));
         applyPriorityBadge(holder.tvUrgency, ticket);
         holder.itemView.setOnClickListener(v -> listener.onTicketClick(ticket));
     }
@@ -133,7 +131,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
     public int getItemCount() { return tickets.size(); }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTicketNumber, tvTicketTitle, tvCategory, tvTime, tvStatus, tvUrgency;
+        TextView tvTicketNumber, tvTicketTitle, tvCategory, tvTime, tvUrgency;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -141,7 +139,6 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
             tvTicketTitle = itemView.findViewById(R.id.tvTicketTitle);
             tvCategory = itemView.findViewById(R.id.tvCategory);
             tvTime = itemView.findViewById(R.id.tvTime);
-            tvStatus = itemView.findViewById(R.id.tvStatus);
             tvUrgency = itemView.findViewById(R.id.tvUrgency);
         }
     }

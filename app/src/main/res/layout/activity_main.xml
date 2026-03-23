@@ -26,6 +26,8 @@
         app:itemTextColor="@color/bottom_nav_tint"
         app:itemRippleColor="@color/colorPrimaryContainer"
         app:itemActiveIndicatorStyle="@null"
+        app:itemTextAppearanceActive="@style/TextAppearance.App.BottomNav"
+        app:itemTextAppearanceInactive="@style/TextAppearance.App.BottomNav"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_admin"
         app:layout_constraintBottom_toBottomOf="parent"
