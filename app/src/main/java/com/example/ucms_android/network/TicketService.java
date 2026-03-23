@@ -9,6 +9,7 @@ import com.example.ucms_android.model.StatusUpdateRequest;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.model.TicketRequest;
 import com.example.ucms_android.model.TicketResponse;
+import com.example.ucms_android.model.UrgencyOverrideRequest;
 
 import java.util.List;
 
@@ -36,6 +37,9 @@ public interface TicketService {
 
     @PATCH("api/tickets/{id}/status")
     Call<ApiResponse<Ticket>> updateTicketStatus(@Path("id") Long id, @Body StatusUpdateRequest request);
+
+    @PATCH("api/admin/ai/tickets/{id}/urgency-override")
+    Call<ApiResponse<Ticket>> overrideTicketUrgency(@Path("id") Long id, @Body UrgencyOverrideRequest request);
 
     @PATCH("api/tickets/{id}/confirm-resolved")
     Call<ApiResponse<Ticket>> confirmResolved(@Path("id") Long id);

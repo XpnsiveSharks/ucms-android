@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ucms_android.R;
@@ -13,6 +14,7 @@ import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.util.DateFormatter;
 
 import java.util.List;
+import java.util.Locale;
 
 public class RecentTicketAdapter extends RecyclerView.Adapter<RecentTicketAdapter.ViewHolder> {
 
@@ -54,7 +56,69 @@ public class RecentTicketAdapter extends RecyclerView.Adapter<RecentTicketAdapte
         holder.tvTicketTitle.setText(ticket.getTitle());
         holder.tvCategory.setText(ticket.getCategoryName());
         holder.tvTimeAgo.setText(DateFormatter.formatRelativeTime(ticket.getCreatedAt()));
+        applyPriorityBadge(holder.tvUrgency, ticket);
         holder.itemView.setOnClickListener(v -> listener.onTicketClick(ticket));
+    }
+
+    private void applyPriorityBadge(TextView badgeView, Ticket ticket) {
+        String priority = resolvePriorityLevel(ticket);
+        if (priority == null) {
+            badgeView.setVisibility(View.GONE);
+            return;
+        }
+
+        badgeView.setVisibility(View.VISIBLE);
+        badgeView.setText(priority);
+
+        switch (priority) {
+            case "CRITICAL":
+                badgeView.setBackgroundResource(R.drawable.bg_badge_urgent);
+                badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.white));
+                break;
+            case "HIGH":
+                badgeView.setBackgroundResource(R.drawable.bg_badge_priority_high);
+                badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorTextPrimary));
+                break;
+            case "LOW":
+                badgeView.setBackgroundResource(R.drawable.bg_badge_priority_low);
+                badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.white));
+                break;
+            default:
+                badgeView.setBackgroundResource(R.drawable.bg_badge_priority_muted);
+                badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.white));
+                break;
+        }
+    }
+
+    private String resolvePriorityLevel(Ticket ticket) {
+        if (ticket == null) {
+            return null;
+        }
+
+        String label = ticket.getUrgencyLabel();
+        if (label != null && !label.trim().isEmpty()) {
+            String normalized = label.trim().toUpperCase(Locale.ROOT);
+            if ("CRITICAL".equals(normalized) || "HIGH".equals(normalized)
+                    || "LOW".equals(normalized) || "MUTED".equals(normalized)) {
+                return normalized;
+            }
+            if ("MEDIUM".equals(normalized)) {
+                return "LOW";
+            }
+        }
+
+        Integer score = ticket.getUrgencyScore();
+        if (score != null) {
+            if (score >= 80) return "CRITICAL";
+            if (score >= 55) return "HIGH";
+            if (score >= 25) return "LOW";
+            return "MUTED";
+        }
+
+        if (ticket.isUrgent()) {
+            return "HIGH";
+        }
+        return null;
     }
 
     @Override
@@ -63,7 +127,7 @@ public class RecentTicketAdapter extends RecyclerView.Adapter<RecentTicketAdapte
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTicketNumber, tvTicketTitle, tvCategory, tvTimeAgo;
+        TextView tvTicketNumber, tvTicketTitle, tvCategory, tvTimeAgo, tvUrgency;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -71,6 +135,7 @@ public class RecentTicketAdapter extends RecyclerView.Adapter<RecentTicketAdapte
             tvTicketTitle = itemView.findViewById(R.id.tvTicketTitle);
             tvCategory = itemView.findViewById(R.id.tvCategory);
             tvTimeAgo = itemView.findViewById(R.id.tvTimeAgo);
+            tvUrgency = itemView.findViewById(R.id.tvUrgency);
         }
     }
 }

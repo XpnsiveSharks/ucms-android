@@ -37,6 +37,10 @@
     <color name="colorStatusInProgress">#B6EE56</color>
     <color name="colorStatusResolved">#92CD28</color>
     <color name="colorStatusClosed">#757575</color>
+    <color name="colorStatusUrgent">#C62828</color>
+    <color name="colorPriorityHigh">#F2C94C</color>
+    <color name="colorPriorityLow">#1E88E5</color>
+    <color name="colorPriorityMuted">#9E9E9E</color>
 
     <!-- Custom -->
     <color name="colorAccentBlue">#2196F3</color>

@@ -25,27 +25,53 @@
             android:textAppearance="@style/TextAppearance.Material3.BodySmall"
             android:textColor="@color/colorTextPrimary"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/tvStatus"
+            app:layout_constraintEnd_toStartOf="@id/layoutBadges"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="#10149" />
 
-        <!-- Status badge -->
-        <TextView
-            android:id="@+id/tvStatus"
+        <LinearLayout
+            android:id="@+id/layoutBadges"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_badge_pending"
-            android:paddingStart="@dimen/spacing_medium"
-            android:paddingEnd="@dimen/spacing_medium"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-             android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
-             android:textColor="@color/white"
-             android:textStyle="bold"
-             app:layout_constraintEnd_toEndOf="parent"
-             app:layout_constraintTop_toTopOf="@id/tvTicketNumber"
-             tools:text="Pending" />
+            android:gravity="end"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!-- Status badge -->
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_badge_pending"
+                android:paddingStart="@dimen/spacing_medium"
+                android:paddingEnd="@dimen/spacing_medium"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                tools:text="Pending" />
+
+            <TextView
+                android:id="@+id/tvUrgency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xsmall"
+                android:background="@drawable/bg_badge_urgent"
+                android:paddingStart="@dimen/spacing_medium"
+                android:paddingEnd="@dimen/spacing_medium"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="@string/urgent"
+                android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+        </LinearLayout>
 
         <!-- Ticket title -->
         <TextView
@@ -58,7 +84,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvTicketNumber"
+            app:layout_constraintTop_toBottomOf="@id/layoutBadges"
             tools:text="Issue with Subject Pre-requisites" />
 
         <!-- Category -->
