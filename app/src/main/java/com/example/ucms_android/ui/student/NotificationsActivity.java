@@ -17,8 +17,6 @@ import com.example.ucms_android.model.Notification;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.NotificationService;
 import com.example.ucms_android.ui.adapter.NotificationAdapter;
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,20 +41,22 @@ public class NotificationsActivity extends AppCompatActivity {
         rvNotifications = findViewById(R.id.rvNotifications);
         progressBar = findViewById(R.id.progressBar);
         tvEmpty = findViewById(R.id.tvEmpty);
-        MaterialCardView btnBack = findViewById(R.id.btnBack);
-        MaterialButton btnMarkAllRead = findViewById(R.id.btnMarkAllRead);
+        View btnClose = findViewById(R.id.btnClose);
+        View btnMarkAllRead = findViewById(R.id.btnMarkAllRead);
 
         notificationService = ApiClient.getInstance(this).create(NotificationService.class);
 
         adapter = new NotificationAdapter(new ArrayList<>(), notification -> {
-            // Mark as read
-            notificationService.markAsRead(notification.getId()).enqueue(new Callback<ApiResponse<Notification>>() {
-                @Override
-                public void onResponse(@NonNull Call<ApiResponse<Notification>> call,
-                                       @NonNull Response<ApiResponse<Notification>> response) {}
-                @Override
-                public void onFailure(@NonNull Call<ApiResponse<Notification>> call, @NonNull Throwable t) {}
-            });
+            // Mark as read if unread
+            if (!notification.isRead()) {
+                notificationService.markAsRead(notification.getId()).enqueue(new Callback<ApiResponse<Notification>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse<Notification>> call,
+                                           @NonNull Response<ApiResponse<Notification>> response) {}
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse<Notification>> call, @NonNull Throwable t) {}
+                });
+            }
 
             // Open ticket detail
             if (notification.getTicketId() != null) {
@@ -69,19 +69,23 @@ public class NotificationsActivity extends AppCompatActivity {
         rvNotifications.setLayoutManager(new LinearLayoutManager(this));
         rvNotifications.setAdapter(adapter);
 
-        btnBack.setOnClickListener(v -> finish());
+        if (btnClose != null) {
+            btnClose.setOnClickListener(v -> finish());
+        }
 
-        btnMarkAllRead.setOnClickListener(v -> {
-            notificationService.markAllAsRead().enqueue(new Callback<ApiResponse<Void>>() {
-                @Override
-                public void onResponse(@NonNull Call<ApiResponse<Void>> call,
-                                       @NonNull Response<ApiResponse<Void>> response) {
-                    loadNotifications(); // refresh list
-                }
-                @Override
-                public void onFailure(@NonNull Call<ApiResponse<Void>> call, @NonNull Throwable t) {}
+        if (btnMarkAllRead != null) {
+            btnMarkAllRead.setOnClickListener(v -> {
+                notificationService.markAllAsRead().enqueue(new Callback<ApiResponse<Void>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse<Void>> call,
+                                           @NonNull Response<ApiResponse<Void>> response) {
+                        loadNotifications();
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse<Void>> call, @NonNull Throwable t) {}
+                });
             });
-        });
+        }
 
         loadNotifications();
     }
