@@ -41,7 +41,7 @@
             android:letterSpacing="0.1"
             android:text="SUCCESS"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="@dimen/text_size_h2" />
 
         <TextView
             android:id="@+id/tvSuccessMessage"
@@ -52,7 +52,7 @@
             android:gravity="center"
             android:text="Your request has been received. A school staff member will handle it soon."
             android:textColor="@color/colorTextSecondary"
-            android:textSize="14sp" />
+            android:textSize="@dimen/text_size_body" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAcknowledge"
@@ -64,7 +64,7 @@
             android:text="ACKNOWLEDGE"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_body"
             android:textStyle="bold" />
 
     </LinearLayout>

@@ -38,7 +38,7 @@
                 android:layout_alignParentStart="true"
                 android:fontFamily="monospace"
                 android:textColor="@color/colorOrange"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_small"
                 tools:text="Ticket Update" />
 
             <TextView
@@ -48,7 +48,7 @@
                 android:layout_alignParentEnd="true"
                 android:fontFamily="monospace"
                 android:textColor="@color/colorOrange"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_small"
                 tools:text="2m ago" />
         </RelativeLayout>
 
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_h4"
             android:textStyle="bold"
             tools:text="Status changed to IN_PROGRESS" />
 
@@ -69,7 +69,7 @@
             android:layout_marginTop="8dp"
             android:fontFamily="monospace"
             android:textColor="@color/colorTextSecondary"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_size_small"
             tools:text="TKT-20260315-0002 has been updated by Admin." />
 
     </LinearLayout>

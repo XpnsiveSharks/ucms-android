@@ -41,4 +41,16 @@
     <dimen name="text_size_button">16sp</dimen>
     <dimen name="text_size_avatar_initials">28sp</dimen>
     <dimen name="vector_icon_size">24dp</dimen>
+
+    <!-- Standard Text Sizes -->
+    <dimen name="text_size_h1">32sp</dimen>
+    <dimen name="text_size_h2">22sp</dimen>
+    <dimen name="text_size_h3">18sp</dimen>
+    <dimen name="text_size_h4">16sp</dimen>
+    <dimen name="text_size_body">14sp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_xsmall">11sp</dimen>
+    <dimen name="text_size_tiny">10sp</dimen>
+    <dimen name="text_size_stat_large">48sp</dimen>
+    <dimen name="text_size_stat_medium">40sp</dimen>
 </resources>
