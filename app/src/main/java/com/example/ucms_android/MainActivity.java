@@ -61,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
             else if (itemId == R.id.nav_admin_settings) fragment = new SettingsFragment();
             else if (itemId == R.id.nav_student_home) fragment = new StudentHomeFragment();
             else if (itemId == R.id.nav_student_tickets) fragment = new TicketListFragment();
-    else if (itemId == R.id.nav_student_add) fragment = new SubmitTicketFragment();
-            else if (itemId == R.id.nav_student_profile) fragment = new StudentProfileFragment();
+            else if (itemId == R.id.nav_student_add) fragment = new SubmitTicketFragment();
+            else if (itemId == R.id.nav_student_settings) fragment = new SettingsFragment();
             
             if (fragment != null) {
                 loadFragment(fragment);

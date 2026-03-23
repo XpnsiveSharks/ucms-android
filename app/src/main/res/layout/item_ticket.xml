@@ -55,6 +55,26 @@
             tools:text="CRITICAL"
             tools:visibility="visible" />
 
+        <!-- Status badge -->
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_badge_outline_pending"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.1"
+            android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+            android:textColor="@color/colorStatusPending"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="PENDING"
+            tools:visibility="visible" />
+
         <!-- Ticket title -->
         <TextView
             android:id="@+id/tvTicketTitle"

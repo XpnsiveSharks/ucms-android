@@ -24,9 +24,11 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
 
     private List<Ticket> tickets;
     private final OnTicketClickListener listener;
+    private final boolean isAdmin;
 
-    public TicketAdapter(List<Ticket> tickets, OnTicketClickListener listener) {
+    public TicketAdapter(List<Ticket> tickets, boolean isAdmin, OnTicketClickListener listener) {
         this.tickets = tickets;
+        this.isAdmin = isAdmin;
         this.listener = listener;
     }
 
@@ -50,8 +52,41 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
         holder.tvTicketTitle.setText(ticket.getTitle());
         holder.tvCategory.setText(ticket.getCategoryName());
         holder.tvTime.setText(DateFormatter.formatRelativeTime(ticket.getCreatedAt()));
-        applyPriorityBadge(holder.tvUrgency, ticket);
+        
+        if (isAdmin) {
+            holder.tvStatus.setVisibility(View.GONE);
+            applyPriorityBadge(holder.tvUrgency, ticket);
+        } else {
+            holder.tvUrgency.setVisibility(View.GONE);
+            applyStatusBadge(holder.tvStatus, ticket);
+        }
+        
         holder.itemView.setOnClickListener(v -> listener.onTicketClick(ticket));
+    }
+
+    private void applyStatusBadge(TextView badgeView, Ticket ticket) {
+        if (ticket == null || ticket.getStatus() == null) {
+            badgeView.setVisibility(View.GONE);
+            return;
+        }
+        
+        badgeView.setVisibility(View.VISIBLE);
+        String status = ticket.getStatus();
+        badgeView.setText(status.replace("_", " "));
+        
+        if ("PENDING".equalsIgnoreCase(status)) {
+            badgeView.setBackgroundResource(R.drawable.bg_badge_outline_pending);
+            badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorStatusPending));
+        } else if ("IN_PROGRESS".equalsIgnoreCase(status)) {
+            badgeView.setBackgroundResource(R.drawable.bg_badge_outline_inprogress);
+            badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorStatusInProgress));
+        } else if ("RESOLVED".equalsIgnoreCase(status)) {
+            badgeView.setBackgroundResource(R.drawable.bg_badge_outline_resolved);
+            badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorStatusResolved));
+        } else {
+            badgeView.setBackgroundResource(R.drawable.bg_badge_outline_closed);
+            badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorStatusClosed));
+        }
     }
 
     private void applyPriorityBadge(TextView badgeView, Ticket ticket) {
@@ -131,7 +166,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
     public int getItemCount() { return tickets.size(); }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTicketNumber, tvTicketTitle, tvCategory, tvTime, tvUrgency;
+        TextView tvTicketNumber, tvTicketTitle, tvCategory, tvTime, tvUrgency, tvStatus;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -140,6 +175,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
             tvCategory = itemView.findViewById(R.id.tvCategory);
             tvTime = itemView.findViewById(R.id.tvTime);
             tvUrgency = itemView.findViewById(R.id.tvUrgency);
+            tvStatus = itemView.findViewById(R.id.tvStatus);
         }
     }
 }

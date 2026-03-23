@@ -9,11 +9,11 @@
         android:icon="@drawable/sel_nav_add"
         android:title="ADD" />
     <item
-        android:id="@+id/nav_student_profile"
-        android:icon="@drawable/sel_nav_profile"
-        android:title="PROFILE" />
-    <item
         android:id="@+id/nav_student_tickets"
         android:icon="@drawable/sel_nav_tickets"
         android:title="TICKETS" />
+    <item
+        android:id="@+id/nav_student_settings"
+        android:icon="@drawable/sel_nav_admin_settings"
+        android:title="SETTINGS" />
 </menu>
