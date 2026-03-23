@@ -50,6 +50,10 @@
     <color name="colorSuccess">#10B981</color>
     <color name="colorSuccessContainer">#D1FAE5</color>
 
+    <color name="colorDanger">#EF4444</color>
+    <color name="colorDangerContainer">#1AEF4444</color>
+
+
     <color name="colorGridSubtle">#1AE0E0E0</color>
 
 
