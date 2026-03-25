@@ -3,194 +3,54 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="vertical">
 
-    <androidx.cardview.widget.CardView
+    <!-- Top Cards Shimmer -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="2dp">
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+        <View
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:background="@color/colorDivider" />
 
-            <View
-                android:layout_width="140dp"
-                android:layout_height="12dp"
-                android:background="#E0E0E0" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@color/colorDivider" />
+    </LinearLayout>
 
-            <View
-                android:layout_width="80dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="12dp"
-                android:background="#E0E0E0" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="12dp"
-                android:layout_marginTop="24dp"
-                android:background="#E0E0E0" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="80dp"
-                    android:layout_height="10dp"
-                    android:background="#E0E0E0" />
-
-                <View
-                    android:layout_width="80dp"
-                    android:layout_height="10dp"
-                    android:layout_marginStart="24dp"
-                    android:background="#E0E0E0" />
-            </LinearLayout>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
+    <!-- Chart Shimmer -->
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="2dp">
+        android:layout_height="240dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/colorDivider" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
-
-            <View
-                android:layout_width="180dp"
-                android:layout_height="14dp"
-                android:background="#E0E0E0" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:orientation="vertical">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="12dp"
-                    android:background="#E0E0E0" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="4dp"
-                    android:layout_marginTop="8dp"
-                    android:background="#E0E0E0" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="vertical">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="12dp"
-                    android:background="#E0E0E0" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="4dp"
-                    android:layout_marginTop="8dp"
-                    android:background="#E0E0E0" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="vertical">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="12dp"
-                    android:background="#E0E0E0" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="4dp"
-                    android:layout_marginTop="8dp"
-                    android:background="#E0E0E0" />
-            </LinearLayout>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
+    <!-- List Shimmer -->
+    <View
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="2dp">
+        android:layout_height="60dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/colorDivider" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="20dp">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/colorDivider" />
 
-            <View
-                android:layout_width="120dp"
-                android:layout_height="12dp"
-                android:background="#E0E0E0" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="24dp"
-                android:layout_weight="1"
-                android:gravity="bottom"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_marginHorizontal="8dp"
-                    android:layout_weight="1"
-                    android:background="#E0E0E0" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="100dp"
-                    android:layout_marginHorizontal="8dp"
-                    android:layout_weight="1"
-                    android:background="#E0E0E0" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="160dp"
-                    android:layout_marginHorizontal="8dp"
-                    android:layout_weight="1"
-                    android:background="#E0E0E0" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_marginHorizontal="8dp"
-                    android:layout_weight="1"
-                    android:background="#E0E0E0" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="8dp"
-                    android:layout_weight="1"
-                    android:background="#E0E0E0" />
-            </LinearLayout>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/colorDivider" />
 
 </LinearLayout>

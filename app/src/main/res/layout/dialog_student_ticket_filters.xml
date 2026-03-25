@@ -4,23 +4,152 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@color/white"
     android:padding="20dp">
 
-    <TextView
+    <!-- Top Orange Border -->
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/ticket_filter_title"
-        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-        android:textColor="@color/colorTextPrimary"
-        android:textStyle="bold" />
+        android:layout_height="4dp"
+        android:background="@color/colorPrimary"
+        android:layout_marginTop="-20dp"
+        android:layout_marginStart="-20dp"
+        android:layout_marginEnd="-20dp"
+        android:layout_marginBottom="16dp" />
 
-    <TextView
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="[ QUERY PARAMETERS ]"
+            android:textColor="@color/colorPrimary"
+            android:textSize="12sp"
+            android:letterSpacing="0.15"
+            android:fontFamily="monospace"
+            android:textStyle="bold" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btnClose"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            app:cardBackgroundColor="@color/colorSurface"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/colorDivider"
+            app:strokeWidth="1dp">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_close"
+                app:tint="@color/colorTextSecondary" />
+        </com.google.android.material.card.MaterialCardView>
+
+    </RelativeLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:text="@string/ticket_filter_subtitle"
-        android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-        android:textColor="@color/colorTextSecondary" />
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="STATUS"
+                android:textSize="10sp"
+                android:letterSpacing="0.1"
+                android:fontFamily="monospace"
+                android:textColor="@color/colorTextSecondary"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:endIconMode="dropdown_menu"
+                app:endIconTint="@color/colorPrimary"
+                app:boxBackgroundColor="@color/colorSurface"
+                app:boxStrokeColor="@color/colorDivider"
+                app:boxCornerRadiusTopStart="0dp"
+                app:boxCornerRadiusTopEnd="0dp"
+                app:boxCornerRadiusBottomStart="0dp"
+                app:boxCornerRadiusBottomEnd="0dp"
+                app:hintEnabled="false">
+
+                <AutoCompleteTextView
+                    android:id="@+id/dropStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:textColor="@color/colorTextPrimary"
+                    android:focusable="false"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="1dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SORT BY"
+                android:textSize="10sp"
+                android:letterSpacing="0.1"
+                android:fontFamily="monospace"
+                android:textColor="@color/colorTextSecondary"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:endIconMode="dropdown_menu"
+                app:endIconTint="@color/colorPrimary"
+                app:boxBackgroundColor="@color/colorSurface"
+                app:boxStrokeColor="@color/colorDivider"
+                app:boxCornerRadiusTopStart="0dp"
+                app:boxCornerRadiusTopEnd="0dp"
+                app:boxCornerRadiusBottomStart="0dp"
+                app:boxCornerRadiusBottomEnd="0dp"
+                app:hintEnabled="false">
+
+                <AutoCompleteTextView
+                    android:id="@+id/dropSortBy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:textColor="@color/colorTextPrimary"
+                    android:focusable="false"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,138 +157,177 @@
         android:layout_marginTop="16dp"
         android:orientation="horizontal">
 
-        <com.google.android.material.textfield.TextInputLayout
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="@string/filter_status"
-            app:endIconMode="dropdown_menu"
-            app:boxBackgroundMode="outline">
+            android:orientation="vertical">
 
-            <AutoCompleteTextView
-                android:id="@+id/dropStatus"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CATEGORY"
+                android:textSize="10sp"
+                android:letterSpacing="0.1"
+                android:fontFamily="monospace"
+                android:textColor="@color/colorTextSecondary"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="false"
-                android:inputType="none" />
-        </com.google.android.material.textfield.TextInputLayout>
+                app:endIconMode="dropdown_menu"
+                app:endIconTint="@color/colorPrimary"
+                app:boxBackgroundColor="@color/colorSurface"
+                app:boxStrokeColor="@color/colorDivider"
+                app:boxCornerRadiusTopStart="0dp"
+                app:boxCornerRadiusTopEnd="0dp"
+                app:boxCornerRadiusBottomStart="0dp"
+                app:boxCornerRadiusBottomEnd="0dp"
+                app:hintEnabled="false">
+
+                <AutoCompleteTextView
+                    android:id="@+id/dropCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:textColor="@color/colorTextPrimary"
+                    android:focusable="false"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
         <Space
-            android:layout_width="12dp"
+            android:layout_width="16dp"
             android:layout_height="1dp" />
 
-        <com.google.android.material.textfield.TextInputLayout
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="@string/filter_sort_by"
-            app:endIconMode="dropdown_menu"
-            app:boxBackgroundMode="outline">
+            android:orientation="vertical">
 
-            <AutoCompleteTextView
-                android:id="@+id/dropSortBy"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ADMIN RESPONSE"
+                android:textSize="10sp"
+                android:letterSpacing="0.1"
+                android:fontFamily="monospace"
+                android:textColor="@color/colorTextSecondary"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="false"
-                android:inputType="none" />
-        </com.google.android.material.textfield.TextInputLayout>
+                app:endIconMode="dropdown_menu"
+                app:endIconTint="@color/colorPrimary"
+                app:boxBackgroundColor="@color/colorSurface"
+                app:boxStrokeColor="@color/colorDivider"
+                app:boxCornerRadiusTopStart="0dp"
+                app:boxCornerRadiusTopEnd="0dp"
+                app:boxCornerRadiusBottomStart="0dp"
+                app:boxCornerRadiusBottomEnd="0dp"
+                app:hintEnabled="false">
+
+                <AutoCompleteTextView
+                    android:id="@+id/dropAdminResponse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:textColor="@color/colorTextPrimary"
+                    android:focusable="false"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:orientation="horizontal">
+        android:layout_marginTop="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DATE RANGE"
+            android:textSize="10sp"
+            android:letterSpacing="0.1"
+            android:fontFamily="monospace"
+            android:textColor="@color/colorTextSecondary"
+            android:layout_marginBottom="8dp" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/filter_category"
-            app:endIconMode="dropdown_menu"
-            app:boxBackgroundMode="outline">
-
-            <AutoCompleteTextView
-                android:id="@+id/dropCategory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:inputType="none" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Space
-            android:layout_width="12dp"
-            android:layout_height="1dp" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/filter_admin_response"
-            app:endIconMode="dropdown_menu"
-            app:boxBackgroundMode="outline">
-
-            <AutoCompleteTextView
-                android:id="@+id/dropAdminResponse"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:inputType="none" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:hint="@string/filter_date_range"
-        app:endIconMode="dropdown_menu"
-        app:boxBackgroundMode="outline">
-
-        <AutoCompleteTextView
-            android:id="@+id/dropDateRange"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="false"
-            android:inputType="none" />
-    </com.google.android.material.textfield.TextInputLayout>
+            app:endIconMode="dropdown_menu"
+            app:endIconTint="@color/colorPrimary"
+            app:boxBackgroundColor="@color/colorSurface"
+            app:boxStrokeColor="@color/colorDivider"
+            app:boxCornerRadiusTopStart="0dp"
+            app:boxCornerRadiusTopEnd="0dp"
+            app:boxCornerRadiusBottomStart="0dp"
+            app:boxCornerRadiusBottomEnd="0dp"
+            app:hintEnabled="false">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/filter_admin_response_note"
-        android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-        android:textColor="@color/colorTextSecondary" />
+            <AutoCompleteTextView
+                android:id="@+id/dropDateRange"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:textSize="12sp"
+                android:fontFamily="monospace"
+                android:textColor="@color/colorTextPrimary"
+                android:focusable="false"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnResetFilters"
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="52dp"
             android:layout_weight="1"
-            android:text="@string/filter_reset"
-            android:textAllCaps="false"
-            app:strokeColor="@color/colorDivider" />
+            android:text="RESET"
+            android:textAllCaps="true"
+            android:letterSpacing="0.1"
+            android:textSize="12sp"
+            android:textColor="@color/colorTextSecondary"
+            app:strokeColor="@color/colorDivider"
+            app:backgroundTint="@color/colorSurface"
+            app:cornerRadius="0dp" />
 
         <Space
-            android:layout_width="12dp"
+            android:layout_width="16dp"
             android:layout_height="1dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnApplyFilters"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="52dp"
             android:layout_weight="1"
-            android:text="@string/filter_execute_query"
-            android:textAllCaps="false"
-            app:backgroundTint="@color/colorPrimary" />
+            android:text="EXECUTE QUERY"
+            android:textAllCaps="true"
+            android:letterSpacing="0.1"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/colorPrimary"
+            app:cornerRadius="0dp" />
     </LinearLayout>
 
 </LinearLayout>

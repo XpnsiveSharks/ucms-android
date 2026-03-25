@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,7 +26,6 @@ import com.example.ucms_android.network.TicketService;
 import com.example.ucms_android.network.UserService;
 import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.ui.adapter.RecentTicketAdapter;
-import com.example.ucms_android.ui.student.NotificationsActivity;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -50,7 +48,7 @@ public class StudentHomeFragment extends Fragment {
     private TextView tvTotalTicketsCount, tvPendingCount, tvResolvedCount;
     private ShimmerFrameLayout shimmerRecentNotifications;
     private TextView tvEmptyRecentNotifications;
-    private ImageView ivNotificationBell;
+    private View viewNotificationBadge;
 
     @Nullable
     @Override
@@ -69,12 +67,16 @@ public class StudentHomeFragment extends Fragment {
         tvTotalTicketsCount = view.findViewById(R.id.tvTotalTicketsCount);
         tvPendingCount = view.findViewById(R.id.tvPendingCount);
         tvResolvedCount = view.findViewById(R.id.tvResolvedCount);
-        ivNotificationBell = view.findViewById(R.id.ivNotificationBell);
-        ivNotificationBell.setOnClickListener(v -> {
-            startActivity(new Intent(requireContext(), NotificationsActivity.class));
-        });
+        viewNotificationBadge = view.findViewById(R.id.viewNotificationBadge);
+        
+        View flNotificationContainer = view.findViewById(R.id.flNotificationContainer);
+        if (flNotificationContainer != null) {
+            flNotificationContainer.setOnClickListener(v -> {
+                startActivity(new Intent(requireContext(), NotificationsActivity.class));
+            });
+        }
 
-        // Show cached stats immediately (no delay)
+        // Show cached stats immediately
         int cachedTotal = sessionManager.getCachedTotalTickets();
         int cachedPending = sessionManager.getCachedPendingCount();
         int cachedResolved = sessionManager.getCachedResolvedToday();
@@ -92,7 +94,7 @@ public class StudentHomeFragment extends Fragment {
             }
         });
 
-        // View All — navigate to ticket list
+        // View All
         view.findViewById(R.id.tvViewAll).setOnClickListener(v -> {
             if (getActivity() instanceof MainActivity) {
                 ((MainActivity) getActivity()).loadFragment(new TicketListFragment());
@@ -102,7 +104,7 @@ public class StudentHomeFragment extends Fragment {
             }
         });
 
-        // User name — cached first, then live
+        // User name
         String cachedName = sessionManager.getCachedName();
         if (!cachedName.isEmpty()) {
             TextView tvName = view.findViewById(R.id.tvUserName);
@@ -172,10 +174,8 @@ public class StudentHomeFragment extends Fragment {
                     long unread = response.body().getData().stream()
                             .filter(n -> !n.isRead()).count();
                     requireActivity().runOnUiThread(() -> {
-                        if (unread > 0) {
-                            ivNotificationBell.setImageResource(R.drawable.ic_notifications_active);
-                        } else {
-                            ivNotificationBell.setImageResource(R.drawable.ic_notifications);
+                        if (viewNotificationBadge != null) {
+                            viewNotificationBadge.setVisibility(unread > 0 ? View.VISIBLE : View.GONE);
                         }
                     });
                 }
@@ -207,8 +207,6 @@ public class StudentHomeFragment extends Fragment {
     }
 
     private void loadFromCache() {
-        // Stats already loaded above via sessionManager.getCachedTotalTickets() etc.
-        // Load cached recent tickets
         String cachedJson = sessionManager.getStudentRecentTicketsJson();
         if (cachedJson != null) {
             Type type = new TypeToken<List<Ticket>>(){}.getType();
@@ -259,7 +257,7 @@ public class StudentHomeFragment extends Fragment {
         int total = tickets.size();
         int pending = 0;
         int resolvedToday = 0;
-        String today = LocalDate.now().toString(); // "yyyy-MM-dd"
+        String today = LocalDate.now().toString();
 
         for (Ticket ticket : tickets) {
             String status = ticket.getStatus();
@@ -278,7 +276,6 @@ public class StudentHomeFragment extends Fragment {
         tvPendingCount.setText(String.valueOf(pending));
         tvResolvedCount.setText(String.valueOf(resolvedToday));
 
-        // Save to cache for next launch
         sessionManager.saveTicketStatsCache(total, pending, resolvedToday);
     }
 }

@@ -1,11 +1,13 @@
 package com.example.ucms_android.ui.adapter;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ucms_android.R;
@@ -44,14 +46,46 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Notification notification = notifications.get(position);
-        holder.tvMessage.setText(notification.getMessage());
+        
+        String fullMessage = notification.getMessage();
+        String category = "Ticket Update";
+        String title = fullMessage;
+        String body = "";
+
+        if (fullMessage != null) {
+            if (fullMessage.contains(": ")) {
+                String[] parts = fullMessage.split(": ", 2);
+                title = parts[0];
+                body = parts[1];
+            } else if (fullMessage.contains("updated") || fullMessage.contains("changed")) {
+                title = fullMessage;
+                body = "A ticket has been updated.";
+            }
+        }
+
+        holder.tvCategory.setText(category);
+        holder.tvTitle.setText(title);
+        holder.tvMessage.setText(body);
         holder.tvTime.setText(DateFormatter.formatRelativeTime(notification.getCreatedAt()));
 
-        // Unread dot visibility
-        holder.viewUnreadDot.setVisibility(notification.isRead() ? View.INVISIBLE : View.VISIBLE);
+        boolean isRead = notification.isRead();
+        holder.viewUnreadIndicator.setVisibility(isRead ? View.INVISIBLE : View.VISIBLE);
+        
+        int orange = ContextCompat.getColor(holder.itemView.getContext(), R.color.colorOrange);
+        int grey = ContextCompat.getColor(holder.itemView.getContext(), R.color.colorTextSecondary);
+        int black = ContextCompat.getColor(holder.itemView.getContext(), R.color.black);
 
-        // Dim read notifications slightly
-        holder.itemView.setAlpha(notification.isRead() ? 0.6f : 1.0f);
+        if (isRead) {
+            holder.tvCategory.setTextColor(grey);
+            holder.tvTime.setTextColor(grey);
+            holder.tvTitle.setTextColor(grey);
+            holder.tvMessage.setTextColor(grey);
+        } else {
+            holder.tvCategory.setTextColor(orange);
+            holder.tvTime.setTextColor(orange);
+            holder.tvTitle.setTextColor(black);
+            holder.tvMessage.setTextColor(grey);
+        }
 
         holder.itemView.setOnClickListener(v -> listener.onNotificationClick(notification));
     }
@@ -62,14 +96,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvMessage, tvTime;
-        View viewUnreadDot;
+        TextView tvCategory, tvTitle, tvMessage, tvTime;
+        View viewUnreadIndicator;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
+            tvCategory = itemView.findViewById(R.id.tvCategory);
+            tvTitle = itemView.findViewById(R.id.tvTitle);
             tvMessage = itemView.findViewById(R.id.tvMessage);
             tvTime = itemView.findViewById(R.id.tvTime);
-            viewUnreadDot = itemView.findViewById(R.id.viewUnreadDot);
+            viewUnreadIndicator = itemView.findViewById(R.id.viewUnreadIndicator);
         }
     }
 }

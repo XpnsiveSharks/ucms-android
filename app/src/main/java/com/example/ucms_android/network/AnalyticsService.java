@@ -1,5 +1,6 @@
 package com.example.ucms_android.network;
 
+import com.example.ucms_android.model.AnalyticsOverview;
 import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.CategoryCount;
 import com.example.ucms_android.model.Ticket;
@@ -11,6 +12,9 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 
 public interface AnalyticsService {
+
+    @GET("api/analytics/overview")
+    Call<ApiResponse<AnalyticsOverview>> getOverview();
 
     @GET("api/analytics/summary")
     Call<ApiResponse<AnalyticsSummary>> getSummary();

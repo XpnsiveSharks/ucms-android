@@ -2,14 +2,12 @@ package com.example.ucms_android.ui.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,7 +23,6 @@ import com.example.ucms_android.network.TicketService;
 import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.ui.adapter.TicketAdapter;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -45,9 +42,9 @@ import retrofit2.Response;
 public class AdminTicketListFragment extends Fragment {
 
     private EditText etSearch;
-    private MaterialButton btnNeedsAction;
-    private MaterialButton btnInProgress;
-    private MaterialButton btnAll;
+    private View tabAll, tabInProgress, tabResolved;
+    private TextView tvTabAll, tvTabInProgress, tvTabResolved;
+    private View indicatorAll, indicatorInProgress, indicatorResolved;
     private RecyclerView rvTickets;
     private ShimmerFrameLayout shimmerLayout;
     private LinearLayout layoutEmpty;
@@ -72,9 +69,18 @@ public class AdminTicketListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         etSearch = view.findViewById(R.id.etSearch);
-        btnNeedsAction = view.findViewById(R.id.btnNeedsAction);
-        btnInProgress = view.findViewById(R.id.btnInProgress);
-        btnAll = view.findViewById(R.id.btnAll);
+        tabAll = view.findViewById(R.id.tabAll);
+        tabInProgress = view.findViewById(R.id.tabInProgress);
+        tabResolved = view.findViewById(R.id.tabResolved);
+        
+        tvTabAll = view.findViewById(R.id.tvTabAll);
+        tvTabInProgress = view.findViewById(R.id.tvTabInProgress);
+        tvTabResolved = view.findViewById(R.id.tvTabResolved);
+        
+        indicatorAll = view.findViewById(R.id.indicatorAll);
+        indicatorInProgress = view.findViewById(R.id.indicatorInProgress);
+        indicatorResolved = view.findViewById(R.id.indicatorResolved);
+        
         rvTickets = view.findViewById(R.id.rvTickets);
         shimmerLayout = view.findViewById(R.id.shimmerLayout);
         layoutEmpty = view.findViewById(R.id.layoutEmpty);
@@ -95,9 +101,7 @@ public class AdminTicketListFragment extends Fragment {
         rvTickets.setAdapter(adapter);
 
         loadFromCache();
-
-        setupFilters();
-        setupSearch();
+        setupTabs();
         loadTickets();
     }
 
@@ -107,49 +111,35 @@ public class AdminTicketListFragment extends Fragment {
         loadTickets();
     }
 
-    private void setupFilters() {
-        btnAll.setOnClickListener(v -> {
+    private void setupTabs() {
+        tabAll.setOnClickListener(v -> {
             activeFilter = "ALL";
-            updateFilterButtons();
+            updateTabs();
             applyFilter();
         });
-        btnNeedsAction.setOnClickListener(v -> {
-            activeFilter = "PENDING";
-            updateFilterButtons();
-            applyFilter();
-        });
-        btnInProgress.setOnClickListener(v -> {
+        tabInProgress.setOnClickListener(v -> {
             activeFilter = "IN_PROGRESS";
-            updateFilterButtons();
+            updateTabs();
+            applyFilter();
+        });
+        tabResolved.setOnClickListener(v -> {
+            activeFilter = "RESOLVED";
+            updateTabs();
             applyFilter();
         });
         
-        updateFilterButtons();
+        updateTabs();
     }
 
-    private void updateFilterButtons() {
-        btnAll.setStrokeColorResource(activeFilter.equals("ALL") ? R.color.colorPrimary : R.color.colorDivider);
-        btnNeedsAction.setStrokeColorResource(activeFilter.equals("PENDING") ? R.color.colorPrimary : R.color.colorDivider);
-        btnInProgress.setStrokeColorResource(activeFilter.equals("IN_PROGRESS") ? R.color.colorPrimary : R.color.colorDivider);
+    private void updateTabs() {
+        tvTabAll.setTextColor(getResources().getColor(activeFilter.equals("ALL") ? R.color.colorElevatedSession : R.color.colorTextSecondary, null));
+        indicatorAll.setVisibility(activeFilter.equals("ALL") ? View.VISIBLE : View.INVISIBLE);
         
-        btnAll.setTextColor(getResources().getColor(activeFilter.equals("ALL") ? R.color.colorPrimary : R.color.colorTextPrimary, null));
-        btnNeedsAction.setTextColor(getResources().getColor(activeFilter.equals("PENDING") ? R.color.colorPrimary : R.color.colorTextPrimary, null));
-        btnInProgress.setTextColor(getResources().getColor(activeFilter.equals("IN_PROGRESS") ? R.color.colorPrimary : R.color.colorTextPrimary, null));
-    }
-
-    private void setupSearch() {
-        etSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                applyFilter();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
+        tvTabInProgress.setTextColor(getResources().getColor(activeFilter.equals("IN_PROGRESS") ? R.color.colorElevatedSession : R.color.colorTextSecondary, null));
+        indicatorInProgress.setVisibility(activeFilter.equals("IN_PROGRESS") ? View.VISIBLE : View.INVISIBLE);
+        
+        tvTabResolved.setTextColor(getResources().getColor(activeFilter.equals("RESOLVED") ? R.color.colorElevatedSession : R.color.colorTextSecondary, null));
+        indicatorResolved.setVisibility(activeFilter.equals("RESOLVED") ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void showState(String state) {
@@ -218,7 +208,7 @@ public class AdminTicketListFragment extends Fragment {
     }
 
     private void applyFilter() {
-        String query = etSearch.getText() != null ? etSearch.getText().toString().toLowerCase().trim() : "";
+        String query = etSearch != null && etSearch.getText() != null ? etSearch.getText().toString().toLowerCase().trim() : "";
         List<Ticket> filtered = new ArrayList<>();
 
         for (Ticket ticket : allTickets) {

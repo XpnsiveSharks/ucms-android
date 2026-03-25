@@ -21,8 +21,11 @@ import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.TicketService;
 import com.example.ucms_android.session.SessionManager;
+import com.example.ucms_android.MainActivity;
+import com.example.ucms_android.ui.common.AnalyticsFragment;
 import com.example.ucms_android.ui.adapter.RecentTicketAdapter;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -64,6 +67,22 @@ public class AdminDashboardFragment extends Fragment {
         rvRecentTickets = view.findViewById(R.id.rvRecentTickets);
         shimmerRecentTickets = view.findViewById(R.id.shimmerRecentTickets);
         tvEmptyRecent = view.findViewById(R.id.tvEmptyRecent);
+
+        view.findViewById(R.id.btnTelemetry).setOnClickListener(v -> {
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).loadFragment(new AnalyticsFragment());
+                BottomNavigationView nav = getActivity().findViewById(R.id.bottomNavView);
+                if (nav != null) nav.setSelectedItemId(R.id.nav_admin_analytics);
+            }
+        });
+
+        view.findViewById(R.id.tvViewAll).setOnClickListener(v -> {
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).loadFragment(new AdminTicketListFragment());
+                BottomNavigationView nav = getActivity().findViewById(R.id.bottomNavView);
+                if (nav != null) nav.setSelectedItemId(R.id.nav_admin_tickets);
+            }
+        });
 
         ticketService = ApiClient.getInstance(requireContext()).create(TicketService.class);
         sessionManager = new SessionManager(requireContext());

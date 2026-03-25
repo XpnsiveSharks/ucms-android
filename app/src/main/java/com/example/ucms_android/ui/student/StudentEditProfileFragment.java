@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,6 +37,8 @@ public class StudentEditProfileFragment extends Fragment {
     private EditText etFullName;
     private EditText etCourse;
     private EditText etYearLevel;
+    private TextView tvStudentNumber;
+    private TextView tvAvatarLarge;
     private MaterialButton btnSaveChanges;
     private SessionManager sessionManager;
     private UserService userService;
@@ -57,32 +60,54 @@ public class StudentEditProfileFragment extends Fragment {
         etFullName = view.findViewById(R.id.etFullName);
         etCourse = view.findViewById(R.id.etCourse);
         etYearLevel = view.findViewById(R.id.etYearLevel);
-        android.widget.TextView tvStudentNameHeader = view.findViewById(R.id.tvStudentNameHeader);
-        android.widget.TextView tvStudentNumber = view.findViewById(R.id.tvStudentNumber);
+        tvStudentNumber = view.findViewById(R.id.tvStudentNumber);
+        tvAvatarLarge = view.findViewById(R.id.tvAvatarLarge);
         btnSaveChanges = view.findViewById(R.id.btnSaveChanges);
 
-        String cachedName = sessionManager.getCachedName();
-        String cachedStudentId = sessionManager.getCachedStudentId();
-        String course = sessionManager.getCachedCourse();
-        String yearLevel = sessionManager.getCachedYearLevel();
-        if (!cachedName.isEmpty()) {
-            etFullName.setText(cachedName);
-        }
-        if (tvStudentNameHeader != null && !cachedName.isEmpty()) tvStudentNameHeader.setText(cachedName);
-        if (tvStudentNumber != null && !cachedStudentId.isEmpty()) tvStudentNumber.setText(cachedStudentId);
-        if (!course.isEmpty()) {
-            etCourse.setText(course);
-        }
-        if (!yearLevel.isEmpty()) {
-            etYearLevel.setText(yearLevel);
-        }
+        loadCachedData();
 
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).setBottomNavVisible(false);
         }
 
         view.findViewById(R.id.btnBack).setOnClickListener(v -> goBack());
-        btnSaveChanges.setOnClickListener(v -> showSaveConfirmation());
+        btnSaveChanges.setOnClickListener(v -> saveProfile());
+        
+        fetchFreshData();
+    }
+
+    private void loadCachedData() {
+        String cachedName = sessionManager.getCachedName();
+        String cachedStudentId = sessionManager.getCachedStudentId();
+        String course = sessionManager.getCachedCourse();
+        String yearLevel = sessionManager.getCachedYearLevel();
+
+        if (etFullName != null) etFullName.setText(cachedName);
+        if (tvStudentNumber != null) tvStudentNumber.setText(cachedStudentId);
+        if (etCourse != null) etCourse.setText(course);
+        if (etYearLevel != null) etYearLevel.setText(yearLevel);
+        if (tvAvatarLarge != null) tvAvatarLarge.setText(getInitials(cachedName));
+    }
+
+    private void fetchFreshData() {
+        userService.getMe().enqueue(new Callback<ApiResponse<User>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<User>> call, @NonNull Response<ApiResponse<User>> response) {
+                if (isAdded() && response.isSuccessful() && response.body() != null) {
+                    User user = response.body().getData();
+                    if (user != null) {
+                        etFullName.setText(user.getName());
+                        tvStudentNumber.setText(user.getStudentId());
+                        etCourse.setText(user.getCourse());
+                        etYearLevel.setText(user.getYearLevel() != null ? String.valueOf(user.getYearLevel()) : "");
+                        tvAvatarLarge.setText(getInitials(user.getName()));
+                        sessionManager.saveProfileCache(user.getName(), user.getStudentId(), user.getCourse(), user.getYearLevel());
+                    }
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<User>> call, @NonNull Throwable t) {}
+        });
     }
 
     @Override
@@ -94,90 +119,68 @@ public class StudentEditProfileFragment extends Fragment {
     }
 
     private void saveProfile() {
-        Map<String, Object> body = new HashMap<>();
-        body.put("name", etFullName.getText().toString().trim());
-        body.put("course", etCourse.getText().toString().trim());
+        String name = etFullName.getText().toString().trim();
+        String course = etCourse.getText().toString().trim();
         String yearLevelText = etYearLevel.getText().toString().trim();
+
+        if (name.isEmpty()) {
+            etFullName.setError("Name is required");
+            return;
+        }
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("name", name);
+        body.put("course", course);
         if (!yearLevelText.isEmpty()) {
             try {
                 body.put("yearLevel", Integer.parseInt(yearLevelText));
-            } catch (NumberFormatException ignored) {
-            }
+            } catch (NumberFormatException ignored) {}
         }
 
         btnSaveChanges.setEnabled(false);
+        btnSaveChanges.setText("UPDATING...");
+
         userService.updateProfile(body).enqueue(new Callback<ApiResponse<User>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<User>> call,
                                    @NonNull Response<ApiResponse<User>> response) {
-                if (!isAdded()) {
-                    return;
-                }
+                if (!isAdded()) return;
 
                 btnSaveChanges.setEnabled(true);
-                if (response.code() == 401) {
-                    sessionManager.clearSession();
-                    Intent intent = new Intent(requireActivity(), LoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    requireActivity().finish();
-                    return;
-                }
+                btnSaveChanges.setText("EXECUTE UPDATE");
 
-                if (response.code() == 403) {
-                    String message = getString(R.string.access_denied);
-                    try {
-                        if (response.errorBody() != null && response.errorBody().string().contains("ACCOUNT_LIMITED")) {
-                            message = getString(R.string.account_limited_prompt);
-                        }
-                    } catch (IOException ignored) {
-                    }
-                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (response.code() == 400 && response.body() != null && response.body().getMessage() != null) {
-                    Toast.makeText(requireContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                if (response.isSuccessful() && response.body() != null) {
                     User user = response.body().getData();
                     sessionManager.saveProfileCache(user.getName(), user.getStudentId(),
                             user.getCourse(), user.getYearLevel());
-                    DialogUtils.showSuccessDialog(
-                            requireContext(),
-                            getString(R.string.dialog_success_title),
-                            getString(R.string.profile_updated),
-                            StudentEditProfileFragment.this::goBack
-                    );
-                    return;
+                    
+                    Toast.makeText(requireContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                    goBack();
+                } else {
+                    Toast.makeText(requireContext(), "Failed to update profile", Toast.LENGTH_SHORT).show();
                 }
-
-                Toast.makeText(requireContext(), getString(R.string.error_update_profile), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<User>> call, @NonNull Throwable t) {
-                if (!isAdded()) {
-                    return;
-                }
+                if (!isAdded()) return;
                 btnSaveChanges.setEnabled(true);
-                Toast.makeText(requireContext(), getString(R.string.error_no_connection), Toast.LENGTH_SHORT).show();
+                btnSaveChanges.setText("EXECUTE UPDATE");
+                Toast.makeText(requireContext(), "Network error", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void showSaveConfirmation() {
-        DialogUtils.showConfirmationDialog(
-                requireContext(),
-                getString(R.string.confirm_profile_update_title),
-                getString(R.string.confirm_profile_update_message),
-                this::saveProfile
-        );
+    private String getInitials(String name) {
+        if (name == null || name.trim().isEmpty()) return "??";
+        String[] parts = name.trim().split("\\s+");
+        if (parts.length == 1) return parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase();
+        return (parts[0].charAt(0) + "" + parts[parts.length - 1].charAt(0)).toUpperCase();
     }
 
     private void goBack() {
-        requireActivity().getSupportFragmentManager().popBackStack();
+        if (getFragmentManager() != null) {
+            getFragmentManager().popBackStack();
+        }
     }
 }

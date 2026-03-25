@@ -4,12 +4,12 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Brand — Primary (Orange) -->
-    <color name="colorPrimary">#FFAA33</color>
-    <color name="colorPrimaryDark">#F78914</color>
+    <!-- Brand — Primary (Create Ticket orange) -->
+    <color name="colorPrimary">@color/colorOrange</color>
+    <color name="colorPrimaryDark">#E63E00</color>
     <color name="colorOnPrimary">#FFFFFF</color>
-    <color name="colorPrimaryContainer">#FFE0A0</color>
-    <color name="colorOnPrimaryContainer">#1A1A1A</color>
+    <color name="colorPrimaryContainer">#FFE2D8</color>
+    <color name="colorOnPrimaryContainer">#2B130A</color>
 
     <!-- Brand — Secondary (Green) -->
     <color name="colorSecondary">#92CD28</color>
@@ -33,8 +33,8 @@
     <color name="colorDivider">#E0E0E0</color>
 
     <!-- Status Badges -->
-    <color name="colorStatusPending">#FFAA33</color>
-    <color name="colorStatusInProgress">#B6EE56</color>
+    <color name="colorStatusPending">#F77F00</color>
+    <color name="colorStatusInProgress">#FCBF49</color>
     <color name="colorStatusResolved">#92CD28</color>
     <color name="colorStatusClosed">#757575</color>
     <color name="colorStatusUrgent">#C62828</color>
@@ -45,6 +45,25 @@
     <!-- Custom -->
     <color name="colorAccentBlue">#2196F3</color>
     <color name="colorError">#D32F2F</color>
+    <color name="colorOrange">#FF4500</color>
+    <color name="colorGrid">#E0E0E0</color>
+    <color name="colorSuccess">#10B981</color>
+    <color name="colorSuccessContainer">#D1FAE5</color>
+
+    <color name="colorDanger">#EF4444</color>
+    <color name="colorDangerContainer">#1AEF4444</color>
 
 
+    <color name="colorGridSubtle">#1AE0E0E0</color>
+
+    <!-- Admin Dashboard Redesign Colors -->
+    <color name="colorElevatedSession">#FF4500</color>
+    <color name="colorTotalTicketsBg">#FFF0EA</color>
+    <color name="colorTotalTicketsBorder">#FF4500</color>
+    <color name="colorTelemetryBorder">#1A1A1A</color>
+    <color name="colorBadgeLowBorder">#80DEEA</color>
+    <color name="colorBadgeLowText">#00ACC1</color>
+    <color name="colorTrendGreen">#10B981</color>
+    <color name="colorTrendOrange">#F77F00</color>
+    <color name="colorChartBar">#FFE2D8</color>
 </resources>

@@ -1,53 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/spacing_small"
-    app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="@dimen/corner_radius_card"
-    app:cardElevation="2dp"
-    app:strokeColor="@color/colorDivider"
-    app:strokeWidth="1dp">
+    android:background="@color/white">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <!-- Unread Indicator (Left Border) -->
+    <View
+        android:id="@+id/viewUnreadIndicator"
+        android:layout_width="4dp"
+        android:layout_height="0dp"
+        android:background="@color/colorOrange"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/bottomDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="@dimen/spacing_medium">
+        android:orientation="vertical"
+        android:padding="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/viewUnreadIndicator"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Unread indicator dot -->
-        <View
-            android:id="@+id/viewUnreadDot"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:background="@drawable/bg_badge_pending"
-            android:backgroundTint="@color/colorPrimary"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <!-- Message -->
+            <TextView
+                android:id="@+id/tvCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:fontFamily="monospace"
+                android:textColor="@color/colorOrange"
+                android:textSize="@dimen/text_size_small"
+                tools:text="Ticket Update" />
+
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:fontFamily="monospace"
+                android:textColor="@color/colorOrange"
+                android:textSize="@dimen/text_size_small"
+                tools:text="2m ago" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_h4"
+            android:textStyle="bold"
+            tools:text="Status changed to IN_PROGRESS" />
+
         <TextView
             android:id="@+id/tvMessage"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_small"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textColor="@color/colorTextPrimary"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/viewUnreadDot"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- Time -->
-        <TextView
-            android:id="@+id/tvTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xsmall"
-            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+            android:layout_marginTop="8dp"
+            android:fontFamily="monospace"
             android:textColor="@color/colorTextSecondary"
-            app:layout_constraintStart_toStartOf="@id/tvMessage"
-            app:layout_constraintTop_toBottomOf="@id/tvMessage" />
+            android:textSize="@dimen/text_size_small"
+            tools:text="TKT-20260315-0002 has been updated by Admin." />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
-</com.google.android.material.card.MaterialCardView>
+    <View
+        android:id="@+id/bottomDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorDivider"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

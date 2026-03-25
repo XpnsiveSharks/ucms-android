@@ -67,6 +67,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
 
         holder.tvEventTime.setText(event.time);
         holder.tvEventTitle.setText(event.title);
+        holder.tvEventTitle.setTextColor(event.dotColor);
         holder.viewDot.setBackgroundTintList(
                 android.content.res.ColorStateList.valueOf(event.dotColor));
 

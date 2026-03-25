@@ -63,85 +63,48 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/screen_padding">
 
-                <com.google.android.material.card.MaterialCardView
+                <ImageView
                     android:id="@+id/btnBack"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_arrow_back"
+                    android:contentDescription="@string/back"
+                    app:tint="@color/colorTextPrimary"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_medium"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/btnBack"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="8dp"
-                        android:src="@drawable/ic_arrow_back"
-                        android:contentDescription="@string/back" />
+                    <TextView
+                        android:id="@+id/tvTicketNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:letterSpacing="0.1"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                        android:textColor="@color/colorTextPrimary"
+                        tools:text="TKT-20260315-0002" />
 
-                </com.google.android.material.card.MaterialCardView>
-
-                <TextView
-                    android:id="@+id/tvTicketNumber"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_small"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@id/tvCategoryName"
-                    app:layout_constraintEnd_toStartOf="@id/tvUrgency"
-                    app:layout_constraintStart_toEndOf="@id/btnBack"
-                    app:layout_constraintTop_toTopOf="@id/btnBack"
-                    tools:text="Ticket #10149" />
-
-                <TextView
-                    android:id="@+id/tvCategoryName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_small"
-                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                    android:textColor="@color/colorTextSecondary"
-                    app:layout_constraintBottom_toBottomOf="@id/btnBack"
-                    app:layout_constraintEnd_toStartOf="@id/tvUrgency"
-                    app:layout_constraintStart_toEndOf="@id/btnBack"
-                    app:layout_constraintTop_toBottomOf="@id/tvTicketNumber"
-                    tools:text="Academic Department" />
-
-                <TextView
-                    android:id="@+id/tvUrgency"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_badge_urgent"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="@string/urgent"
-                    android:textColor="@color/white"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@id/btnBack"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/btnBack"
-                    tools:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/tvUrgencyReason"
-                    android:layout_width="180dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:ellipsize="end"
-                    android:maxLines="4"
-                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                    android:textColor="@color/colorTextSecondary"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvUrgency"
-                    tools:text="Repeated unresolved reports and no admin response"
-                    tools:visibility="visible" />
+                    <TextView
+                        android:id="@+id/tvCategoryName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:letterSpacing="0.1"
+                        android:textAllCaps="true"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                        android:textColor="@color/colorTextSecondary"
+                        tools:text="ACADEMIC-RELATED" />
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -152,122 +115,139 @@
                 android:layout_marginHorizontal="@dimen/screen_padding"
                 android:layout_marginBottom="@dimen/spacing_medium"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/corner_radius_card"
-                app:cardElevation="2dp"
+                app:cardCornerRadius="0dp"
+                app:cardElevation="0dp"
                 app:strokeColor="@color/colorDivider"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/spacing_medium">
+                    android:orientation="horizontal">
 
-                    <!-- Title -->
-                    <TextView
-                        android:id="@+id/tvTicketTitle"
+                    <!-- Left accent border -->
+                    <View
+                        android:layout_width="4dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorPrimary" />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                        android:textColor="@color/colorTextPrimary"
-                        android:textStyle="bold"
-                        tools:text="Issue with Subject Pre-requisites" />
+                        android:orientation="vertical"
+                        android:padding="@dimen/spacing_large">
 
-                    <!-- Description -->
-                    <TextView
-                        android:id="@+id/tvDescription"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_small"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                        android:textColor="@color/colorTextSecondary"
-                        tools:text="The course registration system is incorrectly blocking students..." />
-
-                    <!-- Attachment card inside content -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cvAttachment"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_medium"
-                        android:visibility="visible"
-                        app:cardBackgroundColor="@color/colorBackground"
-                        app:cardCornerRadius="@dimen/corner_radius_card"
-                        app:cardElevation="0dp"
-                        app:strokeColor="@color/colorDivider"
-                        app:strokeWidth="1dp">
-
-                        <LinearLayout
+                        <!-- Title -->
+                        <TextView
+                            android:id="@+id/tvTicketTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="@dimen/spacing_small">
+                            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textStyle="bold"
+                            tools:text="Change of Major Application" />
 
-                            <com.facebook.shimmer.ShimmerFrameLayout
-                                android:id="@+id/shimmerAttachment"
+                        <!-- Description -->
+                        <TextView
+                            android:id="@+id/tvDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_medium"
+                            android:fontFamily="monospace"
+                            android:lineSpacingMultiplier="1.2"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="@color/colorTextSecondary"
+                            tools:text="Student requests assistance in processing a transfer to a different academic program." />
+
+                        <!-- Attachment card inside content -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cvAttachment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_large"
+                            android:visibility="visible"
+                            app:cardBackgroundColor="@color/colorSurface"
+                            app:cardCornerRadius="0dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="@color/colorDivider"
+                            app:strokeWidth="1dp">
+
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:visibility="visible">
+                                android:orientation="vertical"
+                                android:padding="@dimen/spacing_small">
+
+                                <com.facebook.shimmer.ShimmerFrameLayout
+                                    android:id="@+id/shimmerAttachment"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="visible">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_vertical"
+                                        android:orientation="horizontal">
+
+                                        <View
+                                            android:layout_width="32dp"
+                                            android:layout_height="32dp"
+                                            android:background="#E0E0E0" />
+
+                                        <View
+                                            android:layout_width="100dp"
+                                            android:layout_height="10dp"
+                                            android:layout_marginStart="@dimen/spacing_small"
+                                            android:background="#E0E0E0" />
+
+                                    </LinearLayout>
+
+                                </com.facebook.shimmer.ShimmerFrameLayout>
 
                                 <LinearLayout
+                                    android:id="@+id/layoutAttachmentContent"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:gravity="center_vertical"
-                                    android:orientation="horizontal">
+                                    android:orientation="horizontal"
+                                    android:visibility="gone">
 
-                                    <View
-                                        android:layout_width="32dp"
-                                        android:layout_height="32dp"
-                                        android:background="#E0E0E0" />
+                                    <ImageView
+                                        android:id="@+id/ivAttachmentPreview"
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:layout_marginStart="8dp"
+                                        android:contentDescription="@string/attachment_preview"
+                                        android:src="@drawable/ic_attachment"
+                                        app:tint="@color/colorTextSecondary" />
 
-                                    <View
-                                        android:layout_width="100dp"
-                                        android:layout_height="10dp"
-                                        android:layout_marginStart="@dimen/spacing_small"
-                                        android:background="#E0E0E0" />
+                                    <TextView
+                                        android:id="@+id/tvAttachmentName"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="@dimen/spacing_medium"
+                                        android:layout_weight="1"
+                                        android:fontFamily="monospace"
+                                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                                        android:textColor="@color/colorTextPrimary"
+                                        tools:text="image_1000000186.jpg" />
+
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:src="@drawable/ic_arrow_drop_down"
+                                        android:rotation="-90"
+                                        android:contentDescription="@null"
+                                        app:tint="@color/colorTextSecondary" />
 
                                 </LinearLayout>
 
-                            </com.facebook.shimmer.ShimmerFrameLayout>
-
-                            <LinearLayout
-                                android:id="@+id/layoutAttachmentContent"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal"
-                                android:visibility="gone">
-
-                                <ImageView
-                                    android:id="@+id/ivAttachmentPreview"
-                                    android:layout_width="32dp"
-                                    android:layout_height="32dp"
-                                    android:contentDescription="@string/attachment_preview"
-                                    android:src="@drawable/ic_attachment" />
-
-                                <TextView
-                                    android:id="@+id/tvAttachmentName"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/spacing_small"
-                                    android:layout_weight="1"
-                                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                                    android:textColor="@color/colorTextPrimary"
-                                    tools:text="screenshot.jpg" />
-
-                                <ImageView
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:src="@drawable/ic_arrow_drop_down"
-                                    android:rotation="-90"
-                                    android:contentDescription="@null"
-                                    app:tint="@color/colorTextSecondary" />
-
                             </LinearLayout>
 
-                        </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
 
-                    </com.google.android.material.card.MaterialCardView>
-
+                    </LinearLayout>
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
@@ -277,11 +257,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/screen_padding"
-                android:layout_marginBottom="@dimen/spacing_small"
-                android:text="TRACKING TIMELINE"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:layout_marginBottom="@dimen/spacing_large"
+                android:text="[ TRACKING TIMELINE ]"
+                android:fontFamily="monospace"
                 android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
                 android:textColor="@color/colorTextSecondary"
-                android:letterSpacing="0.1" />
+                android:letterSpacing="0.15" />
 
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/shimmerTimeline"
@@ -319,14 +301,17 @@
                 android:id="@+id/btnCloseTicket"
                 style="@style/Widget.Material3.Button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="52dp"
                 android:layout_marginHorizontal="@dimen/screen_padding"
                 android:layout_marginBottom="@dimen/spacing_large"
-                android:text="@string/close_ticket"
-                android:textAllCaps="false"
+                android:text="CLOSE TICKET"
+                android:textAllCaps="true"
+                android:letterSpacing="0.1"
+                android:textSize="14sp"
+                android:textStyle="bold"
                 android:visibility="gone"
                 app:backgroundTint="@color/colorPrimary"
-                app:cornerRadius="@dimen/corner_radius_button" />
+                app:cornerRadius="0dp" />
 
         </LinearLayout>
 

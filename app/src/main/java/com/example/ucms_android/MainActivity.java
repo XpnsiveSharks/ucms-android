@@ -73,10 +73,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadFragment(Fragment fragment) {
-        getSupportFragmentManager()
+        loadFragment(fragment, false);
+    }
+
+    public void loadFragment(Fragment fragment, boolean addToBackStack) {
+        androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragmentContainer, fragment)
-                .commit();
+                .replace(R.id.fragmentContainer, fragment);
+
+        if (addToBackStack) {
+            transaction.addToBackStack(null);
+        }
+
+        transaction.commit();
     }
 
     public void setBottomNavVisible(boolean visible) {
