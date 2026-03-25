@@ -30,6 +30,7 @@ import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.TicketService;
 import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.util.DateFormatter;
+import com.example.ucms_android.util.StatusChipHelper;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.gson.Gson;
@@ -43,11 +44,12 @@ import retrofit2.Response;
 
 public class AdminTicketDetailActivity extends AppCompatActivity {
 
-    private TextView tvTicketId, tvStatus, tvUrgency, tvUrgencyReason, tvAvatarInitials, tvStudentName, tvStudentId, tvStudentCourse;
+    private TextView tvTicketId, tvCategory, tvUrgencyReason, tvAvatarInitials, tvStudentName, tvStudentId, tvStudentCourse;
     private TextView tvDate, tvTitle, tvDescription, tvAttachmentName, tvActionTitle, tvSelectedCategory;
-    private TextView tvOverrideState;
-    private MaterialCardView btnBack, cvAttachment;
-    private MaterialButton btnUpdateStatus, btnOverrideUrgency;
+    private TextView tvOverrideState, tvStatus;
+    private MaterialCardView btnBack, cvAttachment, cvAiScoring;
+    private MaterialButton btnUpdateStatus;
+    private View btnOverrideUrgency;
     private EditText etResponse, etUrgencyOverrideReason;
     private AutoCompleteTextView dropUrgencyLevel;
     private ImageView ivAttachmentImage;
@@ -79,8 +81,22 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
         gson = new Gson();
         
         btnBack.setOnClickListener(v -> finish());
-        findViewById(R.id.btnSendResponse).setOnClickListener(v -> sendResponse());
-        btnOverrideUrgency.setOnClickListener(v -> applyUrgencyOverride());
+        
+        View btnSendIconInside = findViewById(R.id.btnSendIconInside);
+        if (btnSendIconInside != null) {
+            btnSendIconInside.setOnClickListener(v -> sendResponse());
+        }
+        
+        btnOverrideUrgency.setOnClickListener(v -> {
+            if (dropUrgencyLevel.getVisibility() == View.GONE) {
+                dropUrgencyLevel.setVisibility(View.VISIBLE);
+                etUrgencyOverrideReason.setVisibility(View.VISIBLE);
+                if (tvOverrideState != null) tvOverrideState.setVisibility(View.VISIBLE);
+                Toast.makeText(this, "Override fields enabled. Select level and reason below.", Toast.LENGTH_SHORT).show();
+            } else {
+                applyUrgencyOverride();
+            }
+        });
         findViewById(R.id.btnRetry).setOnClickListener(v -> loadTicketDetails());
 
         setupUrgencyOverrideDropdown();
@@ -91,32 +107,41 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
 
     private void initViews() {
         tvTicketId = findViewById(R.id.tvTicketId);
-        tvStatus = findViewById(R.id.tvStatus);
-        tvUrgency = findViewById(R.id.tvUrgency);
+        tvCategory = findViewById(R.id.tvCategory);
+        tvTitle = findViewById(R.id.tvTitle);
+        tvDescription = findViewById(R.id.tvDescription);
+        
+        cvAiScoring = findViewById(R.id.cvAiScoring);
         tvUrgencyReason = findViewById(R.id.tvUrgencyReason);
+        tvStatus = findViewById(R.id.tvStatus);
+        
         tvAvatarInitials = findViewById(R.id.tvAvatarInitials);
         tvStudentName = findViewById(R.id.tvStudentName);
         tvStudentId = findViewById(R.id.tvStudentId);
         tvStudentCourse = findViewById(R.id.tvStudentCourse);
         tvDate = findViewById(R.id.tvDate);
-        tvTitle = findViewById(R.id.tvTitle);
-        tvDescription = findViewById(R.id.tvDescription);
-        tvAttachmentName = findViewById(R.id.tvAttachmentName);
         tvActionTitle = findViewById(R.id.tvActionTitle);
-        tvSelectedCategory = findViewById(R.id.tvSelectedCategory);
-        tvOverrideState = findViewById(R.id.tvOverrideState);
+        tvAttachmentName = findViewById(R.id.tvAttachmentName);
+        
         btnBack = findViewById(R.id.btnBack);
         cvAttachment = findViewById(R.id.cvAttachment);
         ivAttachmentImage = findViewById(R.id.ivAttachmentImage);
         btnUpdateStatus = findViewById(R.id.btnUpdateStatus);
+        
+        tvSelectedCategory = findViewById(R.id.tvSelectedCategory);
         etResponse = findViewById(R.id.etResponse);
-        dropUrgencyLevel = findViewById(R.id.dropUrgencyLevel);
-        etUrgencyOverrideReason = findViewById(R.id.etUrgencyOverrideReason);
+        
         btnOverrideUrgency = findViewById(R.id.btnOverrideUrgency);
+        
         progressBar = findViewById(R.id.progressBar);
         layoutError = findViewById(R.id.layoutError);
         scrollContent = findViewById(R.id.scrollContent);
         shimmerAttachment = findViewById(R.id.shimmerAttachment);
+        
+        // Internal fields for logic that might be hidden in UI
+        dropUrgencyLevel = findViewById(R.id.dropUrgencyLevel);
+        etUrgencyOverrideReason = findViewById(R.id.etUrgencyOverrideReason);
+        tvOverrideState = findViewById(R.id.tvOverrideState);
     }
 
     private void showState(String state) {
@@ -179,48 +204,32 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
 
     private void displayTicket(Ticket ticket) {
         currentTicket = ticket;
-        tvTicketId.setText(ticket.getTicketNumber() != null ? "Ticket " + ticket.getTicketNumber() : "Ticket #" + ticket.getId());
-        tvStatus.setText(ticket.getStatus());
-        tvStatus.setBackgroundResource(getStatusBackgroundResource(ticket.getStatus()));
-        String priorityLevel = resolvePriorityLevel(ticket);
-        boolean showUrgent = priorityLevel != null;
-        applyPriorityBadge(tvUrgency, priorityLevel);
-        if (priorityLevel != null) {
-            dropUrgencyLevel.setText(priorityLevel, false);
-        }
-        String urgencyDetails = buildUrgencyDetails(ticket);
-        boolean showReason = showUrgent && urgencyDetails != null && !urgencyDetails.trim().isEmpty();
-        tvUrgencyReason.setVisibility(showReason ? View.VISIBLE : View.GONE);
-        if (showReason) {
-            tvUrgencyReason.setText(urgencyDetails);
-        }
-        currentStatus = ticket.getStatus();
-        configureStatusActions();
-
-        String studentName = ticket.getStudentName() != null && !ticket.getStudentName().trim().isEmpty()
-                ? ticket.getStudentName().trim()
-                : "Student";
-        String studentId = ticket.getStudentId() != null && !ticket.getStudentId().trim().isEmpty()
-                ? ticket.getStudentId().trim()
-                : "N/A";
-        String studentCourse = ticket.getStudentCourse() != null && !ticket.getStudentCourse().trim().isEmpty()
-                ? ticket.getStudentCourse().trim()
-                : "N/A";
-
-        tvStudentName.setText(studentName);
-        tvAvatarInitials.setText(getInitials(studentName));
-        tvStudentId.setText("School ID: " + studentId);
-        tvStudentCourse.setText(studentCourse);
-
-        tvDate.setText(DateFormatter.formatDate(ticket.getCreatedAt()));
+        tvTicketId.setText(ticket.getTicketNumber() != null ? ticket.getTicketNumber() : "TKT-#" + ticket.getId());
+        
+        String categoryName = ticket.getCategoryName() != null ? ticket.getCategoryName() : "N/A";
+        tvCategory.setText(categoryName.toUpperCase());
+        
         tvTitle.setText(ticket.getTitle());
         tvDescription.setText(ticket.getDescription());
 
-        String categoryName = ticket.getCategoryName() != null ? ticket.getCategoryName() : "N/A";
-        tvActionTitle.setText(categoryName.toUpperCase());
-        tvSelectedCategory.setText(categoryName.toUpperCase());
+        // AI Scoring Section - Only show analysis text
+        String urgencyDetails = buildUrgencyDetails(ticket);
+        if (urgencyDetails != null && !urgencyDetails.trim().isEmpty()) {
+            tvUrgencyReason.setText(urgencyDetails);
+            cvAiScoring.setVisibility(View.VISIBLE);
+        } else {
+            cvAiScoring.setVisibility(View.GONE);
+        }
+        
+        String priorityLevel = StatusChipHelper.resolvePriorityLevel(ticket);
+        if (priorityLevel != null && dropUrgencyLevel != null) {
+            dropUrgencyLevel.setText(priorityLevel, false);
+        }
 
-        if (ticket.isUrgencyOverridden()) {
+        currentStatus = ticket.getStatus();
+        configureStatusActions();
+
+        if (ticket.isUrgencyOverridden() && tvOverrideState != null) {
             String overrideReason = ticket.getUrgencyOverrideReason();
             if (overrideReason == null || overrideReason.trim().isEmpty()) {
                 tvOverrideState.setText("Urgency is manually overridden by admin.");
@@ -228,7 +237,7 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
                 tvOverrideState.setText("Urgency override reason: " + overrideReason.trim());
             }
             tvOverrideState.setVisibility(View.VISIBLE);
-        } else {
+        } else if (tvOverrideState != null) {
             tvOverrideState.setVisibility(View.GONE);
         }
     }
@@ -263,7 +272,7 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
         final String overrideReason = reason;
 
         btnOverrideUrgency.setEnabled(false);
-        btnOverrideUrgency.setText("APPLYING...");
+        btnOverrideUrgency.setAlpha(0.5f);
 
         ticketService.overrideTicketUrgency(ticketId, new UrgencyOverrideRequest(selected, overrideReason))
                 .enqueue(new Callback<ApiResponse<Ticket>>() {
@@ -271,7 +280,7 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
                     public void onResponse(@NonNull Call<ApiResponse<Ticket>> call,
                                            @NonNull Response<ApiResponse<Ticket>> response) {
                         btnOverrideUrgency.setEnabled(true);
-                        btnOverrideUrgency.setText("APPLY URGENCY OVERRIDE");
+                        btnOverrideUrgency.setAlpha(1.0f);
                         if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                             Ticket updated = response.body().getData();
                             if (overrideReason != null) {
@@ -294,7 +303,7 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse<Ticket>> call, @NonNull Throwable t) {
                         btnOverrideUrgency.setEnabled(true);
-                        btnOverrideUrgency.setText("APPLY URGENCY OVERRIDE");
+                        btnOverrideUrgency.setAlpha(1.0f);
                         Toast.makeText(AdminTicketDetailActivity.this,
                                 "Network error while overriding urgency",
                                 Toast.LENGTH_SHORT).show();
@@ -374,18 +383,18 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
         if ("RESOLVED".equalsIgnoreCase(currentStatus)) {
             btnUpdateStatus.setEnabled(false);
             btnUpdateStatus.setAlpha(0.5f);
-            btnUpdateStatus.setText("Waiting for student confirmation");
-            tvSelectedCategory.setText("CLOSED");
+            btnUpdateStatus.setText("WAITING FOR CONFIRMATION");
+            tvSelectedCategory.setText("RESOLVED");
         } else if (nextStatus == null) {
             btnUpdateStatus.setEnabled(false);
             btnUpdateStatus.setAlpha(0.5f);
-            btnUpdateStatus.setText("Update Status");
-            tvSelectedCategory.setText(currentStatus.toUpperCase());
+            btnUpdateStatus.setText("UPDATE STATUS");
+            tvSelectedCategory.setText(currentStatus != null ? currentStatus.toUpperCase() : "N/A");
         } else {
             btnUpdateStatus.setEnabled(true);
             btnUpdateStatus.setAlpha(1.0f);
-            btnUpdateStatus.setText("Update Status");
-            tvSelectedCategory.setText(nextStatus.replace("_", " ").toUpperCase());
+            btnUpdateStatus.setText("UPDATE STATUS");
+            tvSelectedCategory.setText(nextStatus.toUpperCase());
             btnUpdateStatus.setOnClickListener(v -> updateStatus(nextStatus));
         }
     }
@@ -431,10 +440,9 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
             return;
         }
 
-        com.google.android.material.button.MaterialButton btnSend =
-                findViewById(R.id.btnSendResponse);
+        View btnSend = findViewById(R.id.btnSendIconInside);
         btnSend.setEnabled(false);
-        btnSend.setText("TRANSMITTING...");
+        btnSend.setAlpha(0.5f);
 
         ticketService.postResponse(ticketId, new CreateResponseRequest(message))
                 .enqueue(new Callback<ApiResponse<TicketResponse>>() {
@@ -442,7 +450,7 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
                     public void onResponse(@NonNull Call<ApiResponse<TicketResponse>> call,
                                            @NonNull Response<ApiResponse<TicketResponse>> response) {
                         btnSend.setEnabled(true);
-                        btnSend.setText("TRANSMIT RESPONSE");
+                        btnSend.setAlpha(1.0f);
                         if (response.isSuccessful()) {
                             etResponse.setText("");
                             etResponse.clearFocus();
@@ -458,7 +466,7 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Call<ApiResponse<TicketResponse>> call,
                                           @NonNull Throwable t) {
                         btnSend.setEnabled(true);
-                        btnSend.setText("TRANSMIT RESPONSE");
+                        btnSend.setAlpha(1.0f);
                         Toast.makeText(AdminTicketDetailActivity.this,
                                 "Network error.", Toast.LENGTH_SHORT).show();
                     }
@@ -474,91 +482,29 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
         return name.substring(0, Math.min(name.length(), 2)).toUpperCase();
     }
 
-    private int getStatusBackgroundResource(String status) {
-        if ("PENDING".equalsIgnoreCase(status)) return R.drawable.bg_badge_pending;
-        if ("IN_PROGRESS".equalsIgnoreCase(status)) return R.drawable.bg_badge_inprogress;
-        if ("RESOLVED".equalsIgnoreCase(status)) return R.drawable.bg_badge_resolved;
-        return R.drawable.bg_badge_closed;
-    }
-
-    private String resolvePriorityLevel(Ticket ticket) {
-        if (ticket == null) {
-            return null;
-        }
-
-        String label = ticket.getUrgencyLabel();
-        if (label != null && !label.trim().isEmpty()) {
-            String normalized = label.trim().toUpperCase(Locale.ROOT);
-            if ("CRITICAL".equals(normalized) || "HIGH".equals(normalized)
-                    || "LOW".equals(normalized) || "MUTED".equals(normalized)) {
-                return normalized;
-            }
-            if ("MEDIUM".equals(normalized)) {
-                return "LOW";
-            }
-        }
-
-        Integer score = ticket.getUrgencyScore();
-        if (score != null) {
-            if (score >= 80) return "CRITICAL";
-            if (score >= 55) return "HIGH";
-            if (score >= 25) return "LOW";
-            return "MUTED";
-        }
-
-        if (ticket.isUrgent()) {
-            return "HIGH";
-        }
-        return null;
-    }
-
-    private void applyPriorityBadge(TextView badgeView, String priorityLevel) {
-        if (priorityLevel == null) {
-            badgeView.setVisibility(View.GONE);
-            return;
-        }
-
-        badgeView.setVisibility(View.VISIBLE);
-        badgeView.setText(priorityLevel);
-        switch (priorityLevel) {
-            case "CRITICAL":
-                badgeView.setBackgroundResource(R.drawable.bg_badge_urgent);
-                badgeView.setTextColor(ContextCompat.getColor(this, R.color.white));
-                break;
-            case "HIGH":
-                badgeView.setBackgroundResource(R.drawable.bg_badge_priority_high);
-                badgeView.setTextColor(ContextCompat.getColor(this, R.color.colorTextPrimary));
-                break;
-            case "LOW":
-                badgeView.setBackgroundResource(R.drawable.bg_badge_priority_low);
-                badgeView.setTextColor(ContextCompat.getColor(this, R.color.white));
-                break;
-            default:
-                badgeView.setBackgroundResource(R.drawable.bg_badge_priority_muted);
-                badgeView.setTextColor(ContextCompat.getColor(this, R.color.white));
-                break;
-        }
-    }
-
     private String buildUrgencyDetails(Ticket ticket) {
         if (ticket == null) {
             return null;
         }
 
         String reason = ticket.getUrgencyReason();
-        String signals = ticket.getUrgencySignals();
         String normalizedReason = reason == null ? "" : reason.trim();
-        String normalizedSignals = signals == null ? "" : signals.trim();
-
-        if (normalizedReason.isEmpty() && normalizedSignals.isEmpty()) {
+        if (normalizedReason.isEmpty()) {
             return null;
         }
-        if (normalizedSignals.isEmpty()) {
-            return normalizedReason;
+
+        // UI requirement: show only human-readable reason message.
+        // Hide raw diagnostic tokens like status=... and ageHours=... when present.
+        String cleaned = normalizedReason
+                .replaceAll("(?i)\\bstatus\\s*=\\s*[^;\\n]+;?\\s*", "")
+                .replaceAll("(?i)\\bageHours\\s*=\\s*\\d+;?\\s*", "")
+                .replaceAll("\\s{2,}", " ")
+                .trim();
+
+        if (cleaned.endsWith(";")) {
+            cleaned = cleaned.substring(0, cleaned.length() - 1).trim();
         }
-        if (normalizedReason.isEmpty()) {
-            return getString(R.string.urgency_signals_prefix, normalizedSignals);
-        }
-        return normalizedReason + "\n" + getString(R.string.urgency_signals_prefix, normalizedSignals);
+
+        return cleaned.isEmpty() ? null : cleaned;
     }
 }

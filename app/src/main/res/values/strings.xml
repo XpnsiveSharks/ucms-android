@@ -166,4 +166,24 @@
     <string name="avatar_initials">AU</string>
     <string name="welcome_label">Welcome,</string>
 
+    <!-- Admin Dashboard Redesign Strings -->
+    <string name="elevated_session">ELEVATED SESSION</string>
+    <string name="system_administrator">System Administrator</string>
+    <string name="system_overview_label">[ SYSTEM OVERVIEW ]</string>
+    <string name="total_tickets_label_caps">TOTAL TICKETS</string>
+    <string name="required_pending_action_label">REQUIRED PENDING ACTION</string>
+    <string name="resolved_today_label_caps">RESOLVED TODAY</string>
+    <string name="view_system_telemetry">VIEW SYSTEM TELEMETRY</string>
+    <string name="recent_logs_label">RECENT LOGS</string>
+    <string name="view_all_label">VIEW ALL</string>
+
+    <!-- Analytics Redesign Strings -->
+    <string name="system_telemetry">SYSTEM TELEMETRY</string>
+    <string name="analytics">Analytics</string>
+    <string name="resolution_rate">RESOLUTION RATE</string>
+    <string name="avg_wait_time">AVG WAIT TIME</string>
+    <string name="ticket_volume_7_days">TICKET VOLUME (7 DAYS)</string>
+    <string name="category_breakdown_label">[ CATEGORY BREAKDOWN ]</string>
+    <string name="from_last_week">from last week</string>
+    <string name="logs_suffix">%d logs</string>
 </resources>

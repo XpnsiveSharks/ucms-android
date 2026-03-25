@@ -56,5 +56,14 @@
 
     <color name="colorGridSubtle">#1AE0E0E0</color>
 
-
+    <!-- Admin Dashboard Redesign Colors -->
+    <color name="colorElevatedSession">#FF4500</color>
+    <color name="colorTotalTicketsBg">#FFF0EA</color>
+    <color name="colorTotalTicketsBorder">#FF4500</color>
+    <color name="colorTelemetryBorder">#1A1A1A</color>
+    <color name="colorBadgeLowBorder">#80DEEA</color>
+    <color name="colorBadgeLowText">#00ACC1</color>
+    <color name="colorTrendGreen">#10B981</color>
+    <color name="colorTrendOrange">#F77F00</color>
+    <color name="colorChartBar">#FFE2D8</color>
 </resources>

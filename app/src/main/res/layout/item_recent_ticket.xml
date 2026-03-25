@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
+    android:layout_marginBottom="@dimen/spacing_small"
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="0dp"
     app:cardElevation="0dp"
@@ -26,27 +26,27 @@
             android:paddingHorizontal="12dp"
             android:paddingVertical="6dp"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_small"
+            android:textSize="@dimen/text_size_tiny"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="TKT-20260315-0003" />
 
-        <!-- Status Badge -->
+        <!-- Status Badge (Priority in screenshot) -->
         <TextView
             android:id="@+id/tvStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_badge_orange_outline"
+            android:background="@drawable/bg_badge_low_outline"
             android:fontFamily="monospace"
             android:paddingHorizontal="12dp"
             android:paddingVertical="6dp"
-            android:textColor="@color/colorOrange"
-            android:textSize="@dimen/text_size_small"
+            android:textColor="@color/colorBadgeLowText"
+            android:textSize="@dimen/text_size_tiny"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="PENDING" />
+            tools:text="LOW" />
 
         <!-- Ticket Title -->
         <TextView
@@ -54,7 +54,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textColor="@color/black"
+            android:textColor="@color/colorTextPrimary"
             android:textSize="@dimen/text_size_h3"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -71,7 +71,7 @@
             android:fontFamily="monospace"
             android:letterSpacing="0.1"
             android:textColor="@color/colorTextSecondary"
-            android:textSize="@dimen/text_size_xsmall"
+            android:textSize="@dimen/text_size_tiny"
             app:layout_constraintEnd_toStartOf="@id/tvTimeAgo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTicketTitle"
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
             android:textColor="@color/colorTextSecondary"
-            android:textSize="@dimen/text_size_xsmall"
+            android:textSize="@dimen/text_size_tiny"
             app:layout_constraintBottom_toBottomOf="@id/tvCategory"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tvCategory"

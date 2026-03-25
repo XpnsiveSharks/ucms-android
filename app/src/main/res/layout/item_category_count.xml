@@ -1,52 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingVertical="@dimen/spacing_small">
+    android:layout_marginBottom="@dimen/spacing_small"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/colorDivider"
+    app:strokeWidth="1dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tvRankBadge"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@drawable/bg_button_pill"
-            android:backgroundTint="@color/colorPrimary"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            android:textStyle="bold" />
+        <View
+            android:id="@+id/vCategoryColor"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:background="@color/colorTrendOrange"
+            app:layout_constraintBottom_toBottomOf="@id/tvCategoryName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvCategoryName" />
 
         <TextView
             android:id="@+id/tvCategoryName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="@dimen/spacing_small"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:layout_marginStart="12dp"
+            android:fontFamily="monospace"
             android:textColor="@color/colorTextPrimary"
-            android:textStyle="bold" />
+            android:textSize="@dimen/text_size_body"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tvTicketCount"
+            app:layout_constraintStart_toEndOf="@id/vCategoryColor"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Academic-related" />
 
         <TextView
             android:id="@+id/tvTicketCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textColor="@color/colorTextPrimary"
-            android:textStyle="bold" />
+            android:fontFamily="monospace"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="@dimen/text_size_body"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="142 logs" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View
-        android:id="@+id/viewBar"
-        android:layout_width="0dp"
-        android:layout_height="4dp"
-        android:layout_marginTop="@dimen/spacing_small"
-        android:background="@color/colorPrimary" />
-
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -92,6 +92,7 @@
                     tools:text="20251112-N • BSCS • Year 3" />
 
                 <LinearLayout
+                    android:id="@+id/layoutRoleBadge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
@@ -99,12 +100,14 @@
                     android:orientation="horizontal">
 
                     <View
+                        android:id="@+id/vRoleIndicator"
                         android:layout_width="8dp"
                         android:layout_height="8dp"
                         android:background="@drawable/bg_badge_orange_solid"
                         android:backgroundTint="@color/colorSuccess" />
 
                     <TextView
+                        android:id="@+id/tvRoleLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"

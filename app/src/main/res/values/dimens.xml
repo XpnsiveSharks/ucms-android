@@ -53,4 +53,9 @@
     <dimen name="text_size_tiny">10sp</dimen>
     <dimen name="text_size_stat_large">48sp</dimen>
     <dimen name="text_size_stat_medium">40sp</dimen>
+    <dimen name="text_size_stat_small">32sp</dimen>
+
+    <!-- Admin Dashboard Redesign Dimensions -->
+    <dimen name="text_size_label_caps">12sp</dimen>
+    <dimen name="text_size_label_caps_small">11sp</dimen>
 </resources>

@@ -11,549 +11,305 @@
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:visibility="gone">
+        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/screen_padding">
 
-            <!-- Header: Avatar -->
+            <!-- Header Section -->
             <TextView
-                android:id="@+id/tvAvatar"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/bg_button_pill"
-                android:backgroundTint="@color/colorPrimary"
-                android:gravity="center"
-                android:text="@string/avatar_initials"
-                android:textColor="@color/white"
-                android:textSize="18sp"
+                android:id="@+id/tvSystemTelemetry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:text="@string/system_telemetry"
+                android:textColor="@color/colorElevatedSession"
+                android:textSize="@dimen/text_size_label_caps"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <LinearLayout
-                android:id="@+id/llWelcome"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_small"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="@id/tvAvatar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tvAvatar"
-                app:layout_constraintTop_toTopOf="@id/tvAvatar">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/welcome_label"
-                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                    android:textColor="@color/colorTextSecondary" />
-
-                <TextView
-                    android:id="@+id/tvAdminName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textStyle="bold"
-                    tools:text="Admin User" />
-            </LinearLayout>
-
-            <!-- Screen Title -->
             <TextView
                 android:id="@+id/tvScreenTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/analytics"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="@dimen/text_size_h1"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvSystemTelemetry" />
+
+            <!-- Summary Cards Row -->
+            <LinearLayout
+                android:id="@+id/llSummaryCards"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_xlarge"
-                android:text="@string/analytics_title"
-                android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                android:textColor="@color/colorTextPrimary"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvAvatar" />
-
-            <!-- Shimmer for summary card -->
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/shimmerSummary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_medium"
-                android:visibility="visible"
+                android:orientation="horizontal"
                 app:layout_constraintTop_toBottomOf="@id/tvScreenTitle">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                <!-- Resolution Rate Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cvResolutionRate"
+                    android:layout_width="0dp"
+                    android:layout_height="140dp"
+                    android:layout_marginEnd="@dimen/spacing_xsmall"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/colorDivider"
+                    app:strokeWidth="1dp">
 
-                    <View android:layout_width="match_parent" android:layout_height="120dp" android:background="#E0E0E0" android:layout_marginBottom="12dp"/>
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
-                        <View android:layout_width="0dp" android:layout_height="80dp" android:layout_weight="1" android:background="#E0E0E0" android:layout_marginEnd="8dp"/>
-                        <View android:layout_width="0dp" android:layout_height="80dp" android:layout_weight="1" android:background="#E0E0E0"/>
-                    </LinearLayout>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-                </LinearLayout>
+                        <!-- Top Accent -->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="4dp"
+                            android:background="@color/colorTrendOrange"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-            </com.facebook.shimmer.ShimmerFrameLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="@dimen/spacing_medium">
 
-            <!-- Card 1: Unresolved Tickets -->
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:src="@drawable/ic_resolution_rate"
+                                    app:tint="@color/colorTextSecondary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:fontFamily="monospace"
+                                    android:text="@string/resolution_rate"
+                                    android:textColor="@color/colorTextSecondary"
+                                    android:textSize="@dimen/text_size_tiny"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tvResolutionRate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_small"
+                                android:textColor="@color/colorTextPrimary"
+                                android:textSize="28sp"
+                                android:textStyle="bold"
+                                tools:text="94.2%" />
+
+                            <TextView
+                                android:id="@+id/tvResolutionTrend"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_small"
+                                android:fontFamily="monospace"
+                                android:textColor="@color/colorTrendGreen"
+                                android:textSize="@dimen/text_size_tiny"
+                                android:textStyle="bold"
+                                tools:text="+2.4% from last week" />
+                        </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Average Wait Time Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cvAvgWaitTime"
+                    android:layout_width="0dp"
+                    android:layout_height="140dp"
+                    android:layout_marginStart="@dimen/spacing_xsmall"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/colorDivider"
+                    app:strokeWidth="1dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <!-- Top Accent -->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="4dp"
+                            android:background="@color/colorPriorityHigh"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="@dimen/spacing_medium">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:src="@drawable/ic_avg_wait_time"
+                                    app:tint="@color/colorTextSecondary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:fontFamily="monospace"
+                                    android:text="@string/avg_wait_time"
+                                    android:textColor="@color/colorTextSecondary"
+                                    android:textSize="@dimen/text_size_tiny"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tvAvgWaitTime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_small"
+                                android:textColor="@color/colorTextPrimary"
+                                android:textSize="28sp"
+                                android:textStyle="bold"
+                                tools:text="4.2h" />
+
+                            <TextView
+                                android:id="@+id/tvWaitTimeTrend"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_small"
+                                android:fontFamily="monospace"
+                                android:textColor="@color/colorTrendOrange"
+                                android:textSize="@dimen/text_size_tiny"
+                                android:textStyle="bold"
+                                tools:text="-1.1h from last week" />
+                        </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- Ticket Volume Card -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cvUnresolved"
+                android:id="@+id/cvTicketVolume"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_medium"
-                android:visibility="gone"
+                android:layout_marginTop="@dimen/spacing_xlarge"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/corner_radius_card"
-                app:cardElevation="2dp"
+                app:cardCornerRadius="0dp"
+                app:cardElevation="0dp"
                 app:strokeColor="@color/colorDivider"
                 app:strokeWidth="1dp"
-                app:layout_constraintTop_toBottomOf="@id/tvScreenTitle">
+                app:layout_constraintTop_toBottomOf="@id/llSummaryCards">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/spacing_large">
+                    android:padding="@dimen/spacing_xlarge">
 
-                    <TextView
-                        android:id="@+id/tvUnresolvedLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/unresolved_tickets_label"
-                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-                        android:textColor="@color/colorTextSecondary"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvTotalUnresolved"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:textColor="@color/colorTextPrimary"
-                        android:textSize="48sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvUnresolvedLabel"
-                        tools:text="34" />
-
-                    <!-- Resolved % badge -->
                     <LinearLayout
-                        android:id="@+id/llResolvedBadge"
+                        android:id="@+id/llVolumeHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:background="@drawable/bg_trend_badge"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:paddingHorizontal="8dp"
-                        android:paddingVertical="4dp"
-                        app:layout_constraintBottom_toBottomOf="@id/tvTotalUnresolved"
-                        app:layout_constraintStart_toEndOf="@id/tvTotalUnresolved"
-                        app:layout_constraintTop_toTopOf="@id/tvTotalUnresolved">
-
-                        <TextView
-                            android:id="@+id/tvResolvedPct"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="10sp"
-                            android:textColor="@color/colorTextSecondary"
-                            android:textStyle="bold"
-                            tools:text="72% resolved" />
-                    </LinearLayout>
-
-                    <!-- Progress bar: pending vs in-progress -->
-                    <LinearLayout
-                        android:id="@+id/llProgressBar"
-                        android:layout_width="match_parent"
-                        android:layout_height="12dp"
-                        android:layout_marginTop="24dp"
-                        android:orientation="horizontal"
-                        app:layout_constraintTop_toBottomOf="@id/tvTotalUnresolved">
-
-                        <View
-                            android:id="@+id/viewPendingBar"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:background="@drawable/bg_badge_pending"
-                            android:backgroundTint="@color/colorPrimary" />
-
-                        <View
-                            android:id="@+id/viewInProgressBar"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="4dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/bg_badge_inprogress"
-                            android:backgroundTint="@color/colorSecondary" />
-                    </LinearLayout>
-
-                    <!-- Legend -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:orientation="horizontal"
-                        app:layout_constraintTop_toBottomOf="@id/llProgressBar">
-
-                        <View
-                            android:layout_width="8dp"
-                            android:layout_height="8dp"
-                            android:layout_gravity="center_vertical"
-                            android:background="@drawable/bg_button_pill"
-                            android:backgroundTint="@color/colorPrimary" />
-
-                        <TextView
-                            android:id="@+id/tvPendingCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:textSize="10sp"
-                            android:textColor="@color/colorTextSecondary"
-                            tools:text="11 Pending" />
-
-                        <View
-                            android:layout_width="8dp"
-                            android:layout_height="8dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginStart="24dp"
-                            android:background="@drawable/bg_button_pill"
-                            android:backgroundTint="@color/colorSecondary" />
-
-                        <TextView
-                            android:id="@+id/tvInProgressCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:textSize="10sp"
-                            android:textColor="@color/colorTextSecondary"
-                            tools:text="23 In-Progress" />
-                    </LinearLayout>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Card 2: Most Common Concerns -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cvCommonConcerns"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_medium"
-                android:visibility="gone"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/corner_radius_card"
-                app:cardElevation="2dp"
-                app:strokeColor="@color/colorDivider"
-                app:strokeWidth="1dp"
-                app:layout_constraintTop_toBottomOf="@id/cvUnresolved">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/spacing_large">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_common_concerns_header"
-                        android:text="@string/most_common_concerns_label"
-                        android:paddingHorizontal="8dp"
-                        android:paddingVertical="4dp"
-                        android:textSize="12sp"
-                        android:textColor="@color/colorTextPrimary"
-                        android:textStyle="bold" />
-
-                    <RelativeLayout
-                        android:id="@+id/rvCategories"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp">
-
-                        <TextView
-                            android:id="@+id/tvRank1"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:background="@drawable/bg_button_pill"
-                            android:backgroundTint="@color/colorPrimary"
-                            android:gravity="center"
-                            android:text="1"
-                            android:textColor="@color/white"
-                            android:textSize="10sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvCat1Name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_toEndOf="@id/tvRank1"
-                            android:text="Academic (Enrollment)"
-                            android:textColor="@color/colorTextPrimary"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvCat1Percent"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:text="45%"
-                            android:textColor="@color/colorTextPrimary"
-                            android:textStyle="bold" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="4dp"
-                            android:layout_below="@id/tvRank1"
-                            android:layout_marginTop="12dp"
-                            android:background="@color/colorSurface" />
-
-                        <View
-                            android:id="@+id/vCat1Bar"
-                            android:layout_width="160dp"
-                            android:layout_height="4dp"
-                            android:layout_below="@id/tvRank1"
-                            android:layout_marginTop="12dp"
-                            android:background="@color/colorPrimary" />
-                    </RelativeLayout>
-
-                    <!-- Item 2 -->
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp">
-
-                        <TextView
-                            android:id="@+id/tvRank2"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:background="@drawable/bg_button_pill"
-                            android:backgroundTint="@color/colorPrimary"
-                            android:gravity="center"
-                            android:alpha="0.6"
-                            android:text="2"
-                            android:textColor="@color/white"
-                            android:textSize="10sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvCat2Name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_toEndOf="@id/tvRank2"
-                            android:text="IT Services(Wifi/Portal)"
-                            android:textColor="@color/colorTextPrimary"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvCat2Percent"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:text="30%"
-                            android:textColor="@color/colorTextPrimary"
-                            android:textStyle="bold" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="4dp"
-                            android:layout_below="@id/tvRank2"
-                            android:layout_marginTop="12dp"
-                            android:background="@color/colorSurface" />
-
-                        <View
-                            android:id="@+id/vCat2Bar"
-                            android:layout_width="100dp"
-                            android:layout_height="4dp"
-                            android:layout_below="@id/tvRank2"
-                            android:layout_marginTop="12dp"
-                            android:background="@color/colorPrimary"
-                            android:alpha="0.6" />
-                    </RelativeLayout>
-
-                    <!-- Item 3 -->
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp">
-
-                        <TextView
-                            android:id="@+id/tvRank3"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:background="@drawable/bg_button_pill"
-                            android:backgroundTint="@color/colorSecondary"
-                            android:gravity="center"
-                            android:text="3"
-                            android:textColor="@color/white"
-                            android:textSize="10sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvCat3Name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_toEndOf="@id/tvRank3"
-                            android:text="Facilities(Maintenance)"
-                            android:textColor="@color/colorTextPrimary"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvCat3Percent"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:text="15%"
-                            android:textColor="@color/colorTextPrimary"
-                            android:textStyle="bold" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="4dp"
-                            android:layout_below="@id/tvRank3"
-                            android:layout_marginTop="12dp"
-                            android:background="@color/colorSurface" />
-
-                        <View
-                            android:id="@+id/vCat3Bar"
-                            android:layout_width="50dp"
-                            android:layout_height="4dp"
-                            android:layout_below="@id/tvRank3"
-                            android:layout_marginTop="12dp"
-                            android:background="@color/colorSecondary" />
-                    </RelativeLayout>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Card 3: Category Trends -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cvCategoryTrends"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_marginTop="16dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/corner_radius_card"
-                app:cardElevation="2dp"
-                app:strokeColor="@color/colorDivider"
-                app:strokeWidth="1dp"
-                app:layout_constraintTop_toBottomOf="@id/cvCommonConcerns">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:id="@+id/tvTrendsLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="CATEGORY TRENDS"
-                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-                        android:textColor="@color/colorTextSecondary"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_ticket_volume" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:fontFamily="monospace"
+                            android:text="@string/ticket_volume_7_days"
+                            android:textColor="@color/colorTextSecondary"
+                            android:textSize="@dimen/text_size_tiny"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
                     <!-- Mock Bar Chart -->
                     <LinearLayout
-                        android:id="@+id/llBarChart"
+                        android:id="@+id/llMockChart"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:baselineAligned="false"
-                        android:layout_marginTop="24dp"
+                        android:layout_height="160dp"
+                        android:layout_marginTop="@dimen/spacing_xlarge"
+                        android:gravity="bottom"
                         android:orientation="horizontal"
-                        android:paddingBottom="20dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvTrendsLabel">
+                        app:layout_constraintTop_toBottomOf="@id/llVolumeHeader">
 
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="10dp"
-                            android:layout_weight="1"
-                            android:layout_marginHorizontal="8dp"
-                            android:background="@color/colorSecondary"
-                            android:alpha="0.3" />
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="80dp"
-                            android:layout_weight="1"
-                            android:layout_marginHorizontal="8dp"
-                            android:background="@color/colorSecondary"
-                            android:alpha="0.6" />
-
-                        <FrameLayout
-                            android:layout_width="0dp"
-                            android:layout_height="160dp"
-                            android:layout_weight="1"
-                            android:layout_marginHorizontal="8dp">
-                            
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@color/colorSecondary" />
-                                
-                            <TextView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_gravity="top|center_horizontal"
-                                android:layout_marginTop="-12dp"
-                                android:background="@drawable/bg_button_pill"
-                                android:backgroundTint="@color/colorSecondary"
-                                android:gravity="center"
-                                android:text="92"
-                                android:textColor="@color/white"
-                                android:textSize="10sp"
-                                android:textStyle="bold" />
-                        </FrameLayout>
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="80dp"
-                            android:layout_weight="1"
-                            android:layout_marginHorizontal="8dp"
-                            android:background="@color/colorPrimary" />
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="5dp"
-                            android:layout_weight="1"
-                            android:layout_marginHorizontal="8dp"
-                            android:background="@color/colorPrimary"
-                            android:alpha="0.3" />
+                        <!-- Bars with days -->
+                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
 
                     </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Extra padding -->
-            <View
+            <!-- Category Breakdown Section -->
+            <TextView
+                android:id="@+id/tvCategoryBreakdownLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xlarge"
+                android:fontFamily="monospace"
+                android:text="@string/category_breakdown_label"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="@dimen/text_size_tiny"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cvTicketVolume" />
+
+            <!-- Category List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCategoryBreakdown"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                app:layout_constraintTop_toBottomOf="@id/cvCommonConcerns" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintTop_toBottomOf="@id/tvCategoryBreakdownLabel"
+                tools:itemCount="4"
+                tools:listitem="@layout/item_category_count" />
+
+            <!-- Loading Shimmer -->
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerAnalytics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/tvScreenTitle">
+                <include layout="@layout/shimmer_analytics" />
+            </com.facebook.shimmer.ShimmerFrameLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/shimmerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <include layout="@layout/shimmer_analytics" />
-
-    </com.facebook.shimmer.ShimmerFrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

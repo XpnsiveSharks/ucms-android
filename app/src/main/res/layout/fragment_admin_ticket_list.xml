@@ -7,334 +7,269 @@
     android:background="@color/colorSurface"
     tools:context=".ui.admin.AdminTicketListFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!-- Header Section -->
+    <TextView
+        android:id="@+id/tvSystemRecords"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginTop="@dimen/screen_padding"
+        android:fontFamily="monospace"
+        android:text="SYSTEM RECORDS"
+        android:textColor="@color/colorElevatedSession"
+        android:textSize="@dimen/text_size_label_caps"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvScreenTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:text="Ticket Directory"
+        android:textColor="@color/colorTextPrimary"
+        android:textSize="@dimen/text_size_h1"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/btnFilter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSystemRecords" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/btnFilter"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="@dimen/screen_padding"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/tvScreenTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvScreenTitle"
+        app:strokeColor="@color/colorDivider"
+        app:strokeWidth="1dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_filter"
+            app:tint="@color/black" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Tabs Section -->
+    <LinearLayout
+        android:id="@+id/llTabs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:padding="@dimen/screen_padding">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_xlarge"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/screen_padding"
+        android:paddingEnd="@dimen/screen_padding"
+        app:layout_constraintTop_toBottomOf="@id/tvScreenTitle">
 
-        <!-- Header: Avatar -->
-        <TextView
-            android:id="@+id/tvAvatar"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@drawable/bg_button_pill"
-            android:backgroundTint="@color/colorPrimary"
-            android:gravity="center"
-            android:text="AU"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- Header: Welcome text -->
         <LinearLayout
-            android:id="@+id/llWelcome"
-            android:layout_width="0dp"
+            android:id="@+id/tabAll"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_small"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@id/tvAvatar"
-            app:layout_constraintEnd_toStartOf="@id/flNotification"
-            app:layout_constraintStart_toEndOf="@id/tvAvatar"
-            app:layout_constraintTop_toTopOf="@id/tvAvatar">
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tvTabAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Welcome,"
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                android:textColor="@color/colorTextSecondary" />
-
-            <TextView
-                android:id="@+id/tvAdminName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                android:textColor="@color/colorTextPrimary"
-                android:textStyle="bold"
-                tools:text="Admin User" />
-        </LinearLayout>
-
-        <!-- Header: Notification bell with badge -->
-        <FrameLayout
-            android:id="@+id/flNotification"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            app:layout_constraintBottom_toBottomOf="@id/tvAvatar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvAvatar">
-
-            <ImageView
-                android:id="@+id/ivNotification"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_gravity="center"
-                android:contentDescription="@string/notifications"
-                android:src="@drawable/ic_notifications"
-                app:tint="@color/black" />
+                android:fontFamily="monospace"
+                android:paddingBottom="8dp"
+                android:text="ALL LOGS"
+                android:textColor="@color/colorElevatedSession"
+                android:textSize="@dimen/text_size_label_caps"
+                android:textStyle="bold" />
 
             <View
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:layout_gravity="top|end"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="2dp"
-                android:background="@drawable/bg_button_pill"
-                android:backgroundTint="@color/colorPrimary" />
-        </FrameLayout>
-
-        <!-- Screen Title -->
-        <TextView
-            android:id="@+id/tvScreenTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xlarge"
-            android:text="Ticket Inbox"
-            android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-            android:textColor="@color/colorTextPrimary"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvAvatar" />
-
-        <!-- Search Bar + Filter Button -->
-        <LinearLayout
-            android:id="@+id/llSearchRow"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_medium"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvScreenTitle">
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/colorDivider"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="12dp">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_search"
-                        app:tint="@color/colorTextSecondary" />
-
-                    <EditText
-                        android:id="@+id/etSearch"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="8dp"
-                        android:background="@android:color/transparent"
-                        android:hint="Search Tickets....."
-                        android:inputType="text"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                        android:textColor="@color/colorTextPrimary"
-                        android:textColorHint="@color/colorTextSecondary" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/btnFilter"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="12dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/colorDivider"
-                app:strokeWidth="1dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_filter"
-                    app:tint="@color/black" />
-            </com.google.android.material.card.MaterialCardView>
+                android:id="@+id/indicatorAll"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="@color/colorElevatedSession"
+                android:visibility="visible" />
         </LinearLayout>
 
-        <!-- Filter Chips -->
-        <HorizontalScrollView
-            android:id="@+id/hsvChips"
+        <LinearLayout
+            android:id="@+id/tabInProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvTabInProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:paddingBottom="8dp"
+                android:text="IN PROGRESS"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="@dimen/text_size_label_caps"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/indicatorInProgress"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="@color/colorElevatedSession"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tabResolved"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvTabResolved"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:paddingBottom="8dp"
+                android:text="RESOLVED"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="@dimen/text_size_label_caps"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/indicatorResolved"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="@color/colorElevatedSession"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/vTabDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorDivider"
+        app:layout_constraintTop_toBottomOf="@id/llTabs" />
+
+    <!-- Search Hidden (but keep ID if needed for logic, though screenshot doesn't show it) -->
+    <EditText
+        android:id="@+id/etSearch"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Loading Skeleton -->
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:paddingStart="@dimen/screen_padding"
+        android:paddingEnd="@dimen/screen_padding"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/vTabDivider">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_medium"
-            android:clipToPadding="false"
-            android:scrollbars="none"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/llSearchRow">
+            android:orientation="vertical">
 
-        <LinearLayout
+            <include layout="@layout/layout_skeleton_ticket" />
+            <include layout="@layout/layout_skeleton_ticket" />
+            <include layout="@layout/layout_skeleton_ticket" />
+
+        </LinearLayout>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/layoutEmpty"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/vTabDivider">
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/screen_padding"
-            android:orientation="horizontal">
+            android:text="No tickets found"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:textColor="@color/colorTextPrimary" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnNeedsAction"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Needs Actions"
-                    android:textAllCaps="false"
-                    android:textColor="@color/colorTextPrimary"
-                    app:cornerRadius="50dp"
-                    app:strokeColor="@color/colorDivider" />
+    </LinearLayout>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnInProgress"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="In - Progress"
-                    android:textAllCaps="false"
-                    android:textColor="@color/colorTextPrimary"
-                    app:cornerRadius="50dp"
-                    app:strokeColor="@color/colorDivider" />
+    <!-- Error State -->
+    <LinearLayout
+        android:id="@+id/layoutError"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/vTabDivider">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAll"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="All"
-                    android:textAllCaps="false"
-                    android:textColor="@color/colorTextPrimary"
-                    app:cornerRadius="50dp"
-                    app:strokeColor="@color/colorDivider" />
-            </LinearLayout>
-        </HorizontalScrollView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Something went wrong"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:textColor="@color/colorTextPrimary" />
 
-        <!-- Loading Skeleton -->
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/shimmerLayout"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/spacing_medium"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/hsvChips">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRetry"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Retry"
+            android:textAllCaps="false"
+            app:cornerRadius="0dp"
+            app:strokeColor="@color/colorPrimary" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+    </LinearLayout>
 
-                <include layout="@layout/layout_skeleton_ticket" />
-                <include layout="@layout/layout_skeleton_ticket" />
-                <include layout="@layout/layout_skeleton_ticket" />
-
-            </LinearLayout>
-
-        </com.facebook.shimmer.ShimmerFrameLayout>
-
-        <!-- Empty State -->
-        <LinearLayout
-            android:id="@+id/layoutEmpty"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/hsvChips">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="No tickets found"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textColor="@color/colorTextPrimary" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="There are no tickets matching your filter."
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                android:textColor="@color/colorTextSecondary" />
-
-        </LinearLayout>
-
-        <!-- Error State -->
-        <LinearLayout
-            android:id="@+id/layoutError"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/hsvChips">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Something went wrong"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textColor="@color/colorTextPrimary" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Could not load tickets. Check your connection."
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                android:textColor="@color/colorTextSecondary" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnRetry"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Retry"
-                android:textAllCaps="false"
-                app:cornerRadius="50dp"
-                app:strokeColor="@color/colorPrimary" />
-
-        </LinearLayout>
-
-        <!-- Ticket List -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvTickets"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/spacing_medium"
-            android:background="@color/colorSurface"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/hsvChips"
-            tools:listitem="@layout/item_ticket" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Ticket List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTickets"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingStart="@dimen/screen_padding"
+        android:paddingEnd="@dimen/screen_padding"
+        android:paddingTop="@dimen/spacing_medium"
+        android:clipToPadding="false"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/vTabDivider"
+        tools:listitem="@layout/item_ticket" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

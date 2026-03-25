@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.ucms_android.MainActivity;
@@ -45,9 +46,8 @@ public class SettingsFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         sessionManager = new SessionManager(requireContext());
         isAdmin = "ADMIN".equalsIgnoreCase(sessionManager.getRole());
-        
-        int layoutRes = isAdmin ? R.layout.fragment_admin_profile : R.layout.fragment_student_settings;
-        return inflater.inflate(layoutRes, container, false);
+
+        return inflater.inflate(R.layout.fragment_student_settings, container, false);
     }
 
     @Override
@@ -56,18 +56,23 @@ public class SettingsFragment extends Fragment {
 
         userService = ApiClient.getInstance(requireContext()).create(UserService.class);
 
-        // Map views based on the common IDs I've used
-        tvUserName = view.findViewById(isAdmin ? R.id.tvAdminName : R.id.tvUserName);
+        // Map views based on the common IDs in fragment_student_settings
+        tvUserName = view.findViewById(R.id.tvUserName);
         tvAvatarLarge = view.findViewById(R.id.tvAvatarLarge);
         tvUserDetails = view.findViewById(R.id.tvUserDetails);
-        
+
         cvEditProfile = view.findViewById(R.id.cvEditProfile);
         cvChangePassword = view.findViewById(R.id.cvChangePassword);
         cvLogout = view.findViewById(R.id.cvLogout);
 
+        // Update labels based on role
+        TextView tvConfigLabel = view.findViewById(R.id.tvConfigLabel);
+        if (isAdmin && tvConfigLabel != null) {
+            tvConfigLabel.setText("ADMINISTRATOR CONFIG");
+        }
+
         loadInitialData();
         fetchLiveData();
-
         if (cvEditProfile != null) {
             cvEditProfile.setOnClickListener(v -> {
                 if (isAdmin) {
@@ -103,22 +108,28 @@ public class SettingsFragment extends Fragment {
             if (tvAvatarLarge != null) tvAvatarLarge.setText(getInitials(cachedName));
         }
 
-        if (!isAdmin && tvUserDetails != null) {
-            String studentId = sessionManager.getCachedStudentId();
-            String course = sessionManager.getCachedCourse();
-            String year = sessionManager.getCachedYearLevel();
-            
-            StringBuilder sb = new StringBuilder();
-            if (studentId != null) sb.append(studentId);
-            if (course != null) {
-                if (sb.length() > 0) sb.append(" • ");
-                sb.append(course);
+        if (tvUserDetails != null) {
+            if (isAdmin) {
+                tvUserDetails.setText("SYSTEM ACCESS: LEVEL 4");
+                updateRoleBadge("SYSTEM ADMINISTRATOR", R.color.colorAccentBlue);
+            } else {
+                String studentId = sessionManager.getCachedStudentId();
+                String course = sessionManager.getCachedCourse();
+                String year = sessionManager.getCachedYearLevel();
+
+                StringBuilder sb = new StringBuilder();
+                if (studentId != null) sb.append(studentId);
+                if (course != null) {
+                    if (sb.length() > 0) sb.append(" • ");
+                    sb.append(course);
+                }
+                if (year != null) {
+                    if (sb.length() > 0) sb.append(" • ");
+                    sb.append("Year ").append(year);
+                }
+                tvUserDetails.setText(sb.toString());
+                updateRoleBadge("ACTIVE STUDENT", R.color.colorSuccess);
             }
-            if (year != null) {
-                if (sb.length() > 0) sb.append(" • ");
-                sb.append("Year ").append(year);
-            }
-            tvUserDetails.setText(sb.toString());
         }
     }
 
@@ -132,29 +143,52 @@ public class SettingsFragment extends Fragment {
                     User user = response.body().getData();
                     if (tvUserName != null) tvUserName.setText(user.getName());
                     if (tvAvatarLarge != null) tvAvatarLarge.setText(getInitials(user.getName()));
-                    
-                    if (!isAdmin && tvUserDetails != null) {
-                        StringBuilder sb = new StringBuilder();
-                        if (user.getStudentId() != null) sb.append(user.getStudentId());
-                        if (user.getCourse() != null) {
-                            if (sb.length() > 0) sb.append(" • ");
-                            sb.append(user.getCourse());
+
+                    if (tvUserDetails != null) {
+                        if (isAdmin) {
+                            tvUserDetails.setText("SYSTEM ACCESS: LEVEL 4");
+                            updateRoleBadge("SYSTEM ADMINISTRATOR", R.color.colorAccentBlue);
+                        } else {
+                            StringBuilder sb = new StringBuilder();
+                            if (user.getStudentId() != null) sb.append(user.getStudentId());
+                            if (user.getCourse() != null) {
+                                if (sb.length() > 0) sb.append(" • ");
+                                sb.append(user.getCourse());
+                            }
+                            if (user.getYearLevel() != null) {
+                                if (sb.length() > 0) sb.append(" • ");
+                                sb.append("Year ").append(user.getYearLevel());
+                            }
+                            tvUserDetails.setText(sb.toString());
+                            updateRoleBadge("ACTIVE STUDENT", R.color.colorSuccess);
                         }
-                        if (user.getYearLevel() != null) {
-                            if (sb.length() > 0) sb.append(" • ");
-                            sb.append("Year ").append(user.getYearLevel());
-                        }
-                        tvUserDetails.setText(sb.toString());
                     }
-                    
-                    sessionManager.saveProfileCache(user.getName(), user.getStudentId(), 
-                                                 user.getCourse(), user.getYearLevel());
+
+                    sessionManager.saveProfileCache(user.getName(), user.getStudentId(),
+                            user.getCourse(), user.getYearLevel());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<User>> call, @NonNull Throwable t) {}
         });
+    }
+
+    private void updateRoleBadge(String label, int colorResId) {
+        View view = getView();
+        if (view == null) return;
+        
+        TextView tvRoleLabel = view.findViewById(R.id.tvRoleLabel);
+        View vRoleIndicator = view.findViewById(R.id.vRoleIndicator);
+        
+        if (tvRoleLabel != null) {
+            tvRoleLabel.setText(label);
+            tvRoleLabel.setTextColor(ContextCompat.getColor(requireContext(), colorResId));
+        }
+        if (vRoleIndicator != null) {
+            vRoleIndicator.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), colorResId)));
+        }
     }
 
     private String getInitials(String name) {

@@ -6,15 +6,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ucms_android.R;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.util.DateFormatter;
+import com.example.ucms_android.util.StatusChipHelper;
 
 import java.util.List;
-import java.util.Locale;
 
 public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder> {
 
@@ -52,114 +51,25 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
         holder.tvTicketTitle.setText(ticket.getTitle());
         holder.tvCategory.setText(ticket.getCategoryName());
         holder.tvTime.setText(DateFormatter.formatRelativeTime(ticket.getCreatedAt()));
+
+        // Apply ticket number background based on status
+        if ("RESOLVED".equalsIgnoreCase(ticket.getStatus())) {
+            holder.tvTicketNumber.setBackgroundResource(R.drawable.bg_ticket_number_resolved);
+        } else {
+            holder.tvTicketNumber.setBackgroundResource(R.drawable.bg_ticket_number);
+        }
+
+        // Use reusable helper for status and priority chips
+        StatusChipHelper.applyStatusBadge(holder.tvStatus, ticket);
         
         if (isAdmin) {
-            holder.tvStatus.setVisibility(View.GONE);
-            applyPriorityBadge(holder.tvUrgency, ticket);
+            StatusChipHelper.applyPriorityBadge(holder.tvUrgency, ticket);
+            holder.tvUrgency.setVisibility(holder.tvUrgency.getText().length() > 0 ? View.VISIBLE : View.GONE);
         } else {
             holder.tvUrgency.setVisibility(View.GONE);
-            applyStatusBadge(holder.tvStatus, ticket);
         }
-        
+
         holder.itemView.setOnClickListener(v -> listener.onTicketClick(ticket));
-    }
-
-    private void applyStatusBadge(TextView badgeView, Ticket ticket) {
-        if (ticket == null || ticket.getStatus() == null) {
-            badgeView.setVisibility(View.GONE);
-            return;
-        }
-        
-        badgeView.setVisibility(View.VISIBLE);
-        String status = ticket.getStatus();
-        badgeView.setText(status.replace("_", " "));
-        
-        if ("PENDING".equalsIgnoreCase(status)) {
-            badgeView.setBackgroundResource(R.drawable.bg_badge_outline_pending);
-            badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorStatusPending));
-        } else if ("IN_PROGRESS".equalsIgnoreCase(status)) {
-            badgeView.setBackgroundResource(R.drawable.bg_badge_outline_inprogress);
-            badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorStatusInProgress));
-        } else if ("RESOLVED".equalsIgnoreCase(status)) {
-            badgeView.setBackgroundResource(R.drawable.bg_badge_outline_resolved);
-            badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorStatusResolved));
-        } else {
-            badgeView.setBackgroundResource(R.drawable.bg_badge_outline_closed);
-            badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorStatusClosed));
-        }
-    }
-
-    private void applyPriorityBadge(TextView badgeView, Ticket ticket) {
-        String priority = resolvePriorityLevel(ticket);
-        if (priority == null) {
-            badgeView.setVisibility(View.GONE);
-            return;
-        }
-
-        badgeView.setVisibility(View.VISIBLE);
-        badgeView.setText(priority);
-
-        switch (priority) {
-            case "CRITICAL":
-                badgeView.setBackgroundResource(R.drawable.bg_badge_urgent);
-                badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.white));
-                break;
-            case "HIGH":
-                badgeView.setBackgroundResource(R.drawable.bg_badge_priority_high);
-                badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorTextPrimary));
-                break;
-            case "LOW":
-                badgeView.setBackgroundResource(R.drawable.bg_badge_priority_low);
-                badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.white));
-                break;
-            default:
-                badgeView.setBackgroundResource(R.drawable.bg_badge_priority_muted);
-                badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.white));
-                break;
-        }
-    }
-
-    private String resolvePriorityLevel(Ticket ticket) {
-        if (ticket == null) {
-            return null;
-        }
-
-        String label = ticket.getUrgencyLabel();
-        if (label != null && !label.trim().isEmpty()) {
-            String normalized = label.trim().toUpperCase(Locale.ROOT);
-            if ("CRITICAL".equals(normalized) || "HIGH".equals(normalized)
-                    || "LOW".equals(normalized) || "MUTED".equals(normalized)) {
-                return normalized;
-            }
-            if ("MEDIUM".equals(normalized)) {
-                return "LOW";
-            }
-        }
-
-        Integer score = ticket.getUrgencyScore();
-        if (score != null) {
-            if (score >= 80) return "CRITICAL";
-            if (score >= 55) return "HIGH";
-            if (score >= 25) return "LOW";
-            return "MUTED";
-        }
-
-        if (ticket.isUrgent()) {
-            return "HIGH";
-        }
-        return null;
-    }
-
-    private int getStatusBackgroundResource(String status) {
-        if ("PENDING".equalsIgnoreCase(status)) {
-            return R.drawable.bg_badge_pending;
-        } else if ("IN_PROGRESS".equalsIgnoreCase(status)) {
-            return R.drawable.bg_badge_inprogress;
-        } else if ("RESOLVED".equalsIgnoreCase(status)) {
-            return R.drawable.bg_badge_resolved;
-        } else {
-            return R.drawable.bg_badge_closed;
-        }
     }
 
     @Override
@@ -174,8 +84,11 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
             tvTicketTitle = itemView.findViewById(R.id.tvTicketTitle);
             tvCategory = itemView.findViewById(R.id.tvCategory);
             tvTime = itemView.findViewById(R.id.tvTime);
-            tvUrgency = itemView.findViewById(R.id.tvUrgency);
-            tvStatus = itemView.findViewById(R.id.tvStatus);
+            
+            // Chips from included layout
+            View statusChips = itemView.findViewById(R.id.layoutStatusChips);
+            tvStatus = statusChips.findViewById(R.id.tvStatus);
+            tvUrgency = statusChips.findViewById(R.id.tvUrgency);
         }
     }
 }
