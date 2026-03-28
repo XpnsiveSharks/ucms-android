@@ -12,36 +12,61 @@
         android:layout_height="wrap_content"
         android:padding="24dp">
 
-        <!-- User Name -->
-        <TextView
-            android:id="@+id/tvUserName"
+        <!-- User Header Section -->
+        <LinearLayout
+            android:id="@+id/layoutUserHeader"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="28sp"
-            android:textStyle="bold"
+            android:layout_marginEnd="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toStartOf="@id/flNotificationContainer"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Marynelle Aban" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tvAvatarSmall"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_circle_avatar"
+                android:gravity="center"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="MA" />
+
+            <TextView
+                android:id="@+id/tvUserName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:maxLines="2"
+                tools:text="Marynelle Aban" />
+
+        </LinearLayout>
 
         <!-- Notification Bell Container -->
         <FrameLayout
             android:id="@+id/flNotificationContainer"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/bg_circle_box"
+            android:background="@android:color/transparent"
             android:clickable="true"
             android:focusable="true"
-            app:layout_constraintBottom_toBottomOf="@id/tvUserName"
+            app:layout_constraintBottom_toBottomOf="@id/layoutUserHeader"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvUserName">
+            app:layout_constraintTop_toTopOf="@id/layoutUserHeader">
 
             <ImageView
                 android:id="@+id/ivNotificationBell"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_notifications"
                 app:tint="?attr/colorOnSurface" />
@@ -65,14 +90,14 @@
             android:id="@+id/cardTotalTickets"
             android:layout_width="0dp"
             android:layout_height="110dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="32dp"
             android:background="@drawable/bg_card_total_tickets"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvUserName">
+            app:layout_constraintTop_toBottomOf="@id/layoutUserHeader">
 
             <LinearLayout
                 android:layout_width="0dp"

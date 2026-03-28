@@ -46,6 +46,7 @@ public class StudentHomeFragment extends Fragment {
     private RecentTicketAdapter recentTicketAdapter;
     private RecyclerView rvRecentTickets;
     private TextView tvTotalTicketsCount, tvPendingCount, tvResolvedCount;
+    private TextView tvUserName, tvAvatarSmall;
     private ShimmerFrameLayout shimmerRecentNotifications;
     private TextView tvEmptyRecentNotifications;
     private View viewNotificationBadge;
@@ -68,6 +69,8 @@ public class StudentHomeFragment extends Fragment {
         tvPendingCount = view.findViewById(R.id.tvPendingCount);
         tvResolvedCount = view.findViewById(R.id.tvResolvedCount);
         viewNotificationBadge = view.findViewById(R.id.viewNotificationBadge);
+        tvUserName = view.findViewById(R.id.tvUserName);
+        tvAvatarSmall = view.findViewById(R.id.tvAvatarSmall);
         
         View flNotificationContainer = view.findViewById(R.id.flNotificationContainer);
         if (flNotificationContainer != null) {
@@ -104,11 +107,11 @@ public class StudentHomeFragment extends Fragment {
             }
         });
 
-        // User name
+        // User name & Avatar initials from cache
         String cachedName = sessionManager.getCachedName();
         if (!cachedName.isEmpty()) {
-            TextView tvName = view.findViewById(R.id.tvUserName);
-            if (tvName != null) tvName.setText(cachedName);
+            if (tvUserName != null) tvUserName.setText(cachedName);
+            if (tvAvatarSmall != null) tvAvatarSmall.setText(getInitials(cachedName));
         }
 
         UserService userService = ApiClient.getInstance(requireContext()).create(UserService.class);
@@ -122,8 +125,8 @@ public class StudentHomeFragment extends Fragment {
                 String name = user.getName();
                 if (name != null) {
                     requireActivity().runOnUiThread(() -> {
-                        TextView tvName = view.findViewById(R.id.tvUserName);
-                        if (tvName != null) tvName.setText(name);
+                        if (tvUserName != null) tvUserName.setText(name);
+                        if (tvAvatarSmall != null) tvAvatarSmall.setText(getInitials(name));
                     });
                     sessionManager.saveProfileCache(user.getName(), user.getStudentId(),
                             user.getCourse(), user.getYearLevel());
@@ -151,6 +154,17 @@ public class StudentHomeFragment extends Fragment {
         loadFromCache();
         loadTickets();
         loadUnreadCount();
+    }
+
+    private String getInitials(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return "??";
+        }
+        String[] parts = name.trim().split("\\s+");
+        if (parts.length == 1) {
+            return parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase();
+        }
+        return (parts[0].charAt(0) + "" + parts[parts.length - 1].charAt(0)).toUpperCase();
     }
 
     @Override
