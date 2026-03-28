@@ -65,10 +65,10 @@ public class SettingsFragment extends Fragment {
         cvChangePassword = view.findViewById(R.id.cvChangePassword);
         cvLogout = view.findViewById(R.id.cvLogout);
 
-        // Update labels based on role
-        TextView tvConfigLabel = view.findViewById(R.id.tvConfigLabel);
-        if (isAdmin && tvConfigLabel != null) {
-            tvConfigLabel.setText("ADMINISTRATOR CONFIG");
+        // Update title based on role
+        TextView tvTitle = view.findViewById(R.id.tvTitle);
+        if (isAdmin && tvTitle != null) {
+            tvTitle.setText("Admin Settings");
         }
 
         loadInitialData();

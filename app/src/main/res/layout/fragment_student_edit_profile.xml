@@ -25,7 +25,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/black" />
+            app:tint="?attr/colorOnSurface" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -42,9 +42,9 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
                 android:letterSpacing="0.1"
-                android:text="EDIT PARAMETERS"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_h3"
+                android:text="Update Profile"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -52,9 +52,9 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
                 android:letterSpacing="0.2"
-                android:text="ENTITY MANAGEMENT"
-                android:textColor="@color/colorTextSecondary"
-                android:textSize="@dimen/text_size_tiny"
+                android:text="ACCOUNT DETAILS"
+                android:textColor="?attr/colorTextSecondary"
+                android:textSize="10sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -63,7 +63,7 @@
         android:id="@+id/headerDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorDivider"
+        android:background="?attr/colorTicketCardStroke"
         app:layout_constraintTop_toBottomOf="@id/clTopBar" />
 
     <androidx.core.widget.NestedScrollView
@@ -83,9 +83,9 @@
                 android:id="@+id/tvAvatarLarge"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:background="@drawable/bg_square_box"
+                android:background="@drawable/bg_home_icon_container"
                 android:gravity="center"
-                android:textColor="@color/black"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="32sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -102,8 +102,8 @@
                 android:fontFamily="monospace"
                 android:letterSpacing="0.1"
                 android:text="FULL NAME"
-                android:textColor="@color/colorTextSecondary"
-                android:textSize="@dimen/text_size_small"
+                android:textColor="?attr/colorTextSecondary"
+                android:textSize="11sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvAvatarLarge" />
 
@@ -116,8 +116,8 @@
                 android:fontFamily="monospace"
                 android:inputType="textPersonName"
                 android:paddingHorizontal="16dp"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_body"
+                android:textColor="?attr/colorInputText"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvFullNameLabel" />
@@ -137,8 +137,8 @@
                     android:fontFamily="monospace"
                     android:letterSpacing="0.1"
                     android:text="STUDENT NUMBER"
-                    android:textColor="@color/colorTextSecondary"
-                    android:textSize="@dimen/text_size_small" />
+                    android:textColor="?attr/colorTextSecondary"
+                    android:textSize="11sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -150,7 +150,8 @@
                     <ImageView
                         android:layout_width="12dp"
                         android:layout_height="12dp"
-                        android:src="@drawable/ic_immutable" />
+                        android:src="@drawable/ic_immutable"
+                        app:tint="?attr/colorHomeSubmitButton" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -158,7 +159,7 @@
                         android:layout_marginStart="4dp"
                         android:fontFamily="monospace"
                         android:text="IMMUTABLE"
-                        android:textColor="@color/colorOrange"
+                        android:textColor="?attr/colorHomeSubmitButton"
                         android:textSize="9sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -173,8 +174,8 @@
                 android:fontFamily="monospace"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="16dp"
-                android:textColor="#BBBBBB"
-                android:textSize="@dimen/text_size_body"
+                android:textColor="?attr/colorTextSecondary"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rlStudentNumberLabel"
@@ -189,8 +190,8 @@
                 android:fontFamily="monospace"
                 android:letterSpacing="0.1"
                 android:text="COURSE / PROGRAM"
-                android:textColor="@color/colorTextSecondary"
-                android:textSize="@dimen/text_size_small"
+                android:textColor="?attr/colorTextSecondary"
+                android:textSize="11sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvStudentNumber" />
 
@@ -203,8 +204,8 @@
                 android:fontFamily="monospace"
                 android:inputType="text"
                 android:paddingHorizontal="16dp"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_body"
+                android:textColor="?attr/colorInputText"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvCourseLabel" />
@@ -218,8 +219,8 @@
                 android:fontFamily="monospace"
                 android:letterSpacing="0.1"
                 android:text="YEAR LEVEL"
-                android:textColor="@color/colorTextSecondary"
-                android:textSize="@dimen/text_size_small"
+                android:textColor="?attr/colorTextSecondary"
+                android:textSize="11sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/etCourse" />
 
@@ -241,8 +242,8 @@
                     android:fontFamily="monospace"
                     android:inputType="number"
                     android:paddingHorizontal="16dp"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_body" />
+                    android:textColor="?attr/colorInputText"
+                    android:textSize="14sp" />
 
                 <ImageView
                     android:layout_width="20dp"
@@ -251,26 +252,28 @@
                     android:layout_marginEnd="16dp"
                     android:src="@drawable/ic_arrow_up"
                     android:rotation="180"
-                    app:tint="@color/colorTextSecondary" />
+                    app:tint="?attr/colorTextSecondary" />
             </FrameLayout>
 
-            <!-- Execute Update Button -->
+            <!-- Save Changes Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSaveChanges"
                 android:layout_width="0dp"
                 android:layout_height="64dp"
                 android:layout_marginTop="48dp"
                 android:layout_marginBottom="24dp"
-                app:backgroundTint="@color/colorOrange"
-                app:cornerRadius="4dp"
-                android:text="EXECUTE UPDATE"
+                app:backgroundTint="@null"
+                android:background="@drawable/bg_button_submit_glow"
+                android:text="SAVE CHANGES"
                 android:textAllCaps="true"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_body"
+                android:textColor="?attr/colorHomeSubmitButton"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 app:icon="@drawable/ic_save"
                 app:iconGravity="textStart"
                 app:iconPadding="12dp"
+                app:iconSize="20dp"
+                app:iconTint="?attr/colorHomeSubmitButton"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
