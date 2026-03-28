@@ -8,19 +8,20 @@
 
     <View
         android:id="@+id/vBar"
-        android:layout_width="40dp"
+        android:layout_width="32dp"
         android:layout_height="60dp"
-        android:background="@color/colorChartBar"
+        android:background="?attr/colorHomeSubmitButtonTint"
         tools:layout_height="80dp" />
 
     <TextView
         android:id="@+id/tvDay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:fontFamily="monospace"
-        android:textColor="@color/colorTextSecondary"
-        android:textSize="10sp"
+        android:textColor="?attr/colorTextSecondary"
+        android:textSize="9sp"
+        android:textStyle="bold"
         tools:text="MON" />
 
 </LinearLayout>

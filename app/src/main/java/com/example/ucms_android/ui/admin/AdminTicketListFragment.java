@@ -5,7 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,7 +23,10 @@ import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.TicketService;
 import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.ui.adapter.TicketAdapter;
+import com.example.ucms_android.util.StatusChipHelper;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -32,8 +36,11 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,13 +48,11 @@ import retrofit2.Response;
 
 public class AdminTicketListFragment extends Fragment {
 
-    private EditText etSearch;
-    private View tabAll, tabInProgress, tabResolved;
     private TextView tvTabAll, tvTabInProgress, tvTabResolved;
-    private View indicatorAll, indicatorInProgress, indicatorResolved;
+    private View tabIndicator;
     private RecyclerView rvTickets;
     private ShimmerFrameLayout shimmerLayout;
-    private LinearLayout layoutEmpty;
+    private TextView tvEmptyState;
     private LinearLayout layoutError;
     private TicketAdapter adapter;
     private TicketService ticketService;
@@ -56,6 +61,12 @@ public class AdminTicketListFragment extends Fragment {
 
     private List<Ticket> allTickets = new ArrayList<>();
     private String activeFilter = "ALL";
+
+    private String statusFilter = "ALL";
+    private String sortFilter = "NEWEST";
+    private String categoryFilter = "ALL";
+    private String adminResponseFilter = "ALL";
+    private String dateRangeFilter = "ALL";
 
     @Nullable
     @Override
@@ -68,25 +79,18 @@ public class AdminTicketListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        etSearch = view.findViewById(R.id.etSearch);
-        tabAll = view.findViewById(R.id.tabAll);
-        tabInProgress = view.findViewById(R.id.tabInProgress);
-        tabResolved = view.findViewById(R.id.tabResolved);
-        
         tvTabAll = view.findViewById(R.id.tvTabAll);
         tvTabInProgress = view.findViewById(R.id.tvTabInProgress);
         tvTabResolved = view.findViewById(R.id.tvTabResolved);
-        
-        indicatorAll = view.findViewById(R.id.indicatorAll);
-        indicatorInProgress = view.findViewById(R.id.indicatorInProgress);
-        indicatorResolved = view.findViewById(R.id.indicatorResolved);
+        tabIndicator = view.findViewById(R.id.tabIndicator);
         
         rvTickets = view.findViewById(R.id.rvTickets);
         shimmerLayout = view.findViewById(R.id.shimmerLayout);
-        layoutEmpty = view.findViewById(R.id.layoutEmpty);
+        tvEmptyState = view.findViewById(R.id.tvEmptyState);
         layoutError = view.findViewById(R.id.layoutError);
 
         view.findViewById(R.id.btnRetry).setOnClickListener(v -> loadTickets());
+        view.findViewById(R.id.btnFilter).setOnClickListener(v -> showFilterDialog());
 
         ticketService = ApiClient.getInstance(requireContext()).create(TicketService.class);
         sessionManager = new SessionManager(requireContext());
@@ -112,17 +116,17 @@ public class AdminTicketListFragment extends Fragment {
     }
 
     private void setupTabs() {
-        tabAll.setOnClickListener(v -> {
+        tvTabAll.setOnClickListener(v -> {
             activeFilter = "ALL";
             updateTabs();
             applyFilter();
         });
-        tabInProgress.setOnClickListener(v -> {
+        tvTabInProgress.setOnClickListener(v -> {
             activeFilter = "IN_PROGRESS";
             updateTabs();
             applyFilter();
         });
-        tabResolved.setOnClickListener(v -> {
+        tvTabResolved.setOnClickListener(v -> {
             activeFilter = "RESOLVED";
             updateTabs();
             applyFilter();
@@ -132,20 +136,120 @@ public class AdminTicketListFragment extends Fragment {
     }
 
     private void updateTabs() {
-        tvTabAll.setTextColor(getResources().getColor(activeFilter.equals("ALL") ? R.color.colorElevatedSession : R.color.colorTextSecondary, null));
-        indicatorAll.setVisibility(activeFilter.equals("ALL") ? View.VISIBLE : View.INVISIBLE);
-        
-        tvTabInProgress.setTextColor(getResources().getColor(activeFilter.equals("IN_PROGRESS") ? R.color.colorElevatedSession : R.color.colorTextSecondary, null));
-        indicatorInProgress.setVisibility(activeFilter.equals("IN_PROGRESS") ? View.VISIBLE : View.INVISIBLE);
-        
-        tvTabResolved.setTextColor(getResources().getColor(activeFilter.equals("RESOLVED") ? R.color.colorElevatedSession : R.color.colorTextSecondary, null));
-        indicatorResolved.setVisibility(activeFilter.equals("RESOLVED") ? View.VISIBLE : View.INVISIBLE);
+        android.util.TypedValue typedValue = new android.util.TypedValue();
+        requireContext().getTheme().resolveAttribute(R.attr.colorHomeSubmitButton, typedValue, true);
+        int colorSelected = typedValue.data;
+        int colorUnselected = getResources().getColor(R.color.colorTextSecondary, null);
+
+        tvTabAll.setTextColor(activeFilter.equals("ALL") ? colorSelected : colorUnselected);
+        tvTabInProgress.setTextColor(activeFilter.equals("IN_PROGRESS") ? colorSelected : colorUnselected);
+        tvTabResolved.setTextColor(activeFilter.equals("RESOLVED") ? colorSelected : colorUnselected);
+
+        if (tabIndicator != null) {
+            tabIndicator.post(() -> {
+                View activeView = activeFilter.equals("ALL") ? tvTabAll : 
+                                 activeFilter.equals("IN_PROGRESS") ? tvTabInProgress : tvTabResolved;
+                tabIndicator.animate()
+                        .x(activeView.getLeft())
+                        .setDuration(200)
+                        .start();
+                ViewGroup.LayoutParams lp = tabIndicator.getLayoutParams();
+                lp.width = activeView.getWidth();
+                tabIndicator.setLayoutParams(lp);
+            });
+        }
+    }
+
+    private void showFilterDialog() {
+        View dialogView = LayoutInflater.from(requireContext())
+                .inflate(R.layout.dialog_student_ticket_filters, null, false);
+
+        AutoCompleteTextView dropStatus = dialogView.findViewById(R.id.dropStatus);
+        AutoCompleteTextView dropSortBy = dialogView.findViewById(R.id.dropSortBy);
+        AutoCompleteTextView dropCategory = dialogView.findViewById(R.id.dropCategory);
+        AutoCompleteTextView dropAdminResponse = dialogView.findViewById(R.id.dropAdminResponse);
+        AutoCompleteTextView dropDateRange = dialogView.findViewById(R.id.dropDateRange);
+        MaterialButton btnResetFilters = dialogView.findViewById(R.id.btnResetFilters);
+        MaterialButton btnApplyFilters = dialogView.findViewById(R.id.btnApplyFilters);
+
+        String[] statusOptions = new String[] {
+                getString(R.string.filter_all_statuses),
+                getString(R.string.filter_pending),
+                getString(R.string.filter_in_progress),
+                getString(R.string.filter_resolved),
+                getString(R.string.filter_closed)
+        };
+        String[] sortOptions = new String[] {
+                getString(R.string.filter_newest),
+                getString(R.string.filter_oldest)
+        };
+
+        List<String> categoryOptions = new ArrayList<>();
+        categoryOptions.add(getString(R.string.filter_all_categories));
+        Set<String> categories = new LinkedHashSet<>();
+        for (Ticket ticket : allTickets) {
+            if (ticket.getCategoryName() != null && !ticket.getCategoryName().trim().isEmpty()) {
+                categories.add(ticket.getCategoryName().trim());
+            }
+        }
+        categoryOptions.addAll(categories);
+
+        String[] adminResponseOptions = new String[] {
+                getString(R.string.filter_all_responses),
+                getString(R.string.filter_with_response),
+                getString(R.string.filter_no_response)
+        };
+
+        String[] dateRangeOptions = new String[] {
+                getString(R.string.filter_all_time),
+                getString(R.string.filter_last_7_days),
+                getString(R.string.filter_last_30_days)
+        };
+
+        dropStatus.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, statusOptions));
+        dropSortBy.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, sortOptions));
+        dropCategory.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, categoryOptions));
+        dropAdminResponse.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, adminResponseOptions));
+        dropDateRange.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, dateRangeOptions));
+
+        dropStatus.setText(statusLabel(statusFilter), false);
+        dropSortBy.setText(sortLabel(sortFilter), false);
+        dropCategory.setText(categoryLabel(categoryFilter), false);
+        dropAdminResponse.setText(adminResponseLabel(adminResponseFilter), false);
+        dropDateRange.setText(dateRangeLabel(dateRangeFilter), false);
+
+        BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
+        dialog.setContentView(dialogView);
+
+        btnResetFilters.setOnClickListener(v -> {
+            statusFilter = "ALL";
+            sortFilter = "NEWEST";
+            categoryFilter = "ALL";
+            adminResponseFilter = "ALL";
+            dateRangeFilter = "ALL";
+
+            applyFilter();
+            dialog.dismiss();
+        });
+
+        btnApplyFilters.setOnClickListener(v -> {
+            statusFilter = statusValue(dropStatus.getText() != null ? dropStatus.getText().toString() : "");
+            sortFilter = sortValue(dropSortBy.getText() != null ? dropSortBy.getText().toString() : "");
+            categoryFilter = categoryValue(dropCategory.getText() != null ? dropCategory.getText().toString() : "");
+            adminResponseFilter = adminResponseValue(dropAdminResponse.getText() != null ? dropAdminResponse.getText().toString() : "");
+            dateRangeFilter = dateRangeValue(dropDateRange.getText() != null ? dropDateRange.getText().toString() : "");
+
+            applyFilter();
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 
     private void showState(String state) {
         shimmerLayout.setVisibility(View.GONE);
         shimmerLayout.stopShimmer();
-        layoutEmpty.setVisibility(View.GONE);
+        tvEmptyState.setVisibility(View.GONE);
         layoutError.setVisibility(View.GONE);
         rvTickets.setVisibility(View.GONE);
 
@@ -155,7 +259,7 @@ public class AdminTicketListFragment extends Fragment {
                 shimmerLayout.startShimmer();
                 break;
             case "EMPTY":
-                layoutEmpty.setVisibility(View.VISIBLE);
+                tvEmptyState.setVisibility(View.VISIBLE);
                 break;
             case "ERROR":
                 layoutError.setVisibility(View.VISIBLE);
@@ -208,96 +312,118 @@ public class AdminTicketListFragment extends Fragment {
     }
 
     private void applyFilter() {
-        String query = etSearch != null && etSearch.getText() != null ? etSearch.getText().toString().toLowerCase().trim() : "";
         List<Ticket> filtered = new ArrayList<>();
+        long now = System.currentTimeMillis();
 
         for (Ticket ticket : allTickets) {
-            boolean matchesFilter = activeFilter.equals("ALL") || activeFilter.equalsIgnoreCase(ticket.getStatus());
-            boolean matchesSearch = query.isEmpty()
-                    || (ticket.getTitle() != null && ticket.getTitle().toLowerCase().contains(query))
-                    || (ticket.getTicketNumber() != null && ticket.getTicketNumber().toLowerCase().contains(query));
+            boolean matchesTab = activeFilter.equals("ALL") || activeFilter.equalsIgnoreCase(ticket.getStatus());
+            if (!matchesTab) continue;
 
-            if (matchesFilter && matchesSearch) {
-                filtered.add(ticket);
+            if (!"ALL".equals(statusFilter) && !statusFilter.equalsIgnoreCase(ticket.getStatus())) continue;
+            if (!"ALL".equals(categoryFilter) && !categoryFilter.equalsIgnoreCase(ticket.getCategoryName())) continue;
+            if ("WITH_RESPONSE".equals(adminResponseFilter) && !ticket.hasAdminResponse()) continue;
+            if ("NO_RESPONSE".equals(adminResponseFilter) && ticket.hasAdminResponse()) continue;
+
+            if (!"ALL".equals(dateRangeFilter)) {
+                long ts = ticketTimestamp(ticket);
+                if (ts > 0) {
+                    long diff = now - ts;
+                    if ("7D".equals(dateRangeFilter) && diff > 7L * 24L * 60L * 60L * 1000L) continue;
+                    if ("30D".equals(dateRangeFilter) && diff > 30L * 24L * 60L * 60L * 1000L) continue;
+                }
             }
+
+            filtered.add(ticket);
         }
 
-        filtered.sort((left, right) -> {
-            int leftRank = priorityRank(left);
-            int rightRank = priorityRank(right);
-            if (leftRank != rightRank) {
-                return Integer.compare(leftRank, rightRank);
-            }
-            return Long.compare(ticketTimestamp(right), ticketTimestamp(left));
-        });
+        Comparator<Ticket> comparator = Comparator.comparingLong(this::ticketTimestamp);
+        if (!"OLDEST".equals(sortFilter)) {
+            comparator = comparator.reversed();
+        }
+        filtered.sort(comparator);
 
         adapter.updateData(filtered);
         showState(filtered.isEmpty() ? "EMPTY" : "DATA");
     }
 
     private int priorityRank(Ticket ticket) {
-        if (ticket == null) {
-            return 5;
-        }
-
-        String priority = resolvePriorityLevel(ticket);
-        if ("CRITICAL".equals(priority)) {
-            return 0;
-        }
-        if ("HIGH".equals(priority)) {
-            return 1;
-        }
-        if ("LOW".equals(priority)) {
-            return 2;
-        }
-        if ("MUTED".equals(priority)) {
-            return 3;
-        }
+        if (ticket == null) return 5;
+        String priority = StatusChipHelper.resolvePriorityLevel(ticket);
+        if ("CRITICAL".equals(priority)) return 0;
+        if ("HIGH".equals(priority)) return 1;
+        if ("LOW".equals(priority)) return 2;
+        if ("MUTED".equals(priority)) return 3;
         return 4;
-    }
-
-    private String resolvePriorityLevel(Ticket ticket) {
-        String label = ticket.getUrgencyLabel();
-        if (label != null && !label.trim().isEmpty()) {
-            String normalized = label.trim().toUpperCase(Locale.ROOT);
-            if ("MEDIUM".equals(normalized)) {
-                return "LOW";
-            }
-            if ("CRITICAL".equals(normalized) || "HIGH".equals(normalized)
-                    || "LOW".equals(normalized) || "MUTED".equals(normalized)) {
-                return normalized;
-            }
-        }
-
-        Integer score = ticket.getUrgencyScore();
-        if (score != null) {
-            if (score >= 80) return "CRITICAL";
-            if (score >= 55) return "HIGH";
-            if (score >= 25) return "LOW";
-            return "MUTED";
-        }
-
-        if (ticket.isUrgent()) {
-            return "HIGH";
-        }
-        return null;
     }
 
     private long ticketTimestamp(Ticket ticket) {
         String raw = ticket.getCreatedAt();
-        if (raw == null || raw.trim().isEmpty()) {
-            return 0L;
-        }
-
+        if (raw == null || raw.trim().isEmpty()) return 0L;
         try {
             return OffsetDateTime.parse(raw).toInstant().toEpochMilli();
         } catch (DateTimeParseException ignored) {
         }
-
         try {
             return LocalDateTime.parse(raw).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         } catch (DateTimeParseException ignored) {
         }
         return 0L;
+    }
+
+    private String statusLabel(String value) {
+        if ("PENDING".equals(value)) return getString(R.string.filter_pending);
+        if ("IN_PROGRESS".equals(value)) return getString(R.string.filter_in_progress);
+        if ("RESOLVED".equals(value)) return getString(R.string.filter_resolved);
+        if ("CLOSED".equals(value)) return getString(R.string.filter_closed);
+        return getString(R.string.filter_all_statuses);
+    }
+
+    private String sortLabel(String value) {
+        return "OLDEST".equals(value) ? getString(R.string.filter_oldest) : getString(R.string.filter_newest);
+    }
+
+    private String categoryLabel(String value) {
+        return "ALL".equals(value) ? getString(R.string.filter_all_categories) : value;
+    }
+
+    private String adminResponseLabel(String value) {
+        if ("WITH_RESPONSE".equals(value)) return getString(R.string.filter_with_response);
+        if ("NO_RESPONSE".equals(value)) return getString(R.string.filter_no_response);
+        return getString(R.string.filter_all_responses);
+    }
+
+    private String dateRangeLabel(String value) {
+        if ("7D".equals(value)) return getString(R.string.filter_last_7_days);
+        if ("30D".equals(value)) return getString(R.string.filter_last_30_days);
+        return getString(R.string.filter_all_time);
+    }
+
+    private String statusValue(String label) {
+        if (label.equals(getString(R.string.filter_pending))) return "PENDING";
+        if (label.equals(getString(R.string.filter_in_progress))) return "IN_PROGRESS";
+        if (label.equals(getString(R.string.filter_resolved))) return "RESOLVED";
+        if (label.equals(getString(R.string.filter_closed))) return "CLOSED";
+        return "ALL";
+    }
+
+    private String sortValue(String label) {
+        return label.equals(getString(R.string.filter_oldest)) ? "OLDEST" : "NEWEST";
+    }
+
+    private String categoryValue(String label) {
+        if (label.equals(getString(R.string.filter_all_categories)) || label.trim().isEmpty()) return "ALL";
+        return label.trim();
+    }
+
+    private String adminResponseValue(String label) {
+        if (label.equals(getString(R.string.filter_with_response))) return "WITH_RESPONSE";
+        if (label.equals(getString(R.string.filter_no_response))) return "NO_RESPONSE";
+        return "ALL";
+    }
+
+    private String dateRangeValue(String label) {
+        if (label.equals(getString(R.string.filter_last_7_days))) return "7D";
+        if (label.equals(getString(R.string.filter_last_30_days))) return "30D";
+        return "ALL";
     }
 }

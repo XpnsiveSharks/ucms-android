@@ -68,7 +68,7 @@ public class SettingsFragment extends Fragment {
         // Update title based on role
         TextView tvTitle = view.findViewById(R.id.tvTitle);
         if (isAdmin && tvTitle != null) {
-            tvTitle.setText("Admin Settings");
+            tvTitle.setText("Account");
         }
 
         loadInitialData();
