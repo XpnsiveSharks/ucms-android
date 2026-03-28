@@ -11,7 +11,14 @@
 
         <!-- Surface & Background -->
         <item name="colorSurface">@color/colorSurface</item>
+        <item name="colorOnSurface">@color/black</item>
         <item name="android:colorBackground">@color/colorSurface</item>
+
+        <!-- Login Attributes -->
+        <item name="colorLoginButton">@color/colorLoginButtonLight</item>
+        <item name="colorInputBackground">@color/white</item>
+        <item name="colorInputText">@color/black</item>
+        <item name="colorLabelText">@color/colorTextSecondary</item>
 
         <!-- Bottom Nav Customization -->
         <item name="colorContainer">@android:color/transparent</item>

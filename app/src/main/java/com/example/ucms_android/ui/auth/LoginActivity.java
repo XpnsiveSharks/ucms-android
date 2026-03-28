@@ -6,8 +6,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,12 +38,10 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etStudentId;
     private EditText etPassword;
     private MaterialButton btnLogin;
-    private TextView tvTogglePassword;
     private ProgressBar progressBar;
     private View rootView;
     private AuthService authService;
     private SessionManager sessionManager;
-    private boolean isPasswordVisible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +55,9 @@ public class LoginActivity extends AppCompatActivity {
         etStudentId = findViewById(R.id.etStudentId);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
-        tvTogglePassword = findViewById(R.id.tvTogglePassword);
         progressBar = findViewById(R.id.progressBar);
 
         btnLogin.setOnClickListener(v -> attemptLogin());
-        tvTogglePassword.setOnClickListener(v -> togglePasswordVisibility());
         
         View tvForgot = findViewById(R.id.tvForgotPassword);
         if (tvForgot != null) {
@@ -156,17 +150,6 @@ public class LoginActivity extends AppCompatActivity {
     private void setLoading(boolean loading) {
         progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
         btnLogin.setEnabled(!loading);
-    }
-
-    private void togglePasswordVisibility() {
-        isPasswordVisible = !isPasswordVisible;
-        etPassword.setTransformationMethod(
-                isPasswordVisible
-                        ? HideReturnsTransformationMethod.getInstance()
-                        : PasswordTransformationMethod.getInstance()
-        );
-        tvTogglePassword.setText(isPasswordVisible ? R.string.hide_password : R.string.show_password);
-        etPassword.setSelection(etPassword.getText().length());
     }
 
     private void showError(String message) {

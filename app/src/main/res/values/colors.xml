@@ -28,6 +28,17 @@
     <!-- Text -->
     <color name="colorTextPrimary">#1A1A1A</color>
     <color name="colorTextSecondary">#757575</color>
+    <color name="colorTextWhite">#FFFFFF</color>
+
+    <!-- Dark Mode Support -->
+    <color name="colorSurfaceDark">#000000</color>
+    <color name="colorInputBackgroundDark">#808080</color>
+    <color name="colorInputBackgroundLight">#FFFFFF</color>
+    <color name="colorDirtyWhite">#E0E0E0</color>
+
+    <!-- Login Page Colors -->
+    <color name="colorLoginButtonLight">#5CB85C</color>
+    <color name="colorLoginButtonDark">#FF4500</color>
 
     <!-- Divider & Border -->
     <color name="colorDivider">#E0E0E0</color>

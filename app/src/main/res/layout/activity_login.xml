@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@color/colorSurface">
+    android:background="?android:colorBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -14,133 +14,118 @@
         <!-- Logo -->
         <ImageView
             android:id="@+id/ivLogo"
-            android:layout_width="@dimen/login_logo_size"
-            android:layout_height="@dimen/login_logo_size"
-            android:layout_marginTop="@dimen/login_logo_margin_top"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="80dp"
             android:src="@drawable/cms_logo"
             android:contentDescription="@string/app_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- App Title -->
-        <TextView
-            android:id="@+id/tvAppTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_medium"
-            android:text="@string/app_name"
-            android:textColor="@color/black"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ivLogo" />
-
         <!-- Student-ID Label -->
         <TextView
             android:id="@+id/tvStudentIdLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xxlarge"
-            android:layout_marginStart="@dimen/spacing_small"
+            android:layout_marginTop="60dp"
             android:text="@string/student_id_label"
-            android:textColor="@color/colorTextSecondary"
+            android:textColor="?attr/colorLabelText"
             android:textSize="14sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/etStudentId"
-            app:layout_constraintTop_toBottomOf="@id/tvAppTitle" />
+            app:layout_constraintTop_toBottomOf="@id/ivLogo" />
 
         <!-- Student-ID Input -->
         <EditText
             android:id="@+id/etStudentId"
             android:layout_width="0dp"
-            android:layout_height="@dimen/login_input_height"
-            android:layout_marginTop="@dimen/spacing_xsmall"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/bg_input"
-            android:elevation="@dimen/elevation_low"
-            android:paddingHorizontal="@dimen/spacing_medium"
+            android:elevation="4dp"
+            android:paddingHorizontal="16dp"
             android:inputType="text"
             android:maxLines="1"
+            android:textColor="?attr/colorInputText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvStudentIdLabel"
-            app:layout_constraintWidth_percent="0.9" />
+            app:layout_constraintWidth_percent="0.85" />
 
         <!-- Password Label -->
         <TextView
             android:id="@+id/tvPasswordLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:layout_marginStart="@dimen/spacing_small"
+            android:layout_marginTop="24dp"
             android:text="@string/password"
-            android:textColor="@color/colorTextSecondary"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="@id/etPassword"
-            app:layout_constraintTop_toBottomOf="@id/etStudentId" />
-
-        <TextView
-            android:id="@+id/tvTogglePassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:layout_marginEnd="@dimen/spacing_small"
-            android:clickable="true"
-            android:focusable="true"
-            android:text="@string/show_password"
-            android:textColor="@color/colorPrimary"
+            android:textColor="?attr/colorLabelText"
             android:textSize="14sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@id/etPassword"
+            app:layout_constraintStart_toStartOf="@id/tilPassword"
             app:layout_constraintTop_toBottomOf="@id/etStudentId" />
 
-        <!-- Password Input -->
-        <EditText
-            android:id="@+id/etPassword"
+        <!-- Password Input Wrapper -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPassword"
             android:layout_width="0dp"
-            android:layout_height="@dimen/login_input_height"
-            android:layout_marginTop="@dimen/spacing_xsmall"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:background="@drawable/bg_input"
-            android:elevation="@dimen/elevation_low"
-            android:paddingHorizontal="@dimen/spacing_medium"
-            android:inputType="textPassword"
-            android:maxLines="1"
+            android:elevation="4dp"
+            app:hintEnabled="false"
+            app:boxBackgroundMode="none"
+            app:endIconMode="password_toggle"
+            app:endIconTint="?attr/colorOnSurface"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvPasswordLabel"
-            app:layout_constraintWidth_percent="0.9" />
+            app:layout_constraintWidth_percent="0.85">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@android:color/transparent"
+                android:paddingHorizontal="16dp"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:textColor="?attr/colorInputText" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Login Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLogin"
             android:layout_width="0dp"
-            android:layout_height="@dimen/login_button_height"
-            android:layout_marginTop="@dimen/spacing_xxlarge"
-            app:backgroundTint="@color/colorSecondary"
-            app:cornerRadius="@dimen/corner_radius_button"
-            android:elevation="@dimen/elevation_medium"
+            android:layout_height="64dp"
+            android:layout_marginTop="48dp"
+            app:backgroundTint="?attr/colorLoginButton"
+            app:cornerRadius="12dp"
+            android:elevation="8dp"
             android:text="@string/login"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etPassword"
-            app:layout_constraintWidth_percent="0.8" />
+            app:layout_constraintTop_toBottomOf="@id/tilPassword"
+            app:layout_constraintWidth_percent="0.45" />
 
-        <!-- Forgot Password Link -->
+        <!-- Forgot Password -->
         <TextView
             android:id="@+id/tvForgotPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
+            android:text="@string/forgot_password"
+            android:textColor="?attr/colorLabelText"
+            android:textSize="14sp"
             android:clickable="true"
             android:focusable="true"
-            android:text="@string/forgot_password"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textColor="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
