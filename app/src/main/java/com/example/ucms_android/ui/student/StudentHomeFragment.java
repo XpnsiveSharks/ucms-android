@@ -137,7 +137,7 @@ public class StudentHomeFragment extends Fragment {
         // Recent tickets RecyclerView
         rvRecentTickets = view.findViewById(R.id.rvRecentNotifications);
         rvRecentTickets.setLayoutManager(new LinearLayoutManager(getContext()));
-        recentTicketAdapter = new RecentTicketAdapter(new ArrayList<>(), ticket -> {
+        recentTicketAdapter = new RecentTicketAdapter(ticket -> {
             android.content.Intent intent = new android.content.Intent(requireContext(),
                     com.example.ucms_android.ui.student.TicketDetailActivity.class);
             intent.putExtra("ticketId", ticket.getId());

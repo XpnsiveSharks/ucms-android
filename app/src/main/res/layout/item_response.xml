@@ -4,50 +4,58 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingStart="@dimen/spacing_medium"
-    android:paddingEnd="@dimen/spacing_medium"
-    android:paddingBottom="@dimen/spacing_small">
-
-    <TextView
-        android:id="@+id/tvAdminName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/spacing_xsmall"
-        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-        android:textColor="@color/colorTextSecondary"
-        android:textStyle="bold"
-        tools:text="Admin User" />
+    android:paddingBottom="12dp">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:background="@drawable/bubble_admin"
+        android:background="@drawable/bg_response_box"
         android:orientation="vertical"
-        android:paddingStart="@dimen/spacing_medium"
-        android:paddingEnd="@dimen/spacing_medium"
-        android:paddingTop="@dimen/spacing_small"
-        android:paddingBottom="@dimen/spacing_small">
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            
+            <TextView
+                android:id="@+id/tvAdminName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="monospace"
+                android:text="ADMIN RESPONSE"
+                android:textColor="?attr/colorTextSecondary"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCreatedAt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:textColor="?attr/colorTextSecondary"
+                android:textSize="9sp"
+                tools:text="Mar 15, 2026" />
+        </LinearLayout>
+
+        <!-- Divider line -->
+        <View 
+            android:layout_width="match_parent" 
+            android:layout_height="1dp" 
+            android:layout_marginTop="8dp"
+            android:background="?attr/colorTicketResponseStroke" />
 
         <TextView
             android:id="@+id/tvMessage"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxWidth="260dp"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textColor="@color/colorOnPrimary"
-            tools:text="We have resolved your concern. Please confirm if the issue has been addressed." />
+            android:layout_marginTop="12dp"
+            android:fontFamily="monospace"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="13sp"
+            tools:text="bakit?" />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvCreatedAt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginTop="@dimen/spacing_xsmall"
-        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-        android:textColor="@color/colorTextSecondary"
-        tools:text="2 mins ago" />
 
 </LinearLayout>

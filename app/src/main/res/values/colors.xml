@@ -35,6 +35,7 @@
     <color name="colorInputBackgroundDark">#808080</color>
     <color name="colorInputBackgroundLight">#FFFFFF</color>
     <color name="colorDirtyWhite">#E0E0E0</color>
+    <color name="colorGray">#808080</color>
 
     <!-- Login Page Colors -->
     <color name="colorLoginButtonLight">#5CB85C</color>
@@ -43,12 +44,26 @@
     <!-- Divider & Border -->
     <color name="colorDivider">#E0E0E0</color>
 
+    <!-- Dark Mode Specific (The Muted Palette) -->
+    <color name="dm_background">#121212</color>
+    <color name="dm_card_bg">#1E1E1E</color>
+    <color name="dm_orange_peach">#FF8F6B</color>
+    <color name="dm_mint_green">#7DE2B8</color>
+    <color name="dm_yellow_gold">#FFD066</color>
+    <color name="dm_slate_bg">#2C333D</color>
+    <color name="dm_slate_text">#A0B1C5</color>
+    <color name="dm_text_primary">#E0E0E0</color>
+    <color name="dm_text_secondary">#888888</color>
+    <color name="dm_orange_glow">#33FF8F6B</color> <!-- 30% alpha for glow -->
+
     <!-- Status Badges -->
-    <color name="colorStatusPending">#F77F00</color>
-    <color name="colorStatusInProgress">#FCBF49</color>
-    <color name="colorStatusResolved">#92CD28</color>
-    <color name="colorStatusClosed">#757575</color>
-    <color name="colorStatusUrgent">#C62828</color>
+    <color name="colorStatusPending">#FF9900</color>
+    <color name="colorStatusInProgress">#0052CC</color>
+    <color name="colorStatusResolved">#36B37E</color>
+    <color name="colorStatusTodo">#DFE1E6</color>
+    <color name="colorStatusRejected">#FF5630</color>
+    <color name="colorStatusClosed">#36B37E</color>
+    <color name="colorStatusUrgent">#FF5630</color>
     <color name="colorPriorityHigh">#F2C94C</color>
     <color name="colorPriorityLow">#1E88E5</color>
     <color name="colorPriorityMuted">#9E9E9E</color>
@@ -60,6 +75,8 @@
     <color name="colorGrid">#E0E0E0</color>
     <color name="colorSuccess">#10B981</color>
     <color name="colorSuccessContainer">#D1FAE5</color>
+    <color name="colorGreenTint">#F0FDF4</color>
+    <color name="colorOrangeTint">#FFF5F0</color>
 
     <color name="colorDanger">#EF4444</color>
     <color name="colorDangerContainer">#1AEF4444</color>

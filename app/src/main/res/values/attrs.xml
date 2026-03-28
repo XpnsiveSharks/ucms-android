@@ -4,4 +4,45 @@
     <attr name="colorInputBackground" format="color" />
     <attr name="colorInputText" format="color" />
     <attr name="colorLabelText" format="color" />
+    <attr name="colorTextPrimary" format="color" />
+    <attr name="colorTextSecondary" format="color" />
+
+    <!-- Home Screen Attributes -->
+    <attr name="colorHomeTotalTicketsBg" format="color" />
+    <attr name="colorHomeTotalTicketsStroke" format="color" />
+    <attr name="colorHomeTotalTicketsText" format="color" />
+    <attr name="colorHomeTotalTicketsCount" format="color" />
+    <attr name="colorHomeTotalTicketsIcon" format="color" />
+    <attr name="colorHomeSubmitButton" format="color" />
+    <attr name="colorHomeSubmitButtonGlow" format="color" />
+    <attr name="colorHomeSubmitButtonTint" format="color" />
+    <attr name="colorHomeViewAllText" format="color" />
+    <attr name="colorHomeGridBg" format="color" />
+    <attr name="colorHomeStatText" format="color" />
+    <attr name="colorHomeStatCardPendingBg" format="color" />
+    <attr name="colorHomeStatCardResolvedBg" format="color" />
+    <attr name="colorHomeIconContainerBg" format="color" />
+    <attr name="colorHomeIconContainerStroke" format="color" />
+
+    <!-- Recent Ticket Attributes -->
+    <attr name="colorRecentCardBg" format="color" />
+    <attr name="colorRecentCardStroke" format="color" />
+    <attr name="colorRecentTitleText" format="color" />
+    <attr name="colorRecentStatusText" format="color" />
+    <attr name="colorRecentTicketIdText" format="color" />
+
+    <!-- Bottom Nav Attributes -->
+    <attr name="colorBottomNavBg" format="color" />
+    <attr name="colorBottomNavIconSelected" format="color" />
+    <attr name="colorBottomNavIconUnselected" format="color" />
+
+    <!-- Ticket Detail Attributes -->
+    <attr name="colorTicketDetailBg" format="color" />
+    <attr name="colorTicketCardBg" format="color" />
+    <attr name="colorTicketCardStroke" format="color" />
+    <attr name="colorTicketAttachmentBg" format="color" />
+    <attr name="colorTicketAttachmentStroke" format="color" />
+    <attr name="colorTicketTimelineLine" format="color" />
+    <attr name="colorTicketResponseBg" format="color" />
+    <attr name="colorTicketResponseStroke" format="color" />
 </resources>

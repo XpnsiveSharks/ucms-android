@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Ucmsandroid" parent="Theme.Material3.Light.NoActionBar">
@@ -19,6 +20,47 @@
         <item name="colorInputBackground">@color/white</item>
         <item name="colorInputText">@color/black</item>
         <item name="colorLabelText">@color/colorTextSecondary</item>
+        <item name="colorTextPrimary">@color/colorTextPrimary</item>
+        <item name="colorTextSecondary">@color/colorTextSecondary</item>
+
+        <!-- Home Screen Attributes -->
+        <item name="colorHomeTotalTicketsBg">@color/colorGreenTint</item>
+        <item name="colorHomeTotalTicketsStroke">@color/colorSecondary</item>
+        <item name="colorHomeTotalTicketsText">@color/colorSecondary</item>
+        <item name="colorHomeTotalTicketsCount">@color/black</item>
+        <item name="colorHomeTotalTicketsIcon">@color/colorSecondary</item>
+        <item name="colorHomeSubmitButton">@color/colorSecondary</item>
+        <item name="colorHomeSubmitButtonGlow">#1A92CD28</item>
+        <item name="colorHomeSubmitButtonTint">#0D92CD28</item>
+        <item name="colorHomeViewAllText">@color/colorSecondary</item>
+        <item name="colorHomeGridBg">@color/white</item>
+        <item name="colorHomeStatText">@color/black</item>
+        <item name="colorHomeStatCardPendingBg">@color/colorOrange</item>
+        <item name="colorHomeStatCardResolvedBg">@color/colorSuccess</item>
+        <item name="colorHomeIconContainerBg">@color/white</item>
+        <item name="colorHomeIconContainerStroke">@color/colorDivider</item>
+
+        <!-- Recent Ticket Attributes -->
+        <item name="colorRecentCardBg">@color/white</item>
+        <item name="colorRecentCardStroke">@color/colorDivider</item>
+        <item name="colorRecentTitleText">@color/black</item>
+        <item name="colorRecentStatusText">@color/colorTextSecondary</item>
+        <item name="colorRecentTicketIdText">@color/white</item>
+
+        <!-- Bottom Nav Attributes -->
+        <item name="colorBottomNavBg">@color/white</item>
+        <item name="colorBottomNavIconSelected">@color/colorSecondary</item>
+        <item name="colorBottomNavIconUnselected">#757575</item>
+
+        <!-- Ticket Detail Attributes -->
+        <item name="colorTicketDetailBg">@color/colorSurface</item>
+        <item name="colorTicketCardBg">@color/white</item>
+        <item name="colorTicketCardStroke">@color/colorDivider</item>
+        <item name="colorTicketAttachmentBg">@color/colorSurface</item>
+        <item name="colorTicketAttachmentStroke">@color/colorDivider</item>
+        <item name="colorTicketTimelineLine">@color/colorDivider</item>
+        <item name="colorTicketResponseBg">@color/colorSurface</item>
+        <item name="colorTicketResponseStroke">@color/colorDivider</item>
 
         <!-- Bottom Nav Customization -->
         <item name="colorContainer">@android:color/transparent</item>
@@ -28,8 +70,10 @@
 
     <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
         <item name="itemActiveIndicatorStyle">@null</item>
-        <item name="backgroundTint">@color/white</item>
-        <item name="android:background">@color/white</item>
+        <item name="backgroundTint">?attr/colorBottomNavBg</item>
+        <item name="android:background">?attr/colorBottomNavBg</item>
+        <item name="itemIconTint">@color/bottom_nav_tint</item>
+        <item name="itemTextColor">@color/bottom_nav_tint</item>
     </style>
 
     <style name="Theme.Ucmsandroid" parent="Base.Theme.Ucmsandroid" />

@@ -42,7 +42,7 @@ public class TicketDetailActivity extends AppCompatActivity {
     private ImageView btnBack;
     private TextView tvTicketNumber, tvCategoryName, tvTicketTitle, tvDescription, tvAttachmentName;
     private ImageView ivAttachmentPreview;
-    private MaterialCardView cvAttachment;
+    private View cvAttachment;
     private LinearLayout layoutAttachmentContent;
     private ShimmerFrameLayout shimmerAttachment;
     private ShimmerFrameLayout shimmerTimeline;
@@ -105,7 +105,7 @@ public class TicketDetailActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         layoutError = findViewById(R.id.layoutError);
         scrollContent = findViewById(R.id.scrollContent);
-        btnCloseTicket = findViewById(R.id.btnCloseTicket);
+        btnCloseTicket = findViewById(R.id.btnCloseTicketView);
     }
 
     private void showTimelineShimmer() {

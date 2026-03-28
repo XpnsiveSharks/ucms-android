@@ -1,24 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme (night). -->
     <style name="Base.Theme.Ucmsandroid" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Primary (Orange) -->
-        <item name="colorPrimary">@color/colorLoginButtonDark</item>
-        <item name="colorOnPrimary">@color/white</item>
-
         <!-- Status Bar -->
-        <item name="android:statusBarColor">@color/black</item>
+        <item name="android:statusBarColor">@color/dm_background</item>
         <item name="android:windowLightStatusBar">false</item>
 
         <!-- Surface & Background -->
-        <item name="colorSurface">@color/colorSurfaceDark</item>
-        <item name="colorOnSurface">@color/colorDirtyWhite</item>
-        <item name="android:colorBackground">@color/colorSurfaceDark</item>
+        <item name="colorSurface">@color/dm_background</item>
+        <item name="colorOnSurface">@color/dm_text_primary</item>
+        <item name="android:colorBackground">@color/dm_background</item>
 
         <!-- Login Attributes -->
-        <item name="colorLoginButton">@color/colorLoginButtonDark</item>
-        <item name="colorInputBackground">@color/colorInputBackgroundDark</item>
-        <item name="colorInputText">@color/white</item>
-        <item name="colorLabelText">@color/white</item>
+        <item name="colorLoginButton">@color/dm_orange_peach</item>
+        <item name="colorInputBackground">@color/dm_card_bg</item>
+        <item name="colorInputText">@color/dm_text_primary</item>
+        <item name="colorLabelText">@color/dm_text_primary</item>
+        <item name="colorTextPrimary">@color/dm_text_primary</item>
+        <item name="colorTextSecondary">@color/dm_text_secondary</item>
+
+        <!-- Home Screen Attributes (Dark Mode - The Muted Palette) -->
+        <item name="colorHomeTotalTicketsBg">@color/dm_card_bg</item>
+        <item name="colorHomeTotalTicketsStroke">@color/dm_orange_peach</item>
+        <item name="colorHomeTotalTicketsText">@color/dm_orange_peach</item>
+        <item name="colorHomeTotalTicketsCount">@color/dm_text_primary</item>
+        <item name="colorHomeTotalTicketsIcon">@color/dm_orange_peach</item>
+        <item name="colorHomeSubmitButton">@color/dm_orange_peach</item>
+        <item name="colorHomeSubmitButtonGlow">@color/dm_orange_glow</item>
+        <item name="colorHomeSubmitButtonTint">#0DFF8F6B</item>
+        <item name="colorHomeViewAllText">@color/dm_orange_peach</item>
+        <item name="colorHomeGridBg">@color/dm_background</item>
+        <item name="colorHomeStatText">@color/dm_text_secondary</item>
+        <item name="colorHomeStatCardPendingBg">@color/dm_orange_peach</item>
+        <item name="colorHomeStatCardResolvedBg">@color/dm_mint_green</item>
+        <item name="colorHomeIconContainerBg">@color/dm_card_bg</item>
+        <item name="colorHomeIconContainerStroke">@color/dm_text_primary</item>
+
+        <!-- Recent Ticket Attributes -->
+        <item name="colorRecentCardBg">@color/dm_card_bg</item>
+        <item name="colorRecentCardStroke">#333333</item>
+        <item name="colorRecentTitleText">@color/dm_text_primary</item>
+        <item name="colorRecentStatusText">@color/dm_text_secondary</item>
+        <item name="colorRecentTicketIdText">@color/dm_slate_text</item>
+
+        <!-- Bottom Nav Attributes -->
+        <item name="colorBottomNavBg">@color/dm_card_bg</item>
+        <item name="colorBottomNavIconSelected">@color/dm_orange_peach</item>
+        <item name="colorBottomNavIconUnselected">@color/dm_text_secondary</item>
+
+        <!-- Ticket Detail Attributes -->
+        <item name="colorTicketDetailBg">@color/dm_background</item>
+        <item name="colorTicketCardBg">@color/dm_card_bg</item>
+        <item name="colorTicketCardStroke">#333333</item>
+        <item name="colorTicketAttachmentBg">@color/dm_card_bg</item>
+        <item name="colorTicketAttachmentStroke">#333333</item>
+        <item name="colorTicketTimelineLine">#333333</item>
+        <item name="colorTicketResponseBg">@color/dm_card_bg</item>
+        <item name="colorTicketResponseStroke">#333333</item>
 
         <!-- Bottom Nav Customization -->
         <item name="colorContainer">@android:color/transparent</item>
@@ -28,8 +66,10 @@
 
     <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
         <item name="itemActiveIndicatorStyle">@null</item>
-        <item name="backgroundTint">@color/colorSurfaceDark</item>
-        <item name="android:background">@color/colorSurfaceDark</item>
+        <item name="backgroundTint">?attr/colorBottomNavBg</item>
+        <item name="android:background">?attr/colorBottomNavBg</item>
+        <item name="itemIconTint">@color/bottom_nav_tint</item>
+        <item name="itemTextColor">@color/bottom_nav_tint</item>
     </style>
 
     <style name="Theme.Ucmsandroid" parent="Base.Theme.Ucmsandroid" />

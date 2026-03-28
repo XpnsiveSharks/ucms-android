@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSurface">
+    android:background="@drawable/bg_grid">
 
     <!-- Loading -->
     <ProgressBar
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="Failed to load ticket"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-            android:textColor="@color/colorTextPrimary" />
+            android:textColor="?attr/colorOnSurface" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRetry"
@@ -45,164 +45,146 @@
     </LinearLayout>
 
     <!-- Content -->
-    <ScrollView
-        android:id="@+id/scrollContent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutContentMain"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorSurface"
-        android:visibility="gone">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
+            android:id="@+id/scrollContent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btnCloseTicketView"
+            android:visibility="gone">
 
-            <!-- Top bar -->
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/screen_padding">
+                android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/btnBack"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_arrow_back"
-                    android:contentDescription="@string/back"
-                    app:tint="@color/colorTextPrimary"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_medium"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/btnBack"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        android:id="@+id/tvTicketNumber"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:letterSpacing="0.1"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                        android:textColor="@color/colorTextPrimary"
-                        tools:text="TKT-20260315-0002" />
-
-                    <TextView
-                        android:id="@+id/tvCategoryName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:letterSpacing="0.1"
-                        android:textAllCaps="true"
-                        android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                        android:textColor="@color/colorTextSecondary"
-                        tools:text="ACADEMIC-RELATED" />
-                </LinearLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <!-- Ticket content card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/screen_padding"
-                android:layout_marginBottom="@dimen/spacing_medium"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="0dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/colorDivider"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
+                <!-- Top bar -->
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:padding="@dimen/screen_padding">
 
-                    <!-- Left accent border -->
-                    <View
-                        android:layout_width="4dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/colorPrimary" />
+                    <ImageView
+                        android:id="@+id/btnBack"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_arrow_back"
+                        android:contentDescription="@string/back"
+                        app:tint="?attr/colorOnSurface"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_medium"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/btnBack"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/tvTicketNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="monospace"
+                            android:letterSpacing="0.1"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            tools:text="TKT-20260315-0002" />
+
+                        <TextView
+                            android:id="@+id/tvCategoryName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="monospace"
+                            android:letterSpacing="0.1"
+                            android:textAllCaps="true"
+                            android:textColor="?attr/colorTextSecondary"
+                            android:textSize="11sp"
+                            tools:text="ACADEMIC-RELATED" />
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!-- Ticket content card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/screen_padding"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="@dimen/spacing_medium"
+                    app:cardBackgroundColor="?attr/colorTicketCardBg"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="?attr/colorTicketCardStroke"
+                    app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="@dimen/spacing_large">
+                        android:orientation="horizontal">
 
-                        <!-- Title -->
-                        <TextView
-                            android:id="@+id/tvTicketTitle"
+                        <!-- Left accent border -->
+                        <View
+                            android:layout_width="4dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/colorPrimary" />
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                            android:textColor="@color/colorTextPrimary"
-                            android:textStyle="bold"
-                            tools:text="Change of Major Application" />
+                            android:orientation="vertical"
+                            android:padding="@dimen/spacing_large">
 
-                        <!-- Description -->
-                        <TextView
-                            android:id="@+id/tvDescription"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_medium"
-                            android:fontFamily="monospace"
-                            android:lineSpacingMultiplier="1.2"
-                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                            android:textColor="@color/colorTextSecondary"
-                            tools:text="Student requests assistance in processing a transfer to a different academic program." />
-
-                        <!-- Attachment card inside content -->
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/cvAttachment"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_large"
-                            android:visibility="visible"
-                            app:cardBackgroundColor="@color/colorSurface"
-                            app:cardCornerRadius="0dp"
-                            app:cardElevation="0dp"
-                            app:strokeColor="@color/colorDivider"
-                            app:strokeWidth="1dp">
-
-                            <LinearLayout
+                            <!-- Title -->
+                            <TextView
+                                android:id="@+id/tvTicketTitle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:textColor="?attr/colorOnSurface"
+                                android:textSize="22sp"
+                                android:textStyle="bold"
+                                tools:text="Change of Major Application" />
+
+                            <!-- Description -->
+                            <TextView
+                                android:id="@+id/tvDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_medium"
+                                android:fontFamily="monospace"
+                                android:lineSpacingMultiplier="1.2"
+                                android:textColor="?attr/colorTextSecondary"
+                                android:textSize="13sp"
+                                tools:text="Student requests assistance in processing a transfer to a different academic program." />
+
+                            <!-- Attachment card inside content -->
+                            <LinearLayout
+                                android:id="@+id/cvAttachment"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_large"
+                                android:background="@drawable/bg_attachment_box"
                                 android:orientation="vertical"
-                                android:padding="@dimen/spacing_small">
+                                android:padding="12dp"
+                                android:visibility="visible">
 
                                 <com.facebook.shimmer.ShimmerFrameLayout
                                     android:id="@+id/shimmerAttachment"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:visibility="visible">
-
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:gravity="center_vertical"
-                                        android:orientation="horizontal">
-
-                                        <View
-                                            android:layout_width="32dp"
-                                            android:layout_height="32dp"
-                                            android:background="#E0E0E0" />
-
-                                        <View
-                                            android:layout_width="100dp"
-                                            android:layout_height="10dp"
-                                            android:layout_marginStart="@dimen/spacing_small"
-                                            android:background="#E0E0E0" />
-
-                                    </LinearLayout>
-
+                                    <View android:layout_width="150dp" android:layout_height="20dp" android:background="#333333" />
                                 </com.facebook.shimmer.ShimmerFrameLayout>
 
                                 <LinearLayout
@@ -215,106 +197,94 @@
 
                                     <ImageView
                                         android:id="@+id/ivAttachmentPreview"
-                                        android:layout_width="24dp"
-                                        android:layout_height="24dp"
-                                        android:layout_marginStart="8dp"
-                                        android:contentDescription="@string/attachment_preview"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:contentDescription="@null"
                                         android:src="@drawable/ic_attachment"
-                                        app:tint="@color/colorTextSecondary" />
+                                        app:tint="?attr/colorTextSecondary" />
 
                                     <TextView
                                         android:id="@+id/tvAttachmentName"
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginStart="@dimen/spacing_medium"
+                                        android:layout_marginStart="12dp"
                                         android:layout_weight="1"
                                         android:fontFamily="monospace"
-                                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                                        android:textColor="@color/colorTextPrimary"
+                                        android:textColor="?attr/colorOnSurface"
+                                        android:textSize="12sp"
                                         tools:text="image_1000000186.jpg" />
 
                                     <ImageView
-                                        android:layout_width="24dp"
-                                        android:layout_height="24dp"
-                                        android:src="@drawable/ic_arrow_drop_down"
-                                        android:rotation="-90"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:src="@drawable/ic_chevron_right"
                                         android:contentDescription="@null"
-                                        app:tint="@color/colorTextSecondary" />
+                                        app:tint="?attr/colorTextSecondary" />
 
                                 </LinearLayout>
 
                             </LinearLayout>
 
-                        </com.google.android.material.card.MaterialCardView>
-
+                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+                </com.google.android.material.card.MaterialCardView>
 
-            <!-- Tracking Timeline section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/screen_padding"
-                android:layout_marginTop="@dimen/spacing_medium"
-                android:layout_marginBottom="@dimen/spacing_large"
-                android:text="[ TRACKING TIMELINE ]"
-                android:fontFamily="monospace"
-                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                android:textColor="@color/colorTextSecondary"
-                android:letterSpacing="0.15" />
-
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/shimmerTimeline"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/screen_padding"
-                android:layout_marginBottom="@dimen/spacing_medium"
-                android:visibility="gone">
-
-                <LinearLayout
+                <!-- Tracking Timeline section -->
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginHorizontal="@dimen/screen_padding"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:layout_marginBottom="24dp"
+                    android:text="[ TRACKING TIMELINE ]"
+                    android:fontFamily="monospace"
+                    android:textColor="?attr/colorTextSecondary"
+                    android:textSize="11sp"
+                    android:letterSpacing="0.15" />
 
-                    <include layout="@layout/item_skeleton_timeline" />
-                    <include layout="@layout/item_skeleton_timeline" />
-                    <include layout="@layout/item_skeleton_timeline" />
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerTimeline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/screen_padding"
+                    android:layout_marginBottom="@dimen/spacing_medium"
+                    android:visibility="gone">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                        <include layout="@layout/item_skeleton_timeline" />
+                        <include layout="@layout/item_skeleton_timeline" />
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
 
-                </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvTimeline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/screen_padding"
+                    android:layout_marginBottom="32dp"
+                    android:nestedScrollingEnabled="false"
+                    android:visibility="gone"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_timeline_event" />
 
-            </com.facebook.shimmer.ShimmerFrameLayout>
+            </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvTimeline"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/screen_padding"
-                android:layout_marginBottom="@dimen/spacing_large"
-                android:nestedScrollingEnabled="false"
-                android:visibility="gone"
-                tools:itemCount="3"
-                tools:listitem="@layout/item_timeline_event" />
+        </ScrollView>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCloseTicket"
-                style="@style/Widget.Material3.Button"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginHorizontal="@dimen/screen_padding"
-                android:layout_marginBottom="@dimen/spacing_large"
-                android:text="CLOSE TICKET"
-                android:textAllCaps="true"
-                android:letterSpacing="0.1"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:visibility="gone"
-                app:backgroundTint="@color/colorPrimary"
-                app:cornerRadius="0dp" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCloseTicketView"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginHorizontal="@dimen/screen_padding"
+            android:layout_marginBottom="24dp"
+            android:text="CLOSE TICKET VIEW"
+            android:textAllCaps="true"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/colorOrange"
+            app:cornerRadius="0dp"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-        </LinearLayout>
-
-    </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
