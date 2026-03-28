@@ -12,33 +12,19 @@
         android:layout_height="wrap_content"
         android:padding="24dp">
 
-        <!-- System Label -->
-        <TextView
-            android:id="@+id/tvSystemLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="monospace"
-            android:letterSpacing="0.2"
-            android:text="SYSTEM INPUT"
-            android:textColor="@color/colorOrange"
-            android:textSize="@dimen/text_size_small"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <!-- Screen title -->
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/submit_ticket_title"
-            android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
-            android:textColor="@color/colorTextPrimary"
+            android:layout_marginTop="8dp"
+            android:text="Create New Ticket"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="28sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvSystemLabel" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Category Label -->
         <TextView
@@ -49,8 +35,9 @@
             android:fontFamily="monospace"
             android:letterSpacing="0.1"
             android:text="CATEGORY"
-            android:textColor="@color/colorTextSecondary"
-            android:textSize="@dimen/text_size_small"
+            android:textColor="?attr/colorTextSecondary"
+            android:textSize="11sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
@@ -70,8 +57,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
-                android:paddingHorizontal="16dp"
-                tools:listitem="@android:layout/simple_spinner_dropdown_item" />
+                android:paddingHorizontal="0dp"
+                tools:listitem="@layout/item_spinner_category" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -80,7 +67,7 @@
                 android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_arrow_drop_down"
                 android:contentDescription="@null"
-                app:tint="@color/colorTextSecondary" />
+                app:tint="?attr/colorTextSecondary" />
         </FrameLayout>
 
         <!-- Subject/Title Label -->
@@ -92,8 +79,9 @@
             android:fontFamily="monospace"
             android:letterSpacing="0.1"
             android:text="SUBJECT / TITLE"
-            android:textColor="@color/colorTextSecondary"
-            android:textSize="@dimen/text_size_small"
+            android:textColor="?attr/colorTextSecondary"
+            android:textSize="11sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cvCategory" />
 
@@ -109,9 +97,9 @@
             android:inputType="text"
             android:maxLines="1"
             android:paddingHorizontal="16dp"
-            android:textColor="@color/colorTextPrimary"
-            android:textColorHint="@color/colorTextSecondary"
-            android:textSize="@dimen/text_size_body"
+            android:textColor="?attr/colorInputText"
+            android:textColorHint="?attr/colorTextSecondary"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvSubjectLabel" />
@@ -125,8 +113,9 @@
             android:fontFamily="monospace"
             android:letterSpacing="0.1"
             android:text="DETAILED DESCRIPTION"
-            android:textColor="@color/colorTextSecondary"
-            android:textSize="@dimen/text_size_small"
+            android:textColor="?attr/colorTextSecondary"
+            android:textSize="11sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/etTitle" />
 
@@ -143,9 +132,9 @@
             android:inputType="textMultiLine"
             android:minLines="6"
             android:padding="16dp"
-            android:textColor="@color/colorTextPrimary"
-            android:textColorHint="@color/colorTextSecondary"
-            android:textSize="@dimen/text_size_body"
+            android:textColor="?attr/colorInputText"
+            android:textColorHint="?attr/colorTextSecondary"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvDescriptionLabel" />
@@ -159,8 +148,9 @@
             android:fontFamily="monospace"
             android:letterSpacing="0.1"
             android:text="ATTACHMENT (OPTIONAL)"
-            android:textColor="@color/colorTextSecondary"
-            android:textSize="@dimen/text_size_small"
+            android:textColor="?attr/colorTextSecondary"
+            android:textSize="11sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/etDescription" />
 
@@ -187,7 +177,7 @@
                     android:layout_height="24dp"
                     android:src="@drawable/ic_attachment"
                     android:contentDescription="@null"
-                    app:tint="@color/colorTextSecondary" />
+                    app:tint="?attr/colorTextSecondary" />
 
                 <TextView
                     android:id="@+id/tvAttachmentHint"
@@ -196,8 +186,8 @@
                     android:layout_marginTop="8dp"
                     android:fontFamily="monospace"
                     android:text="TAP TO UPLOAD PHOTO OR FILE"
-                    android:textColor="@color/colorTextSecondary"
-                    android:textSize="@dimen/text_size_xsmall" />
+                    android:textColor="?attr/colorTextSecondary"
+                    android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/tvAttachmentName"
@@ -205,9 +195,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:fontFamily="monospace"
-                    android:textColor="@color/colorOrange"
+                    android:textColor="?attr/colorHomeSubmitButton"
                     android:textStyle="bold"
-                    android:textSize="@dimen/text_size_xsmall"
+                    android:textSize="10sp"
                     android:visibility="gone"
                     tools:text="my_document.pdf"
                     tools:visibility="visible" />
@@ -220,19 +210,21 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSubmit"
             android:layout_width="0dp"
-            android:layout_height="56dp"
+            android:layout_height="64dp"
             android:layout_marginTop="40dp"
             android:layout_marginBottom="24dp"
-            app:backgroundTint="@color/colorOrange"
-            app:cornerRadius="4dp"
+            app:backgroundTint="@null"
+            android:background="@drawable/bg_button_submit_glow"
             android:text="SUBMIT NEW CONCERN"
             android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_body"
+            android:textColor="?attr/colorHomeSubmitButton"
+            android:textSize="14sp"
             android:textStyle="bold"
             app:icon="@drawable/ic_chevron_right"
             app:iconGravity="end"
-            app:iconPadding="8dp"
+            app:iconPadding="12dp"
+            app:iconSize="20dp"
+            app:iconTint="?attr/colorHomeSubmitButton"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -243,7 +235,7 @@
             android:id="@+id/progressSubmit"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:indeterminateTint="@color/colorOrange"
+            android:indeterminateTint="?attr/colorHomeSubmitButton"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/btnSubmit"
             app:layout_constraintEnd_toEndOf="@id/btnSubmit"
@@ -256,8 +248,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:fontFamily="monospace"
-            android:textColor="@color/colorTextSecondary"
-            android:textSize="@dimen/text_size_tiny"
+            android:textColor="?attr/colorTextSecondary"
+            android:textSize="10sp"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

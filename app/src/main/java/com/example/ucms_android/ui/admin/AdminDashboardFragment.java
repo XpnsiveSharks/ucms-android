@@ -88,7 +88,7 @@ public class AdminDashboardFragment extends Fragment {
         sessionManager = new SessionManager(requireContext());
         gson = new Gson();
 
-        adapter = new RecentTicketAdapter(new ArrayList<>(), ticket -> {
+        adapter = new RecentTicketAdapter(ticket -> {
             Intent intent = new Intent(requireActivity(), AdminTicketDetailActivity.class);
             intent.putExtra("ticketId", ticket.getId());
             startActivity(intent);

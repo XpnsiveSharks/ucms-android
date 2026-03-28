@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSurface"
-    android:padding="@dimen/screen_padding"
-    tools:context=".TicketListActivity">
+    android:background="@drawable/bg_grid"
+    android:padding="@dimen/screen_padding">
 
     <LinearLayout
         android:id="@+id/layoutHeader"
@@ -23,50 +22,40 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="SYSTEM RECORDS"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/text_size_tiny"
-                    android:letterSpacing="0.15"
-                    android:fontFamily="monospace"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Ticket Directory"
-                    android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
+                android:text="Ticket Directory"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="28sp"
+                android:textStyle="bold" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnFilter"
                 style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="0dp"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                app:iconPadding="0dp"
+                app:iconGravity="textStart"
                 android:contentDescription="@string/filter"
                 app:icon="@drawable/ic_filter"
-                app:iconTint="@color/colorTextPrimary"
-                app:strokeColor="@color/colorDivider"
-                app:cornerRadius="0dp" />
+                app:iconTint="?attr/colorOnSurface"
+                app:strokeColor="?attr/colorTicketCardStroke"
+                app:cornerRadius="12dp" />
         </LinearLayout>
 
         <!-- Filter Tabs -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_medium"
+            android:layout_marginTop="24dp"
             android:orientation="horizontal">
 
             <TextView
@@ -74,35 +63,35 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ALL LOGS"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="11sp"
                 android:fontFamily="monospace"
                 android:letterSpacing="0.1"
                 android:textStyle="bold"
-                android:textColor="@color/colorPrimary"
+                android:textColor="?attr/colorHomeSubmitButton"
                 android:paddingBottom="8dp"
-                android:layout_marginEnd="@dimen/spacing_large" />
+                android:layout_marginEnd="24dp" />
 
             <TextView
                 android:id="@+id/tabInProgress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="IN PROGRESS"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="11sp"
                 android:fontFamily="monospace"
                 android:letterSpacing="0.1"
-                android:textColor="@color/colorTextSecondary"
+                android:textColor="?attr/colorTextSecondary"
                 android:paddingBottom="8dp"
-                android:layout_marginEnd="@dimen/spacing_large" />
+                android:layout_marginEnd="24dp" />
 
             <TextView
                 android:id="@+id/tabResolved"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="RESOLVED"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="11sp"
                 android:fontFamily="monospace"
                 android:letterSpacing="0.1"
-                android:textColor="@color/colorTextSecondary"
+                android:textColor="?attr/colorTextSecondary"
                 android:paddingBottom="8dp" />
 
         </LinearLayout>
@@ -111,14 +100,14 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorDivider">
+            android:background="?attr/colorTicketCardStroke">
 
             <View
                 android:id="@+id/tabIndicator"
                 android:layout_width="60dp"
                 android:layout_height="2dp"
                 android:layout_alignParentBottom="true"
-                android:background="@color/colorPrimary" />
+                android:background="?attr/colorHomeSubmitButton" />
         </RelativeLayout>
 
     </LinearLayout>
@@ -128,7 +117,7 @@
         android:id="@+id/shimmerLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/spacing_medium"
+        android:layout_marginTop="16dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -165,16 +154,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Something went wrong"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-            android:textColor="@color/colorTextPrimary" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Could not load tickets. Check your connection."
-            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-            android:textColor="@color/colorTextSecondary" />
+            android:textColor="?attr/colorOnSurface"
+            android:textStyle="bold" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRetry"
@@ -185,7 +166,8 @@
             android:text="Retry"
             android:textAllCaps="false"
             app:cornerRadius="50dp"
-            app:strokeColor="@color/colorPrimary" />
+            app:strokeColor="?attr/colorHomeSubmitButton"
+            android:textColor="?attr/colorHomeSubmitButton" />
 
     </LinearLayout>
 
@@ -194,8 +176,8 @@
         android:id="@+id/rvTickets"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/spacing_medium"
-        android:background="@color/colorSurface"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
         android:visibility="gone"
         android:paddingBottom="88dp"
         android:clipToPadding="false"
@@ -203,7 +185,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layoutHeader"
-        tools:listitem="@layout/item_ticket" />
+        tools:listitem="@layout/item_recent_ticket" />
 
     <!-- Empty state -->
     <TextView
@@ -212,8 +194,8 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/no_tickets_yet"
-        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-        android:textColor="@color/colorTextSecondary"
+        android:fontFamily="monospace"
+        android:textColor="?attr/colorTextSecondary"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -226,15 +208,14 @@
         android:id="@+id/btnSubmitTicket"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:contentDescription="@string/submit_ticket"
         android:src="@drawable/ic_add"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="?attr/colorHomeSubmitButton"
         app:tint="@color/white"
         app:elevation="6dp"
         app:borderWidth="0dp"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.FAB"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

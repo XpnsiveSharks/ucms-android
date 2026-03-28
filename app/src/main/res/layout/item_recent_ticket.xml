@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/spacing_small"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="?attr/colorRecentCardBg"
     app:cardCornerRadius="0dp"
     app:cardElevation="0dp"
-    app:strokeColor="@color/colorDivider"
+    app:strokeColor="?attr/colorRecentCardStroke"
     app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,32 +21,42 @@
             android:id="@+id/tvTicketNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_badge_orange_solid"
+            android:background="@drawable/bg_badge_ticket_id"
             android:fontFamily="monospace"
             android:paddingHorizontal="12dp"
             android:paddingVertical="6dp"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_tiny"
+            android:textColor="?attr/colorRecentTicketIdText"
+            android:textSize="11sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="TKT-20260315-0003" />
 
-        <!-- Status Badge (Priority in screenshot) -->
+        <!-- Status Indicator -->
         <TextView
             android:id="@+id/tvStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_badge_low_outline"
             android:fontFamily="monospace"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp"
-            android:textColor="@color/colorBadgeLowText"
-            android:textSize="@dimen/text_size_tiny"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:textColor="?attr/colorRecentStatusText"
+            android:textSize="10sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="LOW" />
+            tools:text="PENDING" />
+
+        <!-- Chevron Icon -->
+        <ImageView
+            android:id="@+id/ivChevron"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="?attr/colorRecentStatusText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Ticket Title -->
         <TextView
@@ -54,50 +64,48 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textColor="@color/colorTextPrimary"
-            android:textSize="@dimen/text_size_h3"
+            android:layout_marginEnd="32dp"
+            android:textColor="?attr/colorRecentTitleText"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTicketNumber"
             tools:text="lost id" />
 
-        <!-- Category -->
-        <TextView
-            android:id="@+id/tvCategory"
+        <!-- Category & Time -->
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="monospace"
-            android:letterSpacing="0.1"
-            android:textColor="@color/colorTextSecondary"
-            android:textSize="@dimen/text_size_tiny"
-            app:layout_constraintEnd_toStartOf="@id/tvTimeAgo"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@id/ivChevron"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvTicketTitle"
-            tools:text="ACADEMIC-RELATED" />
+            app:layout_constraintTop_toBottomOf="@id/tvTicketTitle">
 
-        <!-- Time Ago -->
-        <TextView
-            android:id="@+id/tvTimeAgo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="monospace"
-            android:textColor="@color/colorTextSecondary"
-            android:textSize="@dimen/text_size_tiny"
-            app:layout_constraintBottom_toBottomOf="@id/tvCategory"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvCategory"
-            tools:text="6 hours ago" />
+            <TextView
+                android:id="@+id/tvCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:textColor="?attr/colorRecentStatusText"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:text="ACADEMIC-RELATED" />
 
-        <!-- Hidden Urgency view to avoid crashes if referenced -->
-        <TextView
-            android:id="@+id/tvUrgency"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvCategory" />
+            <TextView
+                android:id="@+id/tvTimeAgo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:fontFamily="monospace"
+                android:textColor="?attr/colorRecentStatusText"
+                android:textSize="10sp"
+                tools:text="6 hours ago" />
+        </LinearLayout>
+
+        <!-- Hidden for Java reference -->
+        <TextView android:id="@+id/tvUrgency" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

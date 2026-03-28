@@ -16,7 +16,7 @@
             android:id="@+id/viewLineTop"
             android:layout_width="1dp"
             android:layout_height="12dp"
-            android:background="#E0E0E0" />
+            android:background="?attr/colorTicketTimelineLine" />
 
         <View
             android:id="@+id/viewDot"
@@ -29,7 +29,7 @@
             android:layout_width="1dp"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="#E0E0E0" />
+            android:background="?attr/colorTicketTimelineLine" />
 
     </LinearLayout>
 
@@ -40,7 +40,7 @@
         android:layout_weight="1"
         android:layout_marginStart="12dp"
         android:orientation="vertical"
-        android:paddingBottom="24dp">
+        android:paddingBottom="32dp">
 
         <TextView
             android:id="@+id/tvEventTime"
@@ -49,8 +49,8 @@
             android:fontFamily="monospace"
             android:letterSpacing="0.1"
             android:textAllCaps="true"
-            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-            android:textColor="@color/colorTextSecondary" />
+            android:textColor="?attr/colorTextSecondary"
+            android:textSize="10sp" />
 
         <TextView
             android:id="@+id/tvEventTitle"
@@ -59,8 +59,8 @@
             android:layout_marginTop="4dp"
             android:fontFamily="monospace"
             android:letterSpacing="0.05"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textColor="@color/colorTextPrimary"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <!-- Admin responses container -->
@@ -68,7 +68,7 @@
             android:id="@+id/llResponses"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:orientation="vertical"
             android:visibility="gone" />
 

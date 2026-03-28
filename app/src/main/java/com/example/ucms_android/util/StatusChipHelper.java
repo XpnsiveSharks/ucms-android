@@ -28,16 +28,22 @@ public class StatusChipHelper {
         }
         badgeView.setText(displayStatus.replace("_", " ").toUpperCase(Locale.ROOT));
 
-        // Background and text color mapping
+        // Background and text color mapping (Muted Palette Concept)
         if ("PENDING".equalsIgnoreCase(status)) {
             badgeView.setBackgroundResource(R.drawable.bg_badge_outline_pending);
             badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorStatusPending));
         } else if ("IN_PROGRESS".equalsIgnoreCase(status)) {
             badgeView.setBackgroundResource(R.drawable.bg_badge_outline_inprogress);
-            badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorAccentBlue));
+            badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorStatusInProgress));
         } else if ("RESOLVED".equalsIgnoreCase(status)) {
             badgeView.setBackgroundResource(R.drawable.bg_badge_outline_resolved);
             badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorStatusResolved));
+        } else if ("TODO".equalsIgnoreCase(status) || "NEW".equalsIgnoreCase(status)) {
+            badgeView.setBackgroundResource(R.drawable.bg_badge_outline_todo);
+            badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorStatusTodo));
+        } else if ("REJECTED".equalsIgnoreCase(status) || "FAILED".equalsIgnoreCase(status)) {
+            badgeView.setBackgroundResource(R.drawable.bg_badge_outline_rejected);
+            badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorStatusRejected));
         } else {
             badgeView.setBackgroundResource(R.drawable.bg_badge_outline_muted);
             badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorTextSecondary));
@@ -65,7 +71,7 @@ public class StatusChipHelper {
                 break;
             case "LOW":
                 badgeView.setBackgroundResource(R.drawable.bg_badge_outline_low);
-                badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorAccentBlue));
+                badgeView.setTextColor(ContextCompat.getColor(badgeView.getContext(), R.color.colorStatusInProgress));
                 break;
             default:
                 badgeView.setBackgroundResource(R.drawable.bg_badge_outline_muted);

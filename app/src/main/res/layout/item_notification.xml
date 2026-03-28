@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:background="?attr/colorRecentCardBg">
 
     <!-- Unread Indicator (Left Border) -->
     <View
         android:id="@+id/viewUnreadIndicator"
         android:layout_width="4dp"
         android:layout_height="0dp"
-        android:background="@color/colorOrange"
+        android:background="?attr/colorHomeSubmitButton"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/bottomDivider"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,8 +37,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:fontFamily="monospace"
-                android:textColor="@color/colorOrange"
-                android:textSize="@dimen/text_size_small"
+                android:textColor="?attr/colorHomeSubmitButton"
+                android:textSize="11sp"
+                android:textStyle="bold"
                 tools:text="Ticket Update" />
 
             <TextView
@@ -47,8 +48,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:fontFamily="monospace"
-                android:textColor="@color/colorOrange"
-                android:textSize="@dimen/text_size_small"
+                android:textColor="?attr/colorTextSecondary"
+                android:textSize="10sp"
                 tools:text="2m ago" />
         </RelativeLayout>
 
@@ -57,8 +58,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_h4"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="16sp"
             android:textStyle="bold"
             tools:text="Status changed to IN_PROGRESS" />
 
@@ -68,8 +69,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:fontFamily="monospace"
-            android:textColor="@color/colorTextSecondary"
-            android:textSize="@dimen/text_size_small"
+            android:textColor="?attr/colorTextSecondary"
+            android:textSize="12sp"
             tools:text="TKT-20260315-0002 has been updated by Admin." />
 
     </LinearLayout>
@@ -78,7 +79,7 @@
         android:id="@+id/bottomDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorDivider"
+        android:background="?attr/colorTicketCardStroke"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

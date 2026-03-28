@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/white" />
+    <solid android:color="?attr/colorInputBackground" />
     <stroke
         android:width="2dp"
-        android:color="@color/colorOrange"
+        android:color="?attr/colorHomeSubmitButton"
         android:dashWidth="4dp"
         android:dashGap="4dp" />
+    <corners android:radius="12dp" />
 </shape>

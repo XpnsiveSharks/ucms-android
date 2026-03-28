@@ -12,33 +12,19 @@
         android:layout_height="wrap_content"
         android:padding="24dp">
 
-        <!-- System Configuration Label -->
-        <TextView
-            android:id="@+id/tvConfigLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="monospace"
-            android:letterSpacing="0.1"
-            android:text="SYSTEM CONFIGURATION"
-            android:textColor="@color/colorOrange"
-            android:textSize="@dimen/text_size_small"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <!-- Settings Title -->
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:text="Settings"
-            android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="28sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvConfigLabel" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Profile Card -->
         <LinearLayout
@@ -46,7 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:background="@drawable/bg_card_green_border"
+            android:background="@drawable/bg_stat_card_resolved"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="24dp"
@@ -59,10 +45,10 @@
                 android:id="@+id/tvAvatarLarge"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:background="@drawable/bg_square_box"
+                android:background="@drawable/bg_home_icon_container"
                 android:gravity="center"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_h2"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 tools:text="MA" />
 
@@ -76,8 +62,8 @@
                     android:id="@+id/tvUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_h2"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     tools:text="Marynelle Aban" />
 
@@ -87,8 +73,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:fontFamily="monospace"
-                    android:textColor="@color/colorTextSecondary"
-                    android:textSize="@dimen/text_size_xsmall"
+                    android:textColor="?attr/colorTextSecondary"
+                    android:textSize="11sp"
                     tools:text="20251112-N • BSCS • Year 3" />
 
                 <LinearLayout
@@ -103,8 +89,8 @@
                         android:id="@+id/vRoleIndicator"
                         android:layout_width="8dp"
                         android:layout_height="8dp"
-                        android:background="@drawable/bg_badge_orange_solid"
-                        android:backgroundTint="@color/colorSuccess" />
+                        android:background="@drawable/bg_badge_outline_todo"
+                        android:backgroundTint="?attr/colorHomeSubmitButton" />
 
                     <TextView
                         android:id="@+id/tvRoleLabel"
@@ -114,42 +100,29 @@
                         android:fontFamily="monospace"
                         android:letterSpacing="0.1"
                         android:text="ACTIVE STUDENT"
-                        android:textColor="@color/colorSuccess"
-                        android:textSize="@dimen/text_size_xsmall"
+                        android:textColor="?attr/colorHomeSubmitButton"
+                        android:textSize="10sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Directory Label -->
-        <TextView
-            android:id="@+id/tvDirectoryLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:fontFamily="monospace"
-            android:text="[ CONFIGURATION DIRECTORY ]"
-            android:textColor="@color/colorTextSecondary"
-            android:textSize="@dimen/text_size_small"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardProfile" />
-
-        <!-- Menu: Update Parameters -->
+        <!-- Menu: Update Profile -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cvEditProfile"
             android:layout_width="0dp"
             android:layout_height="64dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="32dp"
             android:clickable="true"
             android:focusable="true"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="0dp"
+            app:cardBackgroundColor="?attr/colorRecentCardBg"
+            app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:strokeColor="@color/colorDivider"
+            app:strokeColor="?attr/colorRecentCardStroke"
             app:strokeWidth="1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvDirectoryLabel">
+            app:layout_constraintTop_toBottomOf="@id/cardProfile">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -162,7 +135,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_profile"
-                    app:tint="@color/colorTextSecondary" />
+                    app:tint="?attr/colorTextSecondary" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -171,15 +144,15 @@
                     android:layout_weight="1"
                     android:fontFamily="monospace"
                     android:letterSpacing="0.1"
-                    android:text="UPDATE ENTITY PARAMETERS"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_body" />
+                    android:text="Update Profile"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="14sp" />
 
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/colorTextSecondary" />
+                    app:tint="?attr/colorTextSecondary" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -191,10 +164,10 @@
             android:layout_marginTop="12dp"
             android:clickable="true"
             android:focusable="true"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="0dp"
+            app:cardBackgroundColor="?attr/colorRecentCardBg"
+            app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:strokeColor="@color/colorDivider"
+            app:strokeColor="?attr/colorRecentCardStroke"
             app:strokeWidth="1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -211,7 +184,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_lock"
-                    app:tint="@color/colorTextSecondary" />
+                    app:tint="?attr/colorTextSecondary" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -220,72 +193,40 @@
                     android:layout_weight="1"
                     android:fontFamily="monospace"
                     android:letterSpacing="0.1"
-                    android:text="SECURITY &amp; AUTHENTICATION"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_body" />
+                    android:text="Security &amp; Auth"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="14sp" />
 
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/colorTextSecondary" />
+                    app:tint="?attr/colorTextSecondary" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Danger Zone Label -->
-        <TextView
-            android:id="@+id/tvDangerLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:fontFamily="monospace"
-            android:text="[ DANGER ZONE ]"
-            android:textColor="#FF8888"
-            android:textSize="@dimen/text_size_small"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cvChangePassword" />
-
-        <!-- Terminate Session -->
-        <com.google.android.material.card.MaterialCardView
+        <!-- Logout Button -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/cvLogout"
             android:layout_width="0dp"
             android:layout_height="64dp"
-            android:layout_marginTop="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:cardBackgroundColor="@android:color/transparent"
-            app:cardCornerRadius="0dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="0dp"
+            android:layout_marginTop="48dp"
+            app:backgroundTint="@null"
+            android:background="@drawable/bg_button_submit_glow"
+            app:strokeColor="@color/colorStatusRejected"
+            android:text="Logout"
+            android:textAllCaps="true"
+            android:textColor="@color/colorStatusRejected"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:icon="@drawable/ic_logout"
+            app:iconGravity="textStart"
+            app:iconPadding="12dp"
+            app:iconSize="20dp"
+            app:iconTint="@color/colorStatusRejected"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvDangerLabel">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/bg_card_danger"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingHorizontal="20dp">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_logout"
-                    app:tint="@color/colorDanger" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:fontFamily="monospace"
-                    android:letterSpacing="0.1"
-                    android:text="TERMINATE SESSION"
-                    android:textColor="@color/colorDanger"
-                    android:textSize="@dimen/text_size_body" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+            app:layout_constraintTop_toBottomOf="@id/cvChangePassword" />
 
         <View
             android:layout_width="match_parent"
