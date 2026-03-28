@@ -4,244 +4,166 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSurface"
-    tools:context=".ui.admin.AdminTicketListFragment">
+    android:background="@drawable/bg_grid">
 
     <!-- Header Section -->
-    <TextView
-        android:id="@+id/tvSystemRecords"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clHeader"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/screen_padding"
-        android:layout_marginTop="@dimen/screen_padding"
-        android:fontFamily="monospace"
-        android:text="SYSTEM RECORDS"
-        android:textColor="@color/colorElevatedSession"
-        android:textSize="@dimen/text_size_label_caps"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:padding="24dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/tvScreenTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/screen_padding"
-        android:text="Ticket Directory"
-        android:textColor="@color/colorTextPrimary"
-        android:textSize="@dimen/text_size_h1"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@id/btnFilter"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvSystemRecords" />
+        <TextView
+            android:id="@+id/tvScreenTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Tickets"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/btnFilter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/btnFilter"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="@dimen/screen_padding"
-        android:clickable="true"
-        android:focusable="true"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/tvScreenTitle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvScreenTitle"
-        app:strokeColor="@color/colorDivider"
-        app:strokeWidth="1dp">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnFilter"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="0dp"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            app:iconPadding="0dp"
+            app:iconGravity="textStart"
+            android:contentDescription="Filter"
+            app:icon="@drawable/ic_filter"
+            app:iconTint="?attr/colorOnSurface"
+            app:strokeColor="?attr/colorTicketCardStroke"
+            app:cornerRadius="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_filter"
-            app:tint="@color/black" />
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Tabs Section -->
     <LinearLayout
         android:id="@+id/llTabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_xlarge"
         android:orientation="horizontal"
-        android:paddingStart="@dimen/screen_padding"
-        android:paddingEnd="@dimen/screen_padding"
-        app:layout_constraintTop_toBottomOf="@id/tvScreenTitle">
+        android:paddingHorizontal="24dp"
+        app:layout_constraintTop_toBottomOf="@id/clHeader">
 
-        <LinearLayout
-            android:id="@+id/tabAll"
+        <TextView
+            android:id="@+id/tvTabAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:text="ALL LOGS"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.1"
+            android:textStyle="bold"
+            android:textColor="?attr/colorHomeSubmitButton"
+            android:paddingBottom="12dp"
+            android:layout_marginEnd="24dp" />
 
-            <TextView
-                android:id="@+id/tvTabAll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:paddingBottom="8dp"
-                android:text="ALL LOGS"
-                android:textColor="@color/colorElevatedSession"
-                android:textSize="@dimen/text_size_label_caps"
-                android:textStyle="bold" />
-
-            <View
-                android:id="@+id/indicatorAll"
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:background="@color/colorElevatedSession"
-                android:visibility="visible" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/tabInProgress"
+        <TextView
+            android:id="@+id/tvTabInProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:text="IN PROGRESS"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.1"
+            android:textColor="?attr/colorTextSecondary"
+            android:paddingBottom="12dp"
+            android:layout_marginEnd="24dp" />
 
-            <TextView
-                android:id="@+id/tvTabInProgress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:paddingBottom="8dp"
-                android:text="IN PROGRESS"
-                android:textColor="@color/colorTextSecondary"
-                android:textSize="@dimen/text_size_label_caps"
-                android:textStyle="bold" />
-
-            <View
-                android:id="@+id/indicatorInProgress"
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:background="@color/colorElevatedSession"
-                android:visibility="invisible" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/tabResolved"
+        <TextView
+            android:id="@+id/tvTabResolved"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tvTabResolved"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:paddingBottom="8dp"
-                android:text="RESOLVED"
-                android:textColor="@color/colorTextSecondary"
-                android:textSize="@dimen/text_size_label_caps"
-                android:textStyle="bold" />
-
-            <View
-                android:id="@+id/indicatorResolved"
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:background="@color/colorElevatedSession"
-                android:visibility="invisible" />
-        </LinearLayout>
+            android:text="RESOLVED"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.1"
+            android:textColor="?attr/colorTextSecondary"
+            android:paddingBottom="12dp" />
 
     </LinearLayout>
 
-    <View
-        android:id="@+id/vTabDivider"
+    <RelativeLayout
+        android:id="@+id/rlIndicatorContainer"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorDivider"
-        app:layout_constraintTop_toBottomOf="@id/llTabs" />
+        android:background="?attr/colorTicketCardStroke"
+        app:layout_constraintTop_toBottomOf="@id/llTabs">
 
-    <!-- Search Hidden (but keep ID if needed for logic, though screenshot doesn't show it) -->
-    <EditText
-        android:id="@+id/etSearch"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:id="@+id/tabIndicator"
+            android:layout_width="60dp"
+            android:layout_height="2dp"
+            android:layout_alignParentBottom="true"
+            android:background="?attr/colorHomeSubmitButton" />
+    </RelativeLayout>
 
     <!-- Loading Skeleton -->
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmerLayout"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/spacing_medium"
-        android:paddingStart="@dimen/screen_padding"
-        android:paddingEnd="@dimen/screen_padding"
+        android:layout_marginTop="16dp"
+        android:paddingHorizontal="24dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vTabDivider">
+        app:layout_constraintTop_toBottomOf="@id/rlIndicatorContainer">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
             <include layout="@layout/layout_skeleton_ticket" />
             <include layout="@layout/layout_skeleton_ticket" />
             <include layout="@layout/layout_skeleton_ticket" />
-
         </LinearLayout>
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 
     <!-- Empty State -->
-    <LinearLayout
-        android:id="@+id/layoutEmpty"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/tvEmptyState"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:gravity="center"
-        android:orientation="vertical"
+        android:text="No tickets found"
+        android:fontFamily="monospace"
+        android:textColor="?attr/colorTextSecondary"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vTabDivider">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No tickets found"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-            android:textColor="@color/colorTextPrimary" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@id/rlIndicatorContainer" />
 
     <!-- Error State -->
     <LinearLayout
         android:id="@+id/layoutError"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vTabDivider">
+        app:layout_constraintTop_toBottomOf="@id/rlIndicatorContainer">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Something went wrong"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-            android:textColor="@color/colorTextPrimary" />
+            android:textColor="?attr/colorOnSurface"
+            android:textStyle="bold" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRetry"
@@ -251,25 +173,23 @@
             android:layout_marginTop="16dp"
             android:text="Retry"
             android:textAllCaps="false"
-            app:cornerRadius="0dp"
-            app:strokeColor="@color/colorPrimary" />
+            app:cornerRadius="12dp"
+            app:strokeColor="?attr/colorHomeSubmitButton"
+            android:textColor="?attr/colorHomeSubmitButton" />
 
     </LinearLayout>
 
     <!-- Ticket List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTickets"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingStart="@dimen/screen_padding"
-        android:paddingEnd="@dimen/screen_padding"
-        android:paddingTop="@dimen/spacing_medium"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="16dp"
         android:clipToPadding="false"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vTabDivider"
+        app:layout_constraintTop_toBottomOf="@id/rlIndicatorContainer"
         tools:listitem="@layout/item_ticket" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

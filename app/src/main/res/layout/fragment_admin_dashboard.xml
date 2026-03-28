@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSurface"
-    tools:context=".ui.admin.AdminDashboardFragment">
+    android:background="@drawable/bg_grid">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -15,85 +14,93 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/screen_padding">
+            android:padding="24dp">
 
-            <!-- Header Section -->
-            <TextView
-                android:id="@+id/tvElevatedSession"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:text="@string/elevated_session"
-                android:textColor="@color/colorElevatedSession"
-                android:textSize="@dimen/text_size_label_caps"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tvHeaderTitle"
+            <!-- User Header Section -->
+            <LinearLayout
+                android:id="@+id/layoutUserHeader"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/system_administrator"
-                android:textColor="@color/colorTextPrimary"
-                android:textSize="@dimen/text_size_h1"
-                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toStartOf="@id/flNotification"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvElevatedSession" />
+                app:layout_constraintTop_toTopOf="parent">
 
+                <TextView
+                    android:id="@+id/tvAvatarSmall"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_circle_avatar"
+                    android:gravity="center"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="AD" />
+
+                <TextView
+                    android:id="@+id/tvHeaderTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:text="Overview"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:ellipsize="end"
+                    android:singleLine="true" />
+
+            </LinearLayout>
+
+            <!-- Notification Bell Container -->
             <FrameLayout
                 android:id="@+id/flNotification"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="@drawable/bg_button_telemetry"
-                app:layout_constraintBottom_toBottomOf="@id/tvHeaderTitle"
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="@id/layoutUserHeader"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tvElevatedSession">
+                app:layout_constraintTop_toTopOf="@id/layoutUserHeader">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_notifications"
-                    app:tint="@color/colorTextPrimary" />
+                    app:tint="?attr/colorOnSurface" />
 
                 <!-- Notification Dot -->
                 <View
+                    android:id="@+id/viewNotificationBadge"
                     android:layout_width="8dp"
                     android:layout_height="8dp"
                     android:layout_gravity="top|end"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/bg_badge_orange_solid" />
+                    android:background="@drawable/bg_button_pill"
+                    android:backgroundTint="@color/colorOrange"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
             </FrameLayout>
-
-            <!-- Overview Label -->
-            <TextView
-                android:id="@+id/tvOverviewLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_xlarge"
-                android:fontFamily="monospace"
-                android:text="@string/system_overview_label"
-                android:textColor="@color/colorTextSecondary"
-                android:textSize="@dimen/text_size_label_caps"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvHeaderTitle" />
 
             <!-- Total Tickets Card -->
             <LinearLayout
                 android:id="@+id/cardTotalTickets"
                 android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/bg_card_orange_tint"
+                android:layout_height="110dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/bg_card_total_tickets"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="24dp"
+                android:padding="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvOverviewLabel">
+                app:layout_constraintTop_toBottomOf="@id/layoutUserHeader">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -106,9 +113,9 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="monospace"
                         android:letterSpacing="0.1"
-                        android:text="TOTAL TICKETS"
-                        android:textColor="@color/colorOrange"
-                        android:textSize="@dimen/text_size_small"
+                        android:text="TOTAL RECORDS"
+                        android:textColor="?attr/colorHomeTotalTicketsText"
+                        android:textSize="11sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -116,22 +123,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_stat_large"
+                        android:textColor="?attr/colorHomeTotalTicketsCount"
+                        android:textSize="36sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
                 <FrameLayout
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:background="@drawable/bg_square_box">
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:background="@drawable/bg_home_icon_container">
 
                     <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_database"
-                        app:tint="@color/colorOrange" />
+                        app:tint="?attr/colorHomeTotalTicketsIcon" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -139,8 +146,8 @@
             <LinearLayout
                 android:id="@+id/llStats"
                 android:layout_width="0dp"
-                android:layout_height="130dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="12dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -149,20 +156,21 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="6dp"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_card_orange_border"
+                    android:background="@drawable/bg_stat_card_pending"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="monospace"
                         android:letterSpacing="0.05"
-                        android:text="REQUIRED PENDING\nACTION"
-                        android:textColor="@color/colorTextSecondary"
-                        android:textSize="@dimen/text_size_xsmall"
+                        android:text="PENDING\nACTION"
+                        android:textColor="?attr/colorHomeStatText"
+                        android:textSize="10sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -171,19 +179,20 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="0"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_stat_medium"
+                        android:textColor="?attr/colorHomeTotalTicketsCount"
+                        android:textSize="28sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="6dp"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_card_green_border"
+                    android:background="@drawable/bg_stat_card_resolved"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -191,8 +200,8 @@
                         android:fontFamily="monospace"
                         android:letterSpacing="0.05"
                         android:text="RESOLVED\nTODAY"
-                        android:textColor="@color/colorTextSecondary"
-                        android:textSize="@dimen/text_size_xsmall"
+                        android:textColor="?attr/colorHomeStatText"
+                        android:textSize="10sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -201,8 +210,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="0"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_stat_medium"
+                        android:textColor="?attr/colorHomeTotalTicketsCount"
+                        android:textSize="28sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
@@ -211,35 +220,36 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTelemetry"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_marginTop="@dimen/spacing_xlarge"
-                android:fontFamily="monospace"
-                android:letterSpacing="0.1"
-                android:text="@string/view_system_telemetry"
-                android:textColor="@color/colorTelemetryBorder"
-                android:textSize="@dimen/text_size_body"
+                android:layout_height="64dp"
+                android:layout_marginTop="24dp"
+                app:backgroundTint="@null"
+                android:background="@drawable/bg_button_submit_glow"
+                android:text="VIEW ANALYTICS"
+                android:textAllCaps="true"
+                android:textColor="?attr/colorHomeSubmitButton"
+                android:textSize="14sp"
                 android:textStyle="bold"
-                app:backgroundTint="@color/white"
-                app:cornerRadius="0dp"
                 app:icon="@drawable/ic_analytics"
                 app:iconGravity="textStart"
-                app:iconTint="@color/colorTelemetryBorder"
+                app:iconPadding="12dp"
+                app:iconSize="20dp"
+                app:iconTint="?attr/colorHomeSubmitButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/llStats"
-                app:strokeColor="@color/colorTelemetryBorder"
-                app:strokeWidth="1dp" />
+                app:layout_constraintTop_toBottomOf="@id/llStats" />
 
             <!-- Recent Logs Section -->
             <TextView
                 android:id="@+id/tvRecentLogsLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_xxlarge"
+                android:layout_marginTop="32dp"
                 android:fontFamily="monospace"
-                android:text="@string/recent_logs_label"
-                android:textColor="@color/colorTextSecondary"
-                android:textSize="@dimen/text_size_label_caps"
+                android:letterSpacing="0.2"
+                android:text="RECENT LOGS"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="12sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/btnTelemetry" />
 
@@ -248,10 +258,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
-                android:text="@string/view_all_label"
-                android:textColor="@color/colorElevatedSession"
-                android:textSize="@dimen/text_size_label_caps_small"
+                android:letterSpacing="0.2"
+                android:text="VIEW ALL"
+                android:textColor="?attr/colorHomeViewAllText"
+                android:textSize="12sp"
                 android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="@id/tvRecentLogsLabel"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tvRecentLogsLabel" />
@@ -261,7 +274,7 @@
                 android:id="@+id/shimmerRecentTickets"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_medium"
+                android:layout_marginTop="12dp"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -274,7 +287,6 @@
 
                     <include layout="@layout/layout_skeleton_ticket" />
                     <include layout="@layout/layout_skeleton_ticket" />
-                    <include layout="@layout/layout_skeleton_ticket" />
 
                 </LinearLayout>
 
@@ -285,12 +297,13 @@
                 android:id="@+id/tvEmptyRecent"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_medium"
+                android:layout_marginTop="12dp"
                 android:gravity="center"
-                android:padding="@dimen/spacing_large"
+                android:padding="24dp"
+                android:background="@drawable/bg_square_box"
                 android:text="No recent logs found"
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                android:textColor="@color/colorTextSecondary"
+                android:fontFamily="monospace"
+                android:textColor="?attr/colorOnSurface"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -301,7 +314,7 @@
                 android:id="@+id/rvRecentTickets"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_medium"
+                android:layout_marginTop="12dp"
                 android:nestedScrollingEnabled="false"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -310,6 +323,11 @@
                 tools:itemCount="3"
                 tools:listitem="@layout/item_recent_ticket"
                 tools:visibility="visible" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                app:layout_constraintTop_toBottomOf="@id/rvRecentTickets" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

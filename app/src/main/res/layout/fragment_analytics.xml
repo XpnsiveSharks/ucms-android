@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSurface"
+    android:background="@drawable/bg_grid"
     tools:context=".ui.common.AnalyticsFragment">
 
     <androidx.core.widget.NestedScrollView
@@ -16,39 +16,28 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/screen_padding">
+            android:padding="24dp">
 
             <!-- Header Section -->
-            <TextView
-                android:id="@+id/tvSystemTelemetry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:text="@string/system_telemetry"
-                android:textColor="@color/colorElevatedSession"
-                android:textSize="@dimen/text_size_label_caps"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <TextView
                 android:id="@+id/tvScreenTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/analytics"
-                android:textColor="@color/colorTextPrimary"
-                android:textSize="@dimen/text_size_h1"
+                android:layout_marginTop="16dp"
+                android:text="Analytics"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="28sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvSystemTelemetry" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Summary Cards Row -->
             <LinearLayout
                 android:id="@+id/llSummaryCards"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_xlarge"
+                android:layout_marginTop="32dp"
                 android:orientation="horizontal"
                 app:layout_constraintTop_toBottomOf="@id/tvScreenTitle">
 
@@ -57,12 +46,12 @@
                     android:id="@+id/cvResolutionRate"
                     android:layout_width="0dp"
                     android:layout_height="140dp"
-                    android:layout_marginEnd="@dimen/spacing_xsmall"
+                    android:layout_marginEnd="6dp"
                     android:layout_weight="1"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="0dp"
+                    app:cardBackgroundColor="?attr/colorRecentCardBg"
+                    app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
-                    app:strokeColor="@color/colorDivider"
+                    app:strokeColor="?attr/colorTicketCardStroke"
                     app:strokeWidth="1dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -73,14 +62,14 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="4dp"
-                            android:background="@color/colorTrendOrange"
+                            android:background="@color/dm_orange_peach"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:padding="@dimen/spacing_medium">
+                            android:padding="16dp">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -92,16 +81,16 @@
                                     android:layout_width="16dp"
                                     android:layout_height="16dp"
                                     android:src="@drawable/ic_resolution_rate"
-                                    app:tint="@color/colorTextSecondary" />
+                                    app:tint="?attr/colorTextSecondary" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="4dp"
                                     android:fontFamily="monospace"
-                                    android:text="@string/resolution_rate"
-                                    android:textColor="@color/colorTextSecondary"
-                                    android:textSize="@dimen/text_size_tiny"
+                                    android:text="RATE"
+                                    android:textColor="?attr/colorTextSecondary"
+                                    android:textSize="10sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
 
@@ -109,9 +98,9 @@
                                 android:id="@+id/tvResolutionRate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_small"
-                                android:textColor="@color/colorTextPrimary"
-                                android:textSize="28sp"
+                                android:layout_marginTop="8dp"
+                                android:textColor="?attr/colorOnSurface"
+                                android:textSize="24sp"
                                 android:textStyle="bold"
                                 tools:text="94.2%" />
 
@@ -119,12 +108,12 @@
                                 android:id="@+id/tvResolutionTrend"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_small"
+                                android:layout_marginTop="4dp"
                                 android:fontFamily="monospace"
-                                android:textColor="@color/colorTrendGreen"
-                                android:textSize="@dimen/text_size_tiny"
+                                android:textColor="@color/dm_mint_green"
+                                android:textSize="9sp"
                                 android:textStyle="bold"
-                                tools:text="+2.4% from last week" />
+                                tools:text="+2.4% last week" />
                         </LinearLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -134,12 +123,12 @@
                     android:id="@+id/cvAvgWaitTime"
                     android:layout_width="0dp"
                     android:layout_height="140dp"
-                    android:layout_marginStart="@dimen/spacing_xsmall"
+                    android:layout_marginStart="6dp"
                     android:layout_weight="1"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="0dp"
+                    app:cardBackgroundColor="?attr/colorRecentCardBg"
+                    app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
-                    app:strokeColor="@color/colorDivider"
+                    app:strokeColor="?attr/colorTicketCardStroke"
                     app:strokeWidth="1dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -150,14 +139,14 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="4dp"
-                            android:background="@color/colorPriorityHigh"
+                            android:background="@color/colorStatusInProgress"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:padding="@dimen/spacing_medium">
+                            android:padding="16dp">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -169,16 +158,16 @@
                                     android:layout_width="16dp"
                                     android:layout_height="16dp"
                                     android:src="@drawable/ic_avg_wait_time"
-                                    app:tint="@color/colorTextSecondary" />
+                                    app:tint="?attr/colorTextSecondary" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="4dp"
                                     android:fontFamily="monospace"
-                                    android:text="@string/avg_wait_time"
-                                    android:textColor="@color/colorTextSecondary"
-                                    android:textSize="@dimen/text_size_tiny"
+                                    android:text="WAIT"
+                                    android:textColor="?attr/colorTextSecondary"
+                                    android:textSize="10sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
 
@@ -186,9 +175,9 @@
                                 android:id="@+id/tvAvgWaitTime"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_small"
-                                android:textColor="@color/colorTextPrimary"
-                                android:textSize="28sp"
+                                android:layout_marginTop="8dp"
+                                android:textColor="?attr/colorOnSurface"
+                                android:textSize="24sp"
                                 android:textStyle="bold"
                                 tools:text="4.2h" />
 
@@ -196,12 +185,12 @@
                                 android:id="@+id/tvWaitTimeTrend"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_small"
+                                android:layout_marginTop="4dp"
                                 android:fontFamily="monospace"
-                                android:textColor="@color/colorTrendOrange"
-                                android:textSize="@dimen/text_size_tiny"
+                                android:textColor="@color/dm_orange_peach"
+                                android:textSize="9sp"
                                 android:textStyle="bold"
-                                tools:text="-1.1h from last week" />
+                                tools:text="-1.1h last week" />
                         </LinearLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -213,18 +202,18 @@
                 android:id="@+id/cvTicketVolume"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_xlarge"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="0dp"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="?attr/colorRecentCardBg"
+                app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
-                app:strokeColor="@color/colorDivider"
+                app:strokeColor="?attr/colorTicketCardStroke"
                 app:strokeWidth="1dp"
                 app:layout_constraintTop_toBottomOf="@id/llSummaryCards">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/spacing_xlarge">
+                    android:padding="24dp">
 
                     <LinearLayout
                         android:id="@+id/llVolumeHeader"
@@ -238,16 +227,17 @@
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:src="@drawable/ic_ticket_volume" />
+                            android:src="@drawable/ic_ticket_volume"
+                            app:tint="?attr/colorHomeSubmitButton" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:fontFamily="monospace"
-                            android:text="@string/ticket_volume_7_days"
-                            android:textColor="@color/colorTextSecondary"
-                            android:textSize="@dimen/text_size_tiny"
+                            android:text="TICKET VOLUME (7D)"
+                            android:textColor="?attr/colorTextSecondary"
+                            android:textSize="10sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -256,7 +246,7 @@
                         android:id="@+id/llMockChart"
                         android:layout_width="match_parent"
                         android:layout_height="160dp"
-                        android:layout_marginTop="@dimen/spacing_xlarge"
+                        android:layout_marginTop="24dp"
                         android:gravity="bottom"
                         android:orientation="horizontal"
                         app:layout_constraintTop_toBottomOf="@id/llVolumeHeader">
@@ -280,11 +270,11 @@
                 android:id="@+id/tvCategoryBreakdownLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_xlarge"
+                android:layout_marginTop="32dp"
                 android:fontFamily="monospace"
-                android:text="@string/category_breakdown_label"
-                android:textColor="@color/colorTextSecondary"
-                android:textSize="@dimen/text_size_tiny"
+                android:text="[ CATEGORY DISTRIBUTION ]"
+                android:textColor="?attr/colorTextSecondary"
+                android:textSize="11sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cvTicketVolume" />
 
@@ -293,7 +283,7 @@
                 android:id="@+id/rvCategoryBreakdown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_medium"
+                android:layout_marginTop="12dp"
                 android:nestedScrollingEnabled="false"
                 app:layout_constraintTop_toBottomOf="@id/tvCategoryBreakdownLabel"
                 tools:itemCount="4"
@@ -308,6 +298,11 @@
                 app:layout_constraintTop_toBottomOf="@id/tvScreenTitle">
                 <include layout="@layout/shimmer_analytics" />
             </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                app:layout_constraintTop_toBottomOf="@id/rvCategoryBreakdown" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

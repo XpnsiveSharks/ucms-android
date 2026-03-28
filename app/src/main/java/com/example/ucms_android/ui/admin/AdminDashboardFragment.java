@@ -17,12 +17,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ucms_android.R;
 import com.example.ucms_android.model.ApiResponse;
+import com.example.ucms_android.model.Notification;
 import com.example.ucms_android.model.Ticket;
+import com.example.ucms_android.model.User;
 import com.example.ucms_android.network.ApiClient;
+import com.example.ucms_android.network.NotificationService;
 import com.example.ucms_android.network.TicketService;
+import com.example.ucms_android.network.UserService;
 import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.MainActivity;
 import com.example.ucms_android.ui.common.AnalyticsFragment;
+import com.example.ucms_android.ui.student.NotificationsActivity;
 import com.example.ucms_android.ui.adapter.RecentTicketAdapter;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -49,6 +54,8 @@ public class AdminDashboardFragment extends Fragment {
     private TicketService ticketService;
     private SessionManager sessionManager;
     private Gson gson;
+    private TextView tvAvatarSmall;
+    private View viewNotificationBadge;
 
     @Nullable
     @Override
@@ -67,6 +74,15 @@ public class AdminDashboardFragment extends Fragment {
         rvRecentTickets = view.findViewById(R.id.rvRecentTickets);
         shimmerRecentTickets = view.findViewById(R.id.shimmerRecentTickets);
         tvEmptyRecent = view.findViewById(R.id.tvEmptyRecent);
+        tvAvatarSmall = view.findViewById(R.id.tvAvatarSmall);
+        viewNotificationBadge = view.findViewById(R.id.viewNotificationBadge);
+
+        View flNotification = view.findViewById(R.id.flNotification);
+        if (flNotification != null) {
+            flNotification.setOnClickListener(v -> {
+                startActivity(new Intent(requireContext(), NotificationsActivity.class));
+            });
+        }
 
         view.findViewById(R.id.btnTelemetry).setOnClickListener(v -> {
             if (getActivity() instanceof MainActivity) {
@@ -88,6 +104,28 @@ public class AdminDashboardFragment extends Fragment {
         sessionManager = new SessionManager(requireContext());
         gson = new Gson();
 
+        // Load cached initials
+        String cachedName = sessionManager.getCachedName();
+        if (!cachedName.isEmpty()) {
+            if (tvAvatarSmall != null) tvAvatarSmall.setText(getInitials(cachedName));
+        }
+
+        // Fetch live user data for avatar
+        UserService userService = ApiClient.getInstance(requireContext()).create(UserService.class);
+        userService.getMe().enqueue(new Callback<ApiResponse<User>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<User>> call, @NonNull Response<ApiResponse<User>> response) {
+                if (isAdded() && response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    String name = response.body().getData().getName();
+                    if (name != null && tvAvatarSmall != null) {
+                        tvAvatarSmall.setText(getInitials(name));
+                    }
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<User>> call, @NonNull Throwable t) {}
+        });
+
         adapter = new RecentTicketAdapter(ticket -> {
             Intent intent = new Intent(requireActivity(), AdminTicketDetailActivity.class);
             intent.putExtra("ticketId", ticket.getId());
@@ -98,12 +136,39 @@ public class AdminDashboardFragment extends Fragment {
 
         loadFromCache();
         loadTickets();
+        loadUnreadCount();
+    }
+
+    private String getInitials(String name) {
+        if (name == null || name.trim().isEmpty()) return "AD";
+        String[] parts = name.trim().split("\\s+");
+        if (parts.length == 1) return parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase();
+        return (parts[0].charAt(0) + "" + parts[parts.length - 1].charAt(0)).toUpperCase();
+    }
+
+    private void loadUnreadCount() {
+        if (!isAdded()) return;
+        NotificationService notificationService = ApiClient.getInstance(requireContext()).create(NotificationService.class);
+        notificationService.getNotifications().enqueue(new Callback<ApiResponse<List<Notification>>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<List<Notification>>> call, @NonNull Response<ApiResponse<List<Notification>>> response) {
+                if (isAdded() && response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    long unread = response.body().getData().stream().filter(n -> !n.isRead()).count();
+                    if (viewNotificationBadge != null) {
+                        viewNotificationBadge.setVisibility(unread > 0 ? View.VISIBLE : View.GONE);
+                    }
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<List<Notification>>> call, @NonNull Throwable t) {}
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
         loadTickets();
+        loadUnreadCount();
     }
 
     private void loadTickets() {
@@ -164,9 +229,6 @@ public class AdminDashboardFragment extends Fragment {
             case "LOADING":
                 shimmerRecentTickets.setVisibility(View.VISIBLE);
                 shimmerRecentTickets.startShimmer();
-                tvTotalTickets.setText("--");
-                tvPendingCount.setText("--");
-                tvResolvedCount.setText("--");
                 break;
             case "EMPTY":
                 tvEmptyRecent.setVisibility(View.VISIBLE);
@@ -184,7 +246,7 @@ public class AdminDashboardFragment extends Fragment {
 
         for (Ticket ticket : tickets) {
             if ("PENDING".equalsIgnoreCase(ticket.getStatus())) pending++;
-            else if ("RESOLVED".equalsIgnoreCase(ticket.getStatus())) resolved++;
+            else if ("RESOLVED".equalsIgnoreCase(ticket.getStatus()) || "CLOSED".equalsIgnoreCase(ticket.getStatus())) resolved++;
         }
 
         tvTotalTickets.setText(String.valueOf(total));
