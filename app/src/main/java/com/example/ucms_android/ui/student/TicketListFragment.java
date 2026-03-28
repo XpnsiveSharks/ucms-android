@@ -138,12 +138,14 @@ public class TicketListFragment extends Fragment {
     }
 
     private void updateTabs() {
-        int colorPrimary = getResources().getColor(R.color.colorPrimary, null);
-        int colorSecondary = getResources().getColor(R.color.colorTextSecondary, null);
+        android.util.TypedValue typedValue = new android.util.TypedValue();
+        requireContext().getTheme().resolveAttribute(R.attr.colorHomeSubmitButton, typedValue, true);
+        int colorSelected = typedValue.data;
+        int colorUnselected = getResources().getColor(R.color.colorTextSecondary, null);
 
-        tabAll.setTextColor("ALL".equals(statusFilter) ? colorPrimary : colorSecondary);
-        tabInProgress.setTextColor("IN_PROGRESS".equals(statusFilter) ? colorPrimary : colorSecondary);
-        tabResolved.setTextColor("RESOLVED".equals(statusFilter) ? colorPrimary : colorSecondary);
+        tabAll.setTextColor("ALL".equals(statusFilter) ? colorSelected : colorUnselected);
+        tabInProgress.setTextColor("IN_PROGRESS".equals(statusFilter) ? colorSelected : colorUnselected);
+        tabResolved.setTextColor("RESOLVED".equals(statusFilter) ? colorSelected : colorUnselected);
 
         tabIndicator.post(() -> {
             TextView activeTab = tabAll;

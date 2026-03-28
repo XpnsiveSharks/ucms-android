@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/spacing_medium"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="?attr/colorRecentCardBg"
     app:cardCornerRadius="0dp"
     app:cardElevation="0dp"
-    app:strokeColor="@color/colorDivider"
+    app:strokeColor="?attr/colorRecentCardStroke"
     app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,25 +19,17 @@
         <!-- Ticket number badge -->
         <TextView
             android:id="@+id/tvTicketNumber"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_ticket_number"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
+            android:background="@drawable/bg_badge_ticket_id"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
             android:fontFamily="monospace"
-            android:textColor="@color/white"
+            android:textColor="?attr/colorRecentTicketIdText"
             android:textSize="11sp"
             android:textStyle="bold"
-            android:ellipsize="end"
-            android:singleLine="true"
-            app:layout_constraintEnd_toStartOf="@id/layoutStatusChips"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_default="wrap"
             tools:text="TKT-20260315-0004" />
 
         <!-- Status & Priority Badges -->
@@ -48,15 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tvTicketNumber"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/barrierHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="bottom"
-            app:constraint_referenced_ids="tvTicketNumber,layoutStatusChips" />
 
         <!-- Ticket Title -->
         <TextView
@@ -64,12 +48,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textColor="@color/colorTextPrimary"
+            android:textColor="?attr/colorRecentTitleText"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/barrierHeader"
+            app:layout_constraintTop_toBottomOf="@id/tvTicketNumber"
             tools:text="nawawalang bag" />
 
         <!-- Footer: Category and Time -->
@@ -80,8 +64,9 @@
             android:layout_marginTop="16dp"
             android:fontFamily="monospace"
             android:textAllCaps="true"
-            android:textColor="@color/colorTextSecondary"
+            android:textColor="?attr/colorRecentStatusText"
             android:textSize="11sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tvTime"
             app:layout_constraintStart_toStartOf="parent"
@@ -93,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
-            android:textColor="@color/colorTextSecondary"
+            android:textColor="?attr/colorRecentStatusText"
             android:textSize="11sp"
             app:layout_constraintBottom_toBottomOf="@id/tvCategory"
             app:layout_constraintEnd_toEndOf="parent"

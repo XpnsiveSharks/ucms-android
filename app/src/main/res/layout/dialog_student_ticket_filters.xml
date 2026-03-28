@@ -4,18 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/white"
-    android:padding="20dp">
-
-    <!-- Top Orange Border -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:background="@color/colorPrimary"
-        android:layout_marginTop="-20dp"
-        android:layout_marginStart="-20dp"
-        android:layout_marginEnd="-20dp"
-        android:layout_marginBottom="16dp" />
+    android:background="?attr/colorInputBackground"
+    android:padding="24dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -25,8 +15,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="[ QUERY PARAMETERS ]"
-            android:textColor="@color/colorPrimary"
+            android:text="[ FILTER BY ]"
+            android:textColor="?attr/colorHomeSubmitButton"
             android:textSize="12sp"
             android:letterSpacing="0.15"
             android:fontFamily="monospace"
@@ -34,22 +24,22 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/btnClose"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            app:cardBackgroundColor="@color/colorSurface"
-            app:cardCornerRadius="0dp"
+            app:cardBackgroundColor="?attr/colorHomeGridBg"
+            app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:strokeColor="@color/colorDivider"
+            app:strokeColor="?attr/colorTicketCardStroke"
             app:strokeWidth="1dp">
 
             <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_close"
-                app:tint="@color/colorTextSecondary" />
+                app:tint="?attr/colorTextSecondary" />
         </com.google.android.material.card.MaterialCardView>
 
     </RelativeLayout>
@@ -57,7 +47,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -73,31 +63,34 @@
                 android:textSize="10sp"
                 android:letterSpacing="0.1"
                 android:fontFamily="monospace"
-                android:textColor="@color/colorTextSecondary"
+                android:textColor="?attr/colorTextSecondary"
+                android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:endIconMode="dropdown_menu"
-                app:endIconTint="@color/colorPrimary"
-                app:boxBackgroundColor="@color/colorSurface"
-                app:boxStrokeColor="@color/colorDivider"
-                app:boxCornerRadiusTopStart="0dp"
-                app:boxCornerRadiusTopEnd="0dp"
-                app:boxCornerRadiusBottomStart="0dp"
-                app:boxCornerRadiusBottomEnd="0dp"
+                app:endIconTint="?attr/colorHomeSubmitButton"
+                app:boxBackgroundColor="?attr/colorHomeGridBg"
+                app:boxStrokeColor="?attr/colorTicketCardStroke"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
                 app:hintEnabled="false">
 
                 <AutoCompleteTextView
                     android:id="@+id/dropStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="12dp"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
                     android:textSize="12sp"
                     android:fontFamily="monospace"
-                    android:textColor="@color/colorTextPrimary"
+                    android:textColor="?attr/colorInputText"
                     android:focusable="false"
                     android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -120,31 +113,34 @@
                 android:textSize="10sp"
                 android:letterSpacing="0.1"
                 android:fontFamily="monospace"
-                android:textColor="@color/colorTextSecondary"
+                android:textColor="?attr/colorTextSecondary"
+                android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:endIconMode="dropdown_menu"
-                app:endIconTint="@color/colorPrimary"
-                app:boxBackgroundColor="@color/colorSurface"
-                app:boxStrokeColor="@color/colorDivider"
-                app:boxCornerRadiusTopStart="0dp"
-                app:boxCornerRadiusTopEnd="0dp"
-                app:boxCornerRadiusBottomStart="0dp"
-                app:boxCornerRadiusBottomEnd="0dp"
+                app:endIconTint="?attr/colorHomeSubmitButton"
+                app:boxBackgroundColor="?attr/colorHomeGridBg"
+                app:boxStrokeColor="?attr/colorTicketCardStroke"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
                 app:hintEnabled="false">
 
                 <AutoCompleteTextView
                     android:id="@+id/dropSortBy"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="12dp"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
                     android:textSize="12sp"
                     android:fontFamily="monospace"
-                    android:textColor="@color/colorTextPrimary"
+                    android:textColor="?attr/colorInputText"
                     android:focusable="false"
                     android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -170,31 +166,34 @@
                 android:textSize="10sp"
                 android:letterSpacing="0.1"
                 android:fontFamily="monospace"
-                android:textColor="@color/colorTextSecondary"
+                android:textColor="?attr/colorTextSecondary"
+                android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:endIconMode="dropdown_menu"
-                app:endIconTint="@color/colorPrimary"
-                app:boxBackgroundColor="@color/colorSurface"
-                app:boxStrokeColor="@color/colorDivider"
-                app:boxCornerRadiusTopStart="0dp"
-                app:boxCornerRadiusTopEnd="0dp"
-                app:boxCornerRadiusBottomStart="0dp"
-                app:boxCornerRadiusBottomEnd="0dp"
+                app:endIconTint="?attr/colorHomeSubmitButton"
+                app:boxBackgroundColor="?attr/colorHomeGridBg"
+                app:boxStrokeColor="?attr/colorTicketCardStroke"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
                 app:hintEnabled="false">
 
                 <AutoCompleteTextView
                     android:id="@+id/dropCategory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="12dp"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
                     android:textSize="12sp"
                     android:fontFamily="monospace"
-                    android:textColor="@color/colorTextPrimary"
+                    android:textColor="?attr/colorInputText"
                     android:focusable="false"
                     android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -213,35 +212,38 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ADMIN RESPONSE"
+                android:text="ADMIN REPLY"
                 android:textSize="10sp"
                 android:letterSpacing="0.1"
                 android:fontFamily="monospace"
-                android:textColor="@color/colorTextSecondary"
+                android:textColor="?attr/colorTextSecondary"
+                android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:endIconMode="dropdown_menu"
-                app:endIconTint="@color/colorPrimary"
-                app:boxBackgroundColor="@color/colorSurface"
-                app:boxStrokeColor="@color/colorDivider"
-                app:boxCornerRadiusTopStart="0dp"
-                app:boxCornerRadiusTopEnd="0dp"
-                app:boxCornerRadiusBottomStart="0dp"
-                app:boxCornerRadiusBottomEnd="0dp"
+                app:endIconTint="?attr/colorHomeSubmitButton"
+                app:boxBackgroundColor="?attr/colorHomeGridBg"
+                app:boxStrokeColor="?attr/colorTicketCardStroke"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
                 app:hintEnabled="false">
 
                 <AutoCompleteTextView
                     android:id="@+id/dropAdminResponse"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="12dp"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
                     android:textSize="12sp"
                     android:fontFamily="monospace"
-                    android:textColor="@color/colorTextPrimary"
+                    android:textColor="?attr/colorInputText"
                     android:focusable="false"
                     android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -261,31 +263,34 @@
             android:textSize="10sp"
             android:letterSpacing="0.1"
             android:fontFamily="monospace"
-            android:textColor="@color/colorTextSecondary"
+            android:textColor="?attr/colorTextSecondary"
+            android:textStyle="bold"
             android:layout_marginBottom="8dp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:endIconMode="dropdown_menu"
-            app:endIconTint="@color/colorPrimary"
-            app:boxBackgroundColor="@color/colorSurface"
-            app:boxStrokeColor="@color/colorDivider"
-            app:boxCornerRadiusTopStart="0dp"
-            app:boxCornerRadiusTopEnd="0dp"
-            app:boxCornerRadiusBottomStart="0dp"
-            app:boxCornerRadiusBottomEnd="0dp"
+            app:endIconTint="?attr/colorHomeSubmitButton"
+            app:boxBackgroundColor="?attr/colorHomeGridBg"
+            app:boxStrokeColor="?attr/colorTicketCardStroke"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
             app:hintEnabled="false">
 
             <AutoCompleteTextView
                 android:id="@+id/dropDateRange"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingStart="20dp"
+                android:paddingEnd="12dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:textSize="12sp"
                 android:fontFamily="monospace"
-                android:textColor="@color/colorTextPrimary"
+                android:textColor="?attr/colorInputText"
                 android:focusable="false"
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -294,23 +299,24 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="40dp"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnResetFilters"
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="0dp"
-            android:layout_height="52dp"
+            android:layout_height="56dp"
             android:layout_weight="1"
             android:text="RESET"
             android:textAllCaps="true"
             android:letterSpacing="0.1"
-            android:textSize="12sp"
-            android:textColor="@color/colorTextSecondary"
-            app:strokeColor="@color/colorDivider"
-            app:backgroundTint="@color/colorSurface"
-            app:cornerRadius="0dp" />
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorTextSecondary"
+            app:strokeColor="?attr/colorTicketCardStroke"
+            app:backgroundTint="@android:color/transparent"
+            app:cornerRadius="16dp" />
 
         <Space
             android:layout_width="16dp"
@@ -319,15 +325,16 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnApplyFilters"
             android:layout_width="0dp"
-            android:layout_height="52dp"
+            android:layout_height="56dp"
             android:layout_weight="1"
-            android:text="EXECUTE QUERY"
+            android:text="EXECUTE"
             android:textAllCaps="true"
             android:letterSpacing="0.1"
-            android:textSize="12sp"
+            android:textSize="13sp"
             android:textStyle="bold"
-            app:backgroundTint="@color/colorPrimary"
-            app:cornerRadius="0dp" />
+            android:textColor="#2B130A"
+            app:backgroundTint="?attr/colorHomeSubmitButton"
+            app:cornerRadius="16dp" />
     </LinearLayout>
 
 </LinearLayout>

@@ -52,13 +52,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
         holder.tvCategory.setText(ticket.getCategoryName());
         holder.tvTime.setText(DateFormatter.formatRelativeTime(ticket.getCreatedAt()));
 
-        // Apply ticket number background based on status
-        if ("RESOLVED".equalsIgnoreCase(ticket.getStatus())) {
-            holder.tvTicketNumber.setBackgroundResource(R.drawable.bg_ticket_number_resolved);
-        } else {
-            holder.tvTicketNumber.setBackgroundResource(R.drawable.bg_ticket_number);
-        }
-
+        // Respect XML background (theme-aware bg_badge_ticket_id)
         // Use reusable helper for status and priority chips
         StatusChipHelper.applyStatusBadge(holder.tvStatus, ticket);
         
