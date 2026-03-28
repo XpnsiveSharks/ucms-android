@@ -146,9 +146,9 @@ public class SubmitTicketFragment extends Fragment {
                     categories = response.body().getData();
                     ArrayAdapter<Category> adapter = new ArrayAdapter<>(
                             requireContext(),
-                            android.R.layout.simple_spinner_item,
+                            R.layout.item_spinner_category,
                             categories);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    adapter.setDropDownViewResource(R.layout.item_spinner_category_dropdown);
                     spinnerCategory.setAdapter(adapter);
                 } else if (isAdded()) {
                     Toast.makeText(requireContext(),
