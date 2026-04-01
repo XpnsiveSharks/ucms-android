@@ -180,22 +180,29 @@ public class AdminDashboardFragment extends Fragment {
 
         int maxBarHeightDp = 140;
         int[] barColors = {
-            0xFFFF4500, // colorOrange
-            0xFFFF8F6B, // dm_orange_peach
-            0xFF92CD28, // colorSecondary
-            0xFF36B37E, // colorStatusResolved
-            0xFFF2C94C, // colorPriorityHigh
-            0xFF56CCF2, // Light Blue
-            0xFFBB6BD9  // Purple
+            0xFFF77F00, // colorTrendOrange
+            0xFFFCBF49, // yellow
+            0xFF10B981, // green
+            0xFF2196F3, // blue
+            0xFF9C27B0, // purple
+            0xFF56CCF2, // light blue
+            0xFFBB6BD9  // lavender
         };
 
         LayoutInflater inflater = LayoutInflater.from(requireContext());
+        View.OnClickListener goToAnalytics = v -> {
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).loadFragment(new AnalyticsFragment());
+                BottomNavigationView nav = getActivity().findViewById(R.id.bottomNavView);
+                if (nav != null) nav.setSelectedItemId(R.id.nav_admin_analytics);
+            }
+        };
 
         for (int i = 0; i < sorted.size(); i++) {
             CategoryCount data = sorted.get(i);
             
             View barItem = inflater.inflate(R.layout.item_chart_bar, llCategoryChart, false);
-            View vBar = barItem.findViewById(R.id.vBar);
+            ThreeDBarView vBar = barItem.findViewById(R.id.vBar);
             TextView tvDay = barItem.findViewById(R.id.tvDay);
 
             if (vBar != null && tvDay != null) {
@@ -206,12 +213,14 @@ public class AdminDashboardFragment extends Fragment {
                 params.height = dpToPx(heightDp);
                 vBar.setLayoutParams(params);
                 
-                // Set the tint for the 3D background
-                vBar.setBackgroundTintList(android.content.res.ColorStateList.valueOf(barColors[i % barColors.length]));
+                vBar.setBarColor(barColors[i % barColors.length]);
                 
                 String label = data.getCategoryName();
                 if (label.length() > 6) label = label.substring(0, 6).toUpperCase();
                 tvDay.setText(label);
+
+                // Make individual bars clickable too just in case scrollview consumes parent touches
+                barItem.setOnClickListener(goToAnalytics);
             }
 
             llCategoryChart.addView(barItem);

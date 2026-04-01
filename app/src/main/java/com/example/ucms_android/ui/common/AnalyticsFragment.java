@@ -91,15 +91,15 @@ public class AnalyticsFragment extends Fragment {
             if (v.getTicketCount() > maxCount) maxCount = v.getTicketCount();
         }
 
-        int maxBarHeightDp = 160; 
+        int maxBarHeightDp = 180; 
         int[] barColors = {
-            0xFFFF4500, // colorOrange
-            0xFFFF8F6B, // dm_orange_peach
-            0xFF92CD28, // colorSecondary
-            0xFF36B37E, // colorStatusResolved
-            0xFFF2C94C, // colorPriorityHigh
-            0xFF56CCF2, // Light Blue
-            0xFFBB6BD9  // Purple
+            0xFFF77F00, // colorTrendOrange
+            0xFFFCBF49, // yellow
+            0xFF10B981, // green
+            0xFF2196F3, // blue
+            0xFF9C27B0, // purple
+            0xFF56CCF2, // light blue
+            0xFFBB6BD9  // lavender
         };
 
         LayoutInflater inflater = LayoutInflater.from(requireContext());
