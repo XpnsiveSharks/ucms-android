@@ -2,6 +2,7 @@ package com.example.ucms_android.ui.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ucms_android.R;
 import com.example.ucms_android.model.ApiResponse;
+import com.example.ucms_android.model.CategoryCount;
 import com.example.ucms_android.model.Notification;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.model.User;
@@ -36,6 +38,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -45,11 +48,13 @@ import retrofit2.Response;
 public class AdminDashboardFragment extends Fragment {
 
     private TextView tvTotalTickets;
+    private TextView tvUnresolvedCount;
     private TextView tvPendingCount;
     private TextView tvResolvedCount;
     private ShimmerFrameLayout shimmerRecentTickets;
     private TextView tvEmptyRecent;
     private RecyclerView rvRecentTickets;
+    private ViewGroup llCategoryChart;
     private RecentTicketAdapter adapter;
     private TicketService ticketService;
     private SessionManager sessionManager;
@@ -69,6 +74,7 @@ public class AdminDashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         tvTotalTickets = view.findViewById(R.id.tvTotalTickets);
+        tvUnresolvedCount = view.findViewById(R.id.tvUnresolvedCount);
         tvPendingCount = view.findViewById(R.id.tvPendingCount);
         tvResolvedCount = view.findViewById(R.id.tvResolvedCount);
         rvRecentTickets = view.findViewById(R.id.rvRecentTickets);
@@ -76,6 +82,7 @@ public class AdminDashboardFragment extends Fragment {
         tvEmptyRecent = view.findViewById(R.id.tvEmptyRecent);
         tvAvatarSmall = view.findViewById(R.id.tvAvatarSmall);
         viewNotificationBadge = view.findViewById(R.id.viewNotificationBadge);
+        llCategoryChart = view.findViewById(R.id.llCategoryChart);
 
         View flNotification = view.findViewById(R.id.flNotification);
         if (flNotification != null) {
@@ -83,14 +90,6 @@ public class AdminDashboardFragment extends Fragment {
                 startActivity(new Intent(requireContext(), NotificationsActivity.class));
             });
         }
-
-        view.findViewById(R.id.btnTelemetry).setOnClickListener(v -> {
-            if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).loadFragment(new AnalyticsFragment());
-                BottomNavigationView nav = getActivity().findViewById(R.id.bottomNavView);
-                if (nav != null) nav.setSelectedItemId(R.id.nav_admin_analytics);
-            }
-        });
 
         view.findViewById(R.id.tvViewAll).setOnClickListener(v -> {
             if (getActivity() instanceof MainActivity) {
@@ -137,6 +136,76 @@ public class AdminDashboardFragment extends Fragment {
         loadFromCache();
         loadTickets();
         loadUnreadCount();
+        fetchCategoryAnalytics();
+    }
+
+    private void fetchCategoryAnalytics() {
+        ticketService.getAnalyticsByCategory().enqueue(new Callback<ApiResponse<List<CategoryCount>>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<List<CategoryCount>>> call, @NonNull Response<ApiResponse<List<CategoryCount>>> response) {
+                if (isAdded() && response.isSuccessful() && response.body() != null) {
+                    bindCategoryChart(response.body().getData());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<List<CategoryCount>>> call, @NonNull Throwable t) {}
+        });
+    }
+
+    private void bindCategoryChart(List<CategoryCount> categories) {
+        if (categories == null || categories.isEmpty() || llCategoryChart == null) return;
+
+        // Take top 5
+        List<CategoryCount> top5 = new ArrayList<>(categories);
+        Collections.sort(top5, (c1, c2) -> Long.compare(c2.getTicketCount(), c1.getTicketCount()));
+        if (top5.size() > 5) top5 = top5.subList(0, 5);
+
+        long maxCount = 0;
+        for (CategoryCount v : top5) {
+            if (v.getTicketCount() > maxCount) maxCount = v.getTicketCount();
+        }
+
+        int maxBarHeightDp = 140;
+        int[] barColors = {
+            0xFF92CD28, // Green
+            0xFFB6EE56, // Light Green
+            0xFFE4FF7F, // Lighter Green
+            0xFFFF4500, // Orange
+            0xFFFF8F6B  // Peach
+        };
+
+        for (int i = 0; i < llCategoryChart.getChildCount(); i++) {
+            if (i >= top5.size()) {
+                llCategoryChart.getChildAt(i).setVisibility(View.GONE);
+                continue;
+            }
+
+            View barItem = llCategoryChart.getChildAt(i);
+            barItem.setVisibility(View.VISIBLE);
+            View vBar = barItem.findViewById(R.id.vBar);
+            TextView tvDay = barItem.findViewById(R.id.tvDay); // Label
+
+            CategoryCount data = top5.get(i);
+
+            if (vBar != null && tvDay != null) {
+                ViewGroup.LayoutParams params = vBar.getLayoutParams();
+                int heightDp = maxCount > 0 ? (int) (maxBarHeightDp * (data.getTicketCount() / (double) maxCount)) : 0;
+                if (data.getTicketCount() > 0) heightDp = Math.max(heightDp, 10);
+
+                params.height = dpToPx(heightDp);
+                vBar.setLayoutParams(params);
+                vBar.setBackgroundColor(barColors[i % barColors.length]);
+                
+                String label = data.getCategoryName();
+                if (label.length() > 4) label = label.substring(0, 4).toUpperCase();
+                tvDay.setText(label);
+            }
+        }
+    }
+
+    private int dpToPx(int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
     }
 
     private String getInitials(String name) {
@@ -169,6 +238,7 @@ public class AdminDashboardFragment extends Fragment {
         super.onResume();
         loadTickets();
         loadUnreadCount();
+        fetchCategoryAnalytics();
     }
 
     private void loadTickets() {
@@ -243,13 +313,25 @@ public class AdminDashboardFragment extends Fragment {
         int total = tickets.size();
         int pending = 0;
         int resolved = 0;
+        int unresolved = 0;
 
         for (Ticket ticket : tickets) {
-            if ("PENDING".equalsIgnoreCase(ticket.getStatus())) pending++;
-            else if ("RESOLVED".equalsIgnoreCase(ticket.getStatus()) || "CLOSED".equalsIgnoreCase(ticket.getStatus())) resolved++;
+            String status = ticket.getStatus();
+            if ("PENDING".equalsIgnoreCase(status)) {
+                pending++;
+                unresolved++;
+            } else if ("IN_PROGRESS".equalsIgnoreCase(status)) {
+                unresolved++;
+            } else if ("RESOLVED".equalsIgnoreCase(status) || "CLOSED".equalsIgnoreCase(status)) {
+                resolved++;
+            } else {
+                // Other statuses like REJECTED might still be considered unresolved until CLOSED
+                unresolved++;
+            }
         }
 
         tvTotalTickets.setText(String.valueOf(total));
+        tvUnresolvedCount.setText(String.valueOf(unresolved));
         tvPendingCount.setText(String.valueOf(pending));
         tvResolvedCount.setText(String.valueOf(resolved));
 

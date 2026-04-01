@@ -20,11 +20,11 @@
         <item name="colorTextSecondary">@color/dm_text_secondary</item>
 
         <!-- Home Screen Attributes (Dark Mode - The Muted Palette) -->
-        <item name="colorHomeTotalTicketsBg">@color/dm_card_bg</item>
-        <item name="colorHomeTotalTicketsStroke">@color/dm_orange_peach</item>
-        <item name="colorHomeTotalTicketsText">@color/dm_orange_peach</item>
-        <item name="colorHomeTotalTicketsCount">@color/dm_text_primary</item>
-        <item name="colorHomeTotalTicketsIcon">@color/dm_orange_peach</item>
+        <item name="colorHomeTotalTicketsBg">@color/dm_mint_green</item>
+        <item name="colorHomeTotalTicketsStroke">@color/dm_mint_green</item>
+        <item name="colorHomeTotalTicketsText">@color/dm_background</item>
+        <item name="colorHomeTotalTicketsCount">@color/dm_background</item>
+        <item name="colorHomeTotalTicketsIcon">@color/dm_background</item>
         <item name="colorHomeSubmitButton">@color/dm_orange_peach</item>
         <item name="colorHomeSubmitButtonGlow">@color/dm_orange_glow</item>
         <item name="colorHomeSubmitButtonTint">#0DFF8F6B</item>
