@@ -58,7 +58,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <!-- Top Accent -->
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="4dp"
@@ -135,7 +134,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <!-- Top Accent -->
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="4dp"
@@ -197,14 +195,14 @@
 
             </LinearLayout>
 
-            <!-- Ticket Volume Card -->
+            <!-- 3D Category Distribution Chart -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cvTicketVolume"
+                android:id="@+id/cvCategoryTrends"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:cardBackgroundColor="?attr/colorRecentCardBg"
-                app:cardCornerRadius="12dp"
+                app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeColor="?attr/colorTicketCardStroke"
                 app:strokeWidth="1dp"
@@ -216,7 +214,7 @@
                     android:padding="24dp">
 
                     <LinearLayout
-                        android:id="@+id/llVolumeHeader"
+                        android:id="@+id/llTrendsHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -227,7 +225,7 @@
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:src="@drawable/ic_ticket_volume"
+                            android:src="@drawable/ic_analytics"
                             app:tint="?attr/colorHomeSubmitButton" />
 
                         <TextView
@@ -235,48 +233,102 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:fontFamily="monospace"
-                            android:text="TICKET VOLUME (7D)"
+                            android:text="CATEGORY DISTRIBUTION"
                             android:textColor="?attr/colorTextSecondary"
                             android:textSize="10sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
-                    <!-- Mock Bar Chart -->
-                    <LinearLayout
-                        android:id="@+id/llMockChart"
+                    <!-- Chart Container -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/chartContainer"
                         android:layout_width="match_parent"
-                        android:layout_height="160dp"
-                        android:layout_marginTop="24dp"
-                        android:gravity="bottom"
-                        android:orientation="horizontal"
-                        app:layout_constraintTop_toBottomOf="@id/llVolumeHeader">
+                        android:layout_height="220dp"
+                        android:layout_marginTop="32dp"
+                        app:layout_constraintTop_toBottomOf="@id/llTrendsHeader">
 
-                        <!-- Bars with days -->
-                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+                        <!-- Numerical Labels -->
+                        <TextView
+                            android:layout_width="24dp"
+                            android:layout_height="wrap_content"
+                            android:text="100"
+                            android:textSize="8sp"
+                            android:textColor="?attr/colorTextSecondary"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                    </LinearLayout>
+                        <TextView
+                            android:layout_width="24dp"
+                            android:layout_height="wrap_content"
+                            android:text="50"
+                            android:textSize="8sp"
+                            android:textColor="?attr/colorTextSecondary"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginBottom="32dp"/>
+
+                        <TextView
+                            android:layout_width="24dp"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="8sp"
+                            android:textColor="?attr/colorTextSecondary"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_marginBottom="44dp" />
+
+                        <!-- Chart Frame (Grid Lines + Bars) -->
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="28dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent">
+
+                            <!-- Grid Lines View -->
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginBottom="44dp"
+                                android:background="@drawable/bg_chart_grid_lines" />
+
+                            <!-- Scrollable Bars Container -->
+                            <HorizontalScrollView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scrollbars="none"
+                                android:fadeScrollbars="true">
+
+                                <LinearLayout
+                                    android:id="@+id/llCategoryChart"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="bottom"
+                                    android:orientation="horizontal"
+                                    android:paddingEnd="16dp">
+                                    <!-- Bars will be added dynamically -->
+                                </LinearLayout>
+                            </HorizontalScrollView>
+                        </FrameLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Category Breakdown Section -->
+            <!-- Category Table Label -->
             <TextView
                 android:id="@+id/tvCategoryBreakdownLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:fontFamily="monospace"
-                android:text="[ CATEGORY DISTRIBUTION ]"
+                android:text="[ DETAILED BREAKDOWN ]"
                 android:textColor="?attr/colorTextSecondary"
                 android:textSize="11sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cvTicketVolume" />
+                app:layout_constraintTop_toBottomOf="@id/cvCategoryTrends" />
 
             <!-- Category List -->
             <androidx.recyclerview.widget.RecyclerView

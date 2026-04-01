@@ -1,10 +1,12 @@
 package com.example.ucms_android.ui.common;
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +43,7 @@ public class AnalyticsFragment extends Fragment {
     private TextView tvAvgWaitTime;
     private TextView tvWaitTimeTrend;
     private RecyclerView rvCategoryBreakdown;
-    private ViewGroup llMockChart;
+    private ViewGroup llCategoryChart;
 
     private AnalyticsService analyticsService;
     private CategoryBreakdownAdapter adapter;
@@ -64,7 +66,7 @@ public class AnalyticsFragment extends Fragment {
         tvAvgWaitTime = view.findViewById(R.id.tvAvgWaitTime);
         tvWaitTimeTrend = view.findViewById(R.id.tvWaitTimeTrend);
         rvCategoryBreakdown = view.findViewById(R.id.rvCategoryBreakdown);
-        llMockChart = view.findViewById(R.id.llMockChart);
+        llCategoryChart = view.findViewById(R.id.llCategoryChart);
 
         analyticsService = ApiClient.getInstance(requireContext()).create(AnalyticsService.class);
         
@@ -75,38 +77,62 @@ public class AnalyticsFragment extends Fragment {
         fetchAnalytics();
     }
 
-    private void bindChart(List<DailyTicketVolume> volume) {
-        if (volume == null || volume.isEmpty()) return;
+    private void bindChart(List<CategoryCount> categories) {
+        if (categories == null || categories.isEmpty() || llCategoryChart == null) return;
+
+        llCategoryChart.removeAllViews();
+
+        List<CategoryCount> sorted = new ArrayList<>(categories);
+        Collections.sort(sorted, (c1, c2) -> Long.compare(c2.getTicketCount(), c1.getTicketCount()));
 
         long maxCount = 0;
-        for (DailyTicketVolume v : volume) {
+        for (CategoryCount v : sorted) {
             if (v.getTicketCount() > maxCount) maxCount = v.getTicketCount();
         }
 
-        int maxBarHeightDp = 140;
-        
-        for (int i = 0; i < llMockChart.getChildCount(); i++) {
-            if (i >= volume.size()) {
-                llMockChart.getChildAt(i).setVisibility(View.GONE);
-                continue;
-            }
+        int maxBarHeightDp = 180; // Higher for full screen analytics
+        int[] barColors = {
+            0xFFFF4500, // colorOrange
+            0xFFFF8F6B, // dm_orange_peach
+            0xFF92CD28, // colorSecondary
+            0xFF36B37E, // colorStatusResolved
+            0xFFF2C94C, // colorPriorityHigh
+            0xFF56CCF2, // Light Blue
+            0xFFBB6BD9  // Purple
+        };
+
+        LayoutInflater inflater = LayoutInflater.from(requireContext());
+
+        for (int i = 0; i < sorted.size(); i++) {
+            CategoryCount data = sorted.get(i);
             
-            View barItem = llMockChart.getChildAt(i);
-            barItem.setVisibility(View.VISIBLE);
+            View barItem = inflater.inflate(R.layout.item_chart_bar, llCategoryChart, false);
             View vBar = barItem.findViewById(R.id.vBar);
             TextView tvDay = barItem.findViewById(R.id.tvDay);
-            
-            DailyTicketVolume data = volume.get(i);
-            
+
             if (vBar != null && tvDay != null) {
                 ViewGroup.LayoutParams params = vBar.getLayoutParams();
                 int heightDp = maxCount > 0 ? (int) (maxBarHeightDp * (data.getTicketCount() / (double) maxCount)) : 0;
-                // Minimum height for visibility if count > 0
-                if (data.getTicketCount() > 0) heightDp = Math.max(heightDp, 4);
-                
+                if (data.getTicketCount() > 0) heightDp = Math.max(heightDp, 15);
+
                 params.height = dpToPx(heightDp);
                 vBar.setLayoutParams(params);
-                tvDay.setText(data.getDay().toUpperCase());
+                
+                vBar.setBackgroundTintList(ColorStateList.valueOf(barColors[i % barColors.length]));
+                
+                // Show more naming for analytics screen
+                String label = data.getCategoryName();
+                if (label.length() > 10) label = label.substring(0, 10).toUpperCase();
+                else label = label.toUpperCase();
+                tvDay.setText(label);
+            }
+
+            llCategoryChart.addView(barItem);
+            
+            if (i < sorted.size() - 1) {
+                View spacer = new View(requireContext());
+                spacer.setLayoutParams(new LinearLayout.LayoutParams(dpToPx(20), 1));
+                llCategoryChart.addView(spacer);
             }
         }
     }
@@ -149,7 +175,8 @@ public class AnalyticsFragment extends Fragment {
                 waitTrendSign, overview.getAverageWaitTimeTrendHours()));
         
         adapter.setCategories(overview.getCategoryBreakdown());
-        bindChart(overview.getTicketVolumeLast7Days());
+        // Use category breakdown for the main chart now as requested
+        bindChart(overview.getCategoryBreakdown());
     }
 
     private void showLoading(boolean loading) {
@@ -170,7 +197,7 @@ public class AnalyticsFragment extends Fragment {
 
     private static class CategoryBreakdownAdapter extends RecyclerView.Adapter<CategoryBreakdownAdapter.ViewHolder> {
         private final List<CategoryCount> categories;
-        private final int[] colors = {0xFFF77F00, 0xFFFCBF49, 0xFF10B981, 0xFF2196F3, 0xFF9C27B0};
+        private final int[] colors = {0xFFF77F00, 0xFFFCBF49, 0xFF10B981, 0xFF2196F3, 0xFF9C27B0, 0xFF56CCF2, 0xFFBB6BD9};
 
         CategoryBreakdownAdapter(List<CategoryCount> categories) {
             this.categories = categories;
