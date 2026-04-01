@@ -25,6 +25,7 @@ import com.example.ucms_android.network.AnalyticsService;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.ui.view.ThreeDBarView;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,12 +40,10 @@ public class AnalyticsFragment extends Fragment {
 
     private ShimmerFrameLayout shimmerAnalytics;
     private View nestedScrollView;
-    private TextView tvResolutionRate;
-    private TextView tvResolutionTrend;
-    private TextView tvAvgWaitTime;
-    private TextView tvWaitTimeTrend;
+    private TextView tvResolutionRate, tvResolutionTrend;
+    private TextView tvAvgWaitTime, tvWaitTimeTrend;
+    private ViewGroup llCategoryChart, llTimelineChart, llStatusDistribution;
     private RecyclerView rvCategoryBreakdown;
-    private ViewGroup llCategoryChart;
 
     private AnalyticsService analyticsService;
     private CategoryBreakdownAdapter adapter;
@@ -66,8 +65,10 @@ public class AnalyticsFragment extends Fragment {
         tvResolutionTrend = view.findViewById(R.id.tvResolutionTrend);
         tvAvgWaitTime = view.findViewById(R.id.tvAvgWaitTime);
         tvWaitTimeTrend = view.findViewById(R.id.tvWaitTimeTrend);
-        rvCategoryBreakdown = view.findViewById(R.id.rvCategoryBreakdown);
         llCategoryChart = view.findViewById(R.id.llCategoryChart);
+        llTimelineChart = view.findViewById(R.id.llTimelineChart);
+        llStatusDistribution = view.findViewById(R.id.llStatusDistribution);
+        rvCategoryBreakdown = view.findViewById(R.id.rvCategoryBreakdown);
 
         analyticsService = ApiClient.getInstance(requireContext()).create(AnalyticsService.class);
         
@@ -78,73 +79,17 @@ public class AnalyticsFragment extends Fragment {
         fetchAnalytics();
     }
 
-    private void bindChart(List<CategoryCount> categories) {
-        if (categories == null || categories.isEmpty() || llCategoryChart == null) return;
-
-        llCategoryChart.removeAllViews();
-
-        List<CategoryCount> sorted = new ArrayList<>(categories);
-        Collections.sort(sorted, (c1, c2) -> Long.compare(c2.getTicketCount(), c1.getTicketCount()));
-
-        long maxCount = 0;
-        for (CategoryCount v : sorted) {
-            if (v.getTicketCount() > maxCount) maxCount = v.getTicketCount();
-        }
-
-        int maxBarHeightDp = 140; 
-        int[] barColors = {
-            0xFFF77F00, // colorTrendOrange
-            0xFFFCBF49, // yellow
-            0xFF10B981, // green
-            0xFF2196F3, // blue
-            0xFF9C27B0, // purple
-            0xFF56CCF2, // light blue
-            0xFFBB6BD9  // lavender
-        };
-
-        LayoutInflater inflater = LayoutInflater.from(requireContext());
-
-        for (int i = 0; i < sorted.size(); i++) {
-            CategoryCount data = sorted.get(i);
-            
-            View barItem = inflater.inflate(R.layout.item_chart_bar, llCategoryChart, false);
-            ThreeDBarView vBar = barItem.findViewById(R.id.vBar);
-            TextView tvDay = barItem.findViewById(R.id.tvDay);
-
-            if (vBar != null && tvDay != null) {
-                ViewGroup.LayoutParams params = vBar.getLayoutParams();
-                int heightDp = maxCount > 0 ? (int) (maxBarHeightDp * (data.getTicketCount() / (double) maxCount)) : 0;
-                if (data.getTicketCount() > 0) heightDp = Math.max(heightDp, 20);
-
-                params.height = dpToPx(heightDp);
-                vBar.setLayoutParams(params);
-                
-                vBar.setBarColor(barColors[i % barColors.length]);
-                
-                // Show full naming with rotation
-                tvDay.setText(data.getCategoryName().toUpperCase());
-            }
-
-            llCategoryChart.addView(barItem);
-            
-            if (i < sorted.size() - 1) {
-                View spacer = new View(requireContext());
-                spacer.setLayoutParams(new LinearLayout.LayoutParams(dpToPx(24), 1));
-                llCategoryChart.addView(spacer);
-            }
-        }
-    }
-
     private void fetchAnalytics() {
         showLoading(true);
-        
         analyticsService.getOverview().enqueue(new Callback<ApiResponse<AnalyticsOverview>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<AnalyticsOverview>> call, @NonNull Response<ApiResponse<AnalyticsOverview>> response) {
-                if (isAdded() && response.isSuccessful() && response.body() != null) {
-                    bindOverview(response.body().getData());
+                if (isAdded()) {
+                    showLoading(false);
+                    if (response.isSuccessful() && response.body() != null) {
+                        bindOverview(response.body().getData());
+                    }
                 }
-                showLoading(false);
             }
 
             @Override
@@ -160,31 +105,128 @@ public class AnalyticsFragment extends Fragment {
     private void bindOverview(AnalyticsOverview overview) {
         if (overview == null) return;
 
+        // 1. Top Metrics
         tvResolutionRate.setText(String.format(Locale.getDefault(), "%.1f%%", overview.getResolutionRate()));
-        
         String resTrendSign = overview.getResolutionTrend() >= 0 ? "+" : "";
-        tvResolutionTrend.setText(String.format(Locale.getDefault(), "%s%.1f%% from last week", 
-                resTrendSign, overview.getResolutionTrend()));
-        
+        tvResolutionTrend.setText(String.format(Locale.getDefault(), "%s%.1f%% vs last week", resTrendSign, overview.getResolutionTrend()));
+        tvResolutionTrend.setTextColor(overview.getResolutionTrend() >= 0 ? getResources().getColor(R.color.dm_mint_green) : getResources().getColor(R.color.colorError));
+
         tvAvgWaitTime.setText(String.format(Locale.getDefault(), "%.1fh", overview.getAverageWaitTimeHours()));
-        
         String waitTrendSign = overview.getAverageWaitTimeTrendHours() >= 0 ? "+" : "";
-        tvWaitTimeTrend.setText(String.format(Locale.getDefault(), "%s%.1fh from last week", 
-                waitTrendSign, overview.getAverageWaitTimeTrendHours()));
-        
+        tvWaitTimeTrend.setText(String.format(Locale.getDefault(), "%s%.1fh vs last week", waitTrendSign, overview.getAverageWaitTimeTrendHours()));
+        tvWaitTimeTrend.setTextColor(overview.getAverageWaitTimeTrendHours() <= 0 ? getResources().getColor(R.color.dm_mint_green) : getResources().getColor(R.color.dm_orange_peach));
+
+        // 2. Timeline Chart
+        bindTimelineChart(overview.getTicketVolumeLast7Days());
+
+        // 3. Category 3D Chart
+        bindCategoryChart(overview.getCategoryBreakdown());
+
+        // 4. Status Distribution
+        bindStatusDistribution(overview);
+
+        // 5. Detailed Table
         adapter.setCategories(overview.getCategoryBreakdown());
-        bindChart(overview.getCategoryBreakdown());
+    }
+
+    private void bindTimelineChart(List<DailyTicketVolume> volume) {
+        if (llTimelineChart == null || volume == null) return;
+        llTimelineChart.removeAllViews();
+
+        long maxCount = 0;
+        for (DailyTicketVolume d : volume) {
+            if (d.getTicketCount() > maxCount) maxCount = d.getTicketCount();
+        }
+
+        for (int i = 0; i < volume.size(); i++) {
+            DailyTicketVolume d = volume.get(i);
+            View bar = new View(requireContext());
+            int heightPx = maxCount > 0 ? (int) (dpToPx(120) * (d.getTicketCount() / (double) maxCount)) : 0;
+            if (d.getTicketCount() > 0) heightPx = Math.max(heightPx, dpToPx(10));
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, heightPx, 1f);
+            params.setMargins(dpToPx(4), 0, dpToPx(4), 0);
+            bar.setLayoutParams(params);
+            bar.setBackgroundResource(R.drawable.bg_button_pill);
+            bar.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorHomeSubmitButton)));
+            bar.setAlpha(0.8f);
+            
+            llTimelineChart.addView(bar);
+        }
+    }
+
+    private void bindCategoryChart(List<CategoryCount> categories) {
+        if (categories == null || categories.isEmpty() || llCategoryChart == null) return;
+        llCategoryChart.removeAllViews();
+
+        List<CategoryCount> sorted = new ArrayList<>(categories);
+        Collections.sort(sorted, (c1, c2) -> Long.compare(c2.getTicketCount(), c1.getTicketCount()));
+
+        long maxCount = 0;
+        for (CategoryCount v : sorted) {
+            if (v.getTicketCount() > maxCount) maxCount = v.getTicketCount();
+        }
+
+        int maxBarHeightDp = 140; 
+        int[] barColors = {0xFFF77F00, 0xFFFCBF49, 0xFF10B981, 0xFF2196F3, 0xFF9C27B0, 0xFF56CCF2, 0xFFBB6BD9};
+
+        LayoutInflater inflater = LayoutInflater.from(requireContext());
+        for (int i = 0; i < sorted.size(); i++) {
+            CategoryCount data = sorted.get(i);
+            View barItem = inflater.inflate(R.layout.item_chart_bar, llCategoryChart, false);
+            ThreeDBarView vBar = barItem.findViewById(R.id.vBar);
+            TextView tvDay = barItem.findViewById(R.id.tvDay);
+
+            if (vBar != null && tvDay != null) {
+                ViewGroup.LayoutParams params = vBar.getLayoutParams();
+                int heightDp = maxCount > 0 ? (int) (maxBarHeightDp * (data.getTicketCount() / (double) maxCount)) : 0;
+                if (data.getTicketCount() > 0) heightDp = Math.max(heightDp, 20);
+                params.height = dpToPx(heightDp);
+                vBar.setLayoutParams(params);
+                vBar.setBarColor(barColors[i % barColors.length]);
+                tvDay.setText(data.getCategoryName().toUpperCase());
+            }
+            llCategoryChart.addView(barItem);
+            if (i < sorted.size() - 1) {
+                View spacer = new View(requireContext());
+                spacer.setLayoutParams(new LinearLayout.LayoutParams(dpToPx(24), 1));
+                llCategoryChart.addView(spacer);
+            }
+        }
+    }
+
+    private void bindStatusDistribution(AnalyticsOverview data) {
+        if (llStatusDistribution == null) return;
+        llStatusDistribution.removeAllViews();
+
+        addStatusItem("PENDING", data.getPendingCount(), data.getTotalTickets(), getResources().getColor(R.color.colorStatusPending));
+        addStatusItem("IN PROGRESS", data.getInProgressCount(), data.getTotalTickets(), getResources().getColor(R.color.colorStatusInProgress));
+        addStatusItem("RESOLVED", data.getResolvedCount(), data.getTotalTickets(), getResources().getColor(R.color.colorStatusResolved));
+    }
+
+    private void addStatusItem(String label, long count, long total, int color) {
+        View item = LayoutInflater.from(requireContext()).inflate(R.layout.item_status_distribution, llStatusDistribution, false);
+        TextView tvName = item.findViewById(R.id.tvStatusName);
+        TextView tvCount = item.findViewById(R.id.tvStatusCount);
+        LinearProgressIndicator progress = item.findViewById(R.id.progressStatus);
+
+        tvName.setText(label);
+        tvCount.setText(String.format(Locale.getDefault(), "%d logs", count));
+        progress.setIndicatorColor(color);
+        int percentage = total > 0 ? (int) ((count / (double) total) * 100) : 0;
+        progress.setProgress(percentage);
+
+        llStatusDistribution.addView(item);
     }
 
     private void showLoading(boolean loading) {
-        if (loading) {
-            shimmerAnalytics.setVisibility(View.VISIBLE);
-            shimmerAnalytics.startShimmer();
-            nestedScrollView.setAlpha(0.3f);
-        } else {
-            shimmerAnalytics.stopShimmer();
-            shimmerAnalytics.setVisibility(View.GONE);
-            nestedScrollView.setAlpha(1.0f);
+        if (shimmerAnalytics != null) {
+            shimmerAnalytics.setVisibility(loading ? View.VISIBLE : View.GONE);
+            if (loading) shimmerAnalytics.startShimmer();
+            else shimmerAnalytics.stopShimmer();
+        }
+        if (nestedScrollView != null) {
+            nestedScrollView.setVisibility(loading ? View.GONE : View.VISIBLE);
         }
     }
 
