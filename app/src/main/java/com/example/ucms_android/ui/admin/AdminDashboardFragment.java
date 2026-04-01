@@ -169,10 +169,9 @@ public class AdminDashboardFragment extends Fragment {
 
         llCategoryChart.removeAllViews();
 
-        // Sort and take top 10 (or all if you really want ALL, but 10 is usually safe for scroll)
+        // Sort and show all categories
         List<CategoryCount> sorted = new ArrayList<>(categories);
         Collections.sort(sorted, (c1, c2) -> Long.compare(c2.getTicketCount(), c1.getTicketCount()));
-        if (sorted.size() > 10) sorted = sorted.subList(0, 10);
 
         long maxCount = 0;
         for (CategoryCount v : sorted) {
