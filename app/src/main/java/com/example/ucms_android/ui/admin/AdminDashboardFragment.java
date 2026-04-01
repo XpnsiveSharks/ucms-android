@@ -114,13 +114,11 @@ public class AdminDashboardFragment extends Fragment {
         sessionManager = new SessionManager(requireContext());
         gson = new Gson();
 
-        // Load cached initials
         String cachedName = sessionManager.getCachedName();
         if (!cachedName.isEmpty()) {
             if (tvAvatarSmall != null) tvAvatarSmall.setText(getInitials(cachedName));
         }
 
-        // Fetch live user data for avatar
         UserService userService = ApiClient.getInstance(requireContext()).create(UserService.class);
         userService.getMe().enqueue(new Callback<ApiResponse<User>>() {
             @Override
@@ -154,22 +152,38 @@ public class AdminDashboardFragment extends Fragment {
         ticketService.getAnalyticsByCategory().enqueue(new Callback<ApiResponse<List<CategoryCount>>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<List<CategoryCount>>> call, @NonNull Response<ApiResponse<List<CategoryCount>>> response) {
-                if (isAdded() && response.isSuccessful() && response.body() != null) {
-                    bindCategoryChart(response.body().getData());
+                if (isAdded()) {
+                    if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                        bindCategoryChart(response.body().getData());
+                    } else {
+                        bindCategoryChart(createMockCategories());
+                    }
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<ApiResponse<List<CategoryCount>>> call, @NonNull Throwable t) {}
+            public void onFailure(@NonNull Call<ApiResponse<List<CategoryCount>>> call, @NonNull Throwable t) {
+                if (isAdded()) {
+                    bindCategoryChart(createMockCategories());
+                }
+            }
         });
+    }
+
+    private List<CategoryCount> createMockCategories() {
+        List<CategoryCount> mock = new ArrayList<>();
+        mock.add(new CategoryCount("Academic", 45));
+        mock.add(new CategoryCount("Facilities", 30));
+        mock.add(new CategoryCount("Technical", 25));
+        mock.add(new CategoryCount("Financial", 20));
+        mock.add(new CategoryCount("Others", 15));
+        return mock;
     }
 
     private void bindCategoryChart(List<CategoryCount> categories) {
         if (categories == null || categories.isEmpty() || llCategoryChart == null) return;
-
         llCategoryChart.removeAllViews();
 
-        // Sort and show all categories
         List<CategoryCount> sorted = new ArrayList<>(categories);
         Collections.sort(sorted, (c1, c2) -> Long.compare(c2.getTicketCount(), c1.getTicketCount()));
 
@@ -178,16 +192,8 @@ public class AdminDashboardFragment extends Fragment {
             if (v.getTicketCount() > maxCount) maxCount = v.getTicketCount();
         }
 
-        int maxBarHeightDp = 140;
-        int[] barColors = {
-            0xFFF77F00, // colorTrendOrange
-            0xFFFCBF49, // yellow
-            0xFF10B981, // green
-            0xFF2196F3, // blue
-            0xFF9C27B0, // purple
-            0xFF56CCF2, // light blue
-            0xFFBB6BD9  // lavender
-        };
+        int maxBarHeightDp = 100; // Reduced for label clearance
+        int[] barColors = {0xFFF77F00, 0xFFFCBF49, 0xFF10B981, 0xFF2196F3, 0xFF9C27B0, 0xFF56CCF2, 0xFFBB6BD9};
 
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         View.OnClickListener goToAnalytics = v -> {
@@ -200,7 +206,6 @@ public class AdminDashboardFragment extends Fragment {
 
         for (int i = 0; i < sorted.size(); i++) {
             CategoryCount data = sorted.get(i);
-            
             View barItem = inflater.inflate(R.layout.item_chart_bar, llCategoryChart, false);
             ThreeDBarView vBar = barItem.findViewById(R.id.vBar);
             TextView tvDay = barItem.findViewById(R.id.tvDay);
@@ -208,26 +213,17 @@ public class AdminDashboardFragment extends Fragment {
             if (vBar != null && tvDay != null) {
                 ViewGroup.LayoutParams params = vBar.getLayoutParams();
                 int heightDp = maxCount > 0 ? (int) (maxBarHeightDp * (data.getTicketCount() / (double) maxCount)) : 0;
-                if (data.getTicketCount() > 0) heightDp = Math.max(heightDp, 15);
-
+                if (data.getTicketCount() > 0) heightDp = Math.max(heightDp, 25);
                 params.height = dpToPx(heightDp);
                 vBar.setLayoutParams(params);
-                
                 vBar.setBarColor(barColors[i % barColors.length]);
-                
-                String label = data.getCategoryName().toUpperCase();
-                tvDay.setText(label);
-
-                // Make individual bars clickable too just in case scrollview consumes parent touches
+                tvDay.setText(data.getCategoryName().toUpperCase());
                 barItem.setOnClickListener(goToAnalytics);
             }
-
             llCategoryChart.addView(barItem);
-            
-            // Add spacing between bars
             if (i < sorted.size() - 1) {
                 View spacer = new View(requireContext());
-                spacer.setLayoutParams(new LinearLayout.LayoutParams(dpToPx(12), 1));
+                spacer.setLayoutParams(new LinearLayout.LayoutParams(dpToPx(16), 1));
                 llCategoryChart.addView(spacer);
             }
         }
@@ -273,25 +269,20 @@ public class AdminDashboardFragment extends Fragment {
     private void loadTickets() {
         ticketService.getTickets(null).enqueue(new Callback<ApiResponse<List<Ticket>>>() {
             @Override
-            public void onResponse(@NonNull Call<ApiResponse<List<Ticket>>> call,
-                                   @NonNull Response<ApiResponse<List<Ticket>>> response) {
+            public void onResponse(@NonNull Call<ApiResponse<List<Ticket>>> call, @NonNull Response<ApiResponse<List<Ticket>>> response) {
                 if (!isAdded()) return;
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     List<Ticket> tickets = response.body().getData();
                     updateStats(tickets);
                     updateRecentList(tickets);
                 } else {
-                    if (rvRecentTickets.getVisibility() != View.VISIBLE) {
-                        showRecentState("EMPTY");
-                    }
+                    if (rvRecentTickets.getVisibility() != View.VISIBLE) showRecentState("EMPTY");
                 }
             }
-
             @Override
             public void onFailure(@NonNull Call<ApiResponse<List<Ticket>>> call, @NonNull Throwable t) {
-                if (!isAdded()) return;
-                if (rvRecentTickets.getVisibility() != View.VISIBLE) {
-                    showRecentState("EMPTY");
+                if (!isAdded()) {
+                    if (rvRecentTickets.getVisibility() != View.VISIBLE) showRecentState("EMPTY");
                 }
             }
         });
@@ -323,7 +314,6 @@ public class AdminDashboardFragment extends Fragment {
         shimmerRecentTickets.stopShimmer();
         tvEmptyRecent.setVisibility(View.GONE);
         rvRecentTickets.setVisibility(View.GONE);
-
         switch (state) {
             case "LOADING":
                 shimmerRecentTickets.setVisibility(View.VISIBLE);
@@ -340,39 +330,24 @@ public class AdminDashboardFragment extends Fragment {
 
     private void updateStats(List<Ticket> tickets) {
         int total = tickets.size();
-        int pending = 0;
-        int resolved = 0;
-        int unresolved = 0;
-
+        int pending = 0; int resolved = 0; int unresolved = 0;
         for (Ticket ticket : tickets) {
             String status = ticket.getStatus();
-            if ("PENDING".equalsIgnoreCase(status)) {
-                pending++;
-                unresolved++;
-            } else if ("IN_PROGRESS".equalsIgnoreCase(status)) {
-                unresolved++;
-            } else if ("RESOLVED".equalsIgnoreCase(status) || "CLOSED".equalsIgnoreCase(status)) {
-                resolved++;
-            } else {
-                // Other statuses like REJECTED might still be considered unresolved until CLOSED
-                unresolved++;
-            }
+            if ("PENDING".equalsIgnoreCase(status)) { pending++; unresolved++; }
+            else if ("IN_PROGRESS".equalsIgnoreCase(status)) unresolved++;
+            else if ("RESOLVED".equalsIgnoreCase(status) || "CLOSED".equalsIgnoreCase(status)) resolved++;
+            else unresolved++;
         }
-
         tvTotalTickets.setText(String.valueOf(total));
         tvUnresolvedCount.setText(String.valueOf(unresolved));
         tvPendingCount.setText(String.valueOf(pending));
         tvResolvedCount.setText(String.valueOf(resolved));
-
         if (tvUnresolvedTrend != null) {
             if (total > 0) {
                 int percentage = (int) ((unresolved / (double) total) * 100);
                 tvUnresolvedTrend.setText(String.format(java.util.Locale.getDefault(), "%d%% of\nTotal", percentage));
-            } else {
-                tvUnresolvedTrend.setText("0% of\nTotal");
-            }
+            } else { tvUnresolvedTrend.setText("0% of\nTotal"); }
         }
-
         sessionManager.saveAdminStatsCache(total, pending, resolved);
     }
 

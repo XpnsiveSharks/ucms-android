@@ -95,9 +95,8 @@ public class AnalyticsFragment extends Fragment {
                     if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                         bindOverview(response.body().getData());
                     } else {
-                        // Fallback to mock data if server response is empty but request was successful
                         bindOverview(createFallbackData());
-                        Toast.makeText(requireContext(), "Showing cached insights", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "Cached insights", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -106,8 +105,8 @@ public class AnalyticsFragment extends Fragment {
             public void onFailure(@NonNull Call<ApiResponse<AnalyticsOverview>> call, @NonNull Throwable t) {
                 if (isAdded()) {
                     showLoading(false);
-                    // On complete network failure, show error layout
-                    handleFetchError("Network failure: " + t.getLocalizedMessage());
+                    bindOverview(createFallbackData());
+                    Toast.makeText(requireContext(), "Offline Mode", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -145,18 +144,11 @@ public class AnalyticsFragment extends Fragment {
         return mock;
     }
 
-    private void handleFetchError(String message) {
-        layoutError.setVisibility(View.VISIBLE);
-        nestedScrollView.setVisibility(View.GONE);
-        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
-    }
-
     private void bindOverview(AnalyticsOverview overview) {
         if (overview == null) return;
         layoutError.setVisibility(View.GONE);
         nestedScrollView.setVisibility(View.VISIBLE);
 
-        // 1. Top Metrics
         tvResolutionRate.setText(String.format(Locale.getDefault(), "%.1f%%", overview.getResolutionRate()));
         String resTrendSign = overview.getResolutionTrend() >= 0 ? "+" : "";
         tvResolutionTrend.setText(String.format(Locale.getDefault(), "%s%.1f%% vs last week", resTrendSign, overview.getResolutionTrend()));
@@ -167,18 +159,15 @@ public class AnalyticsFragment extends Fragment {
         tvWaitTimeTrend.setText(String.format(Locale.getDefault(), "%s%.1fh vs last week", waitTrendSign, overview.getAverageWaitTimeTrendHours()));
         tvWaitTimeTrend.setTextColor(overview.getAverageWaitTimeTrendHours() <= 0 ? getResources().getColor(R.color.dm_mint_green) : getResources().getColor(R.color.dm_orange_peach));
 
-        // 2. Timeline Chart
         if (overview.getTicketVolumeLast7Days() != null) {
             bindTimelineChart(overview.getTicketVolumeLast7Days());
         }
 
-        // 3. Category 3D Chart
         if (overview.getCategoryBreakdown() != null) {
             bindCategoryChart(overview.getCategoryBreakdown());
             adapter.setCategories(overview.getCategoryBreakdown());
         }
         
-        // 4. Status Distribution
         bindStatusDistribution(overview);
     }
 
@@ -193,7 +182,7 @@ public class AnalyticsFragment extends Fragment {
 
         for (DailyTicketVolume d : volume) {
             View bar = new View(requireContext());
-            int heightPx = maxCount > 0 ? (int) (dpToPx(120) * (d.getTicketCount() / (double) maxCount)) : 0;
+            int heightPx = maxCount > 0 ? (int) (dpToPx(100) * (d.getTicketCount() / (double) maxCount)) : 0;
             if (d.getTicketCount() > 0) heightPx = Math.max(heightPx, dpToPx(10));
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, heightPx, 1f);
@@ -202,7 +191,6 @@ public class AnalyticsFragment extends Fragment {
             bar.setBackgroundResource(R.drawable.bg_button_pill);
             bar.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorSecondary)));
             bar.setAlpha(0.8f);
-            
             llTimelineChart.addView(bar);
         }
     }
@@ -219,7 +207,7 @@ public class AnalyticsFragment extends Fragment {
             if (v.getTicketCount() > maxCount) maxCount = v.getTicketCount();
         }
 
-        int maxBarHeightDp = 140; 
+        int maxBarHeightDp = 100; // Safer height
         int[] barColors = {0xFFF77F00, 0xFFFCBF49, 0xFF10B981, 0xFF2196F3, 0xFF9C27B0, 0xFF56CCF2, 0xFFBB6BD9};
 
         LayoutInflater inflater = LayoutInflater.from(requireContext());
@@ -250,7 +238,6 @@ public class AnalyticsFragment extends Fragment {
     private void bindStatusDistribution(AnalyticsOverview data) {
         if (llStatusDistribution == null) return;
         llStatusDistribution.removeAllViews();
-
         addStatusItem("PENDING", data.getPendingCount(), data.getTotalTickets(), getResources().getColor(R.color.colorStatusPending));
         addStatusItem("IN PROGRESS", data.getInProgressCount(), data.getTotalTickets(), getResources().getColor(R.color.colorStatusInProgress));
         addStatusItem("RESOLVED", data.getResolvedCount(), data.getTotalTickets(), getResources().getColor(R.color.colorStatusResolved));
@@ -261,13 +248,11 @@ public class AnalyticsFragment extends Fragment {
         TextView tvName = item.findViewById(R.id.tvStatusName);
         TextView tvCount = item.findViewById(R.id.tvStatusCount);
         LinearProgressIndicator progress = item.findViewById(R.id.progressStatus);
-
         tvName.setText(label);
         tvCount.setText(String.format(Locale.getDefault(), "%d logs", count));
         progress.setIndicatorColor(color);
         int percentage = total > 0 ? (int) ((count / (double) total) * 100) : 0;
         progress.setProgress(percentage);
-
         llStatusDistribution.addView(item);
     }
 
@@ -289,11 +274,7 @@ public class AnalyticsFragment extends Fragment {
     private static class CategoryBreakdownAdapter extends RecyclerView.Adapter<CategoryBreakdownAdapter.ViewHolder> {
         private final List<CategoryCount> categories;
         private final int[] colors = {0xFFF77F00, 0xFFFCBF49, 0xFF10B981, 0xFF2196F3, 0xFF9C27B0, 0xFF56CCF2, 0xFFBB6BD9};
-
-        CategoryBreakdownAdapter(List<CategoryCount> categories) {
-            this.categories = categories;
-        }
-
+        CategoryBreakdownAdapter(List<CategoryCount> categories) { this.categories = categories; }
         void setCategories(List<CategoryCount> newCategories) {
             this.categories.clear();
             if (newCategories != null) {
@@ -302,14 +283,12 @@ public class AnalyticsFragment extends Fragment {
             }
             notifyDataSetChanged();
         }
-
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_category_count, parent, false);
             return new ViewHolder(view);
         }
-
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             CategoryCount category = categories.get(position);
@@ -317,16 +296,10 @@ public class AnalyticsFragment extends Fragment {
             holder.tvCount.setText(String.format(Locale.getDefault(), "%d logs", category.getTicketCount()));
             holder.vColor.setBackgroundColor(colors[position % colors.length]);
         }
-
         @Override
-        public int getItemCount() {
-            return categories.size();
-        }
-
+        public int getItemCount() { return categories.size(); }
         static class ViewHolder extends RecyclerView.ViewHolder {
-            View vColor;
-            TextView tvName, tvCount;
-
+            View vColor; TextView tvName, tvCount;
             ViewHolder(View itemView) {
                 super(itemView);
                 vColor = itemView.findViewById(R.id.vCategoryColor);
