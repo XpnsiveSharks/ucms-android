@@ -166,13 +166,15 @@ public class AdminDashboardFragment extends Fragment {
     private void bindCategoryChart(List<CategoryCount> categories) {
         if (categories == null || categories.isEmpty() || llCategoryChart == null) return;
 
-        // Take top 5
-        List<CategoryCount> top5 = new ArrayList<>(categories);
-        Collections.sort(top5, (c1, c2) -> Long.compare(c2.getTicketCount(), c1.getTicketCount()));
-        if (top5.size() > 5) top5 = top5.subList(0, 5);
+        llCategoryChart.removeAllViews();
+
+        // Sort and take top 10 (or all if you really want ALL, but 10 is usually safe for scroll)
+        List<CategoryCount> sorted = new ArrayList<>(categories);
+        Collections.sort(sorted, (c1, c2) -> Long.compare(c2.getTicketCount(), c1.getTicketCount()));
+        if (sorted.size() > 10) sorted = sorted.subList(0, 10);
 
         long maxCount = 0;
-        for (CategoryCount v : top5) {
+        for (CategoryCount v : sorted) {
             if (v.getTicketCount() > maxCount) maxCount = v.getTicketCount();
         }
 
@@ -182,34 +184,43 @@ public class AdminDashboardFragment extends Fragment {
             0xFFFF8F6B, // dm_orange_peach
             0xFF92CD28, // colorSecondary
             0xFF36B37E, // colorStatusResolved
-            0xFFF2C94C  // colorPriorityHigh
+            0xFFF2C94C, // colorPriorityHigh
+            0xFF56CCF2, // Light Blue
+            0xFFBB6BD9  // Purple
         };
 
-        for (int i = 0; i < llCategoryChart.getChildCount(); i++) {
-            if (i >= top5.size()) {
-                llCategoryChart.getChildAt(i).setVisibility(View.GONE);
-                continue;
-            }
+        LayoutInflater inflater = LayoutInflater.from(requireContext());
 
-            View barItem = llCategoryChart.getChildAt(i);
-            barItem.setVisibility(View.VISIBLE);
+        for (int i = 0; i < sorted.size(); i++) {
+            CategoryCount data = sorted.get(i);
+            
+            View barItem = inflater.inflate(R.layout.item_chart_bar, llCategoryChart, false);
             View vBar = barItem.findViewById(R.id.vBar);
-            TextView tvDay = barItem.findViewById(R.id.tvDay); // Label
-
-            CategoryCount data = top5.get(i);
+            TextView tvDay = barItem.findViewById(R.id.tvDay);
 
             if (vBar != null && tvDay != null) {
                 ViewGroup.LayoutParams params = vBar.getLayoutParams();
                 int heightDp = maxCount > 0 ? (int) (maxBarHeightDp * (data.getTicketCount() / (double) maxCount)) : 0;
-                if (data.getTicketCount() > 0) heightDp = Math.max(heightDp, 10);
+                if (data.getTicketCount() > 0) heightDp = Math.max(heightDp, 15);
 
                 params.height = dpToPx(heightDp);
                 vBar.setLayoutParams(params);
-                vBar.setBackgroundColor(barColors[i % barColors.length]);
+                
+                // Set the tint for the 3D background
+                vBar.setBackgroundTintList(android.content.res.ColorStateList.valueOf(barColors[i % barColors.length]));
                 
                 String label = data.getCategoryName();
-                if (label.length() > 4) label = label.substring(0, 4).toUpperCase();
+                if (label.length() > 6) label = label.substring(0, 6).toUpperCase();
                 tvDay.setText(label);
+            }
+
+            llCategoryChart.addView(barItem);
+            
+            // Add spacing between bars
+            if (i < sorted.size() - 1) {
+                View spacer = new View(requireContext());
+                spacer.setLayoutParams(new LinearLayout.LayoutParams(dpToPx(12), 1));
+                llCategoryChart.addView(spacer);
             }
         }
     }

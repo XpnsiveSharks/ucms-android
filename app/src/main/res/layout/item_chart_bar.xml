@@ -10,7 +10,7 @@
         android:id="@+id/vBar"
         android:layout_width="32dp"
         android:layout_height="60dp"
-        android:background="?attr/colorHomeSubmitButtonTint"
+        android:background="@drawable/bg_bar_3d"
         tools:layout_height="80dp" />
 
     <TextView

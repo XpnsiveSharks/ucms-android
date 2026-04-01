@@ -365,25 +365,23 @@
                             android:layout_marginBottom="32dp"
                             android:background="@drawable/bg_chart_grid_lines" />
 
-                        <!-- Bars Container -->
-                        <LinearLayout
-                            android:id="@+id/llCategoryChart"
+                        <!-- Scrollable Bars Container -->
+                        <HorizontalScrollView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:gravity="bottom"
-                            android:orientation="horizontal">
+                            android:scrollbars="none"
+                            android:fadeScrollbars="true">
 
-                            <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                            <include layout="@layout/layout_spacer_horizontal" android:layout_width="8dp" android:layout_height="match_parent" />
-                            <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                            <include layout="@layout/layout_spacer_horizontal" android:layout_width="8dp" android:layout_height="match_parent" />
-                            <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                            <include layout="@layout/layout_spacer_horizontal" android:layout_width="8dp" android:layout_height="match_parent" />
-                            <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                            <include layout="@layout/layout_spacer_horizontal" android:layout_width="8dp" android:layout_height="match_parent" />
-                            <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-
-                        </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/llCategoryChart"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="bottom"
+                                android:orientation="horizontal"
+                                android:paddingEnd="16dp">
+                                <!-- Bars will be added dynamically -->
+                            </LinearLayout>
+                        </HorizontalScrollView>
                     </FrameLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
