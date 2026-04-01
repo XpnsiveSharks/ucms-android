@@ -243,7 +243,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/chartContainer"
                         android:layout_width="match_parent"
-                        android:layout_height="220dp"
+                        android:layout_height="280dp"
                         android:layout_marginTop="32dp"
                         app:layout_constraintTop_toBottomOf="@id/llTrendsHeader">
 
@@ -255,7 +255,8 @@
                             android:textSize="8sp"
                             android:textColor="?attr/colorTextSecondary"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginTop="40dp" />
 
                         <TextView
                             android:layout_width="24dp"
@@ -264,9 +265,8 @@
                             android:textSize="8sp"
                             android:textColor="?attr/colorTextSecondary"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            android:layout_marginBottom="32dp"/>
+                            android:layout_marginTop="100dp"/>
 
                         <TextView
                             android:layout_width="24dp"
@@ -275,8 +275,8 @@
                             android:textSize="8sp"
                             android:textColor="?attr/colorTextSecondary"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            android:layout_marginBottom="44dp" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginTop="160dp" />
 
                         <!-- Chart Frame (Grid Lines + Bars) -->
                         <FrameLayout
@@ -289,8 +289,8 @@
                             <!-- Grid Lines View -->
                             <View
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginBottom="44dp"
+                                android:layout_height="121dp"
+                                android:layout_marginTop="40dp"
                                 android:background="@drawable/bg_chart_grid_lines" />
 
                             <!-- Scrollable Bars Container -->
@@ -306,7 +306,10 @@
                                     android:layout_height="match_parent"
                                     android:gravity="bottom"
                                     android:orientation="horizontal"
-                                    android:paddingEnd="16dp">
+                                    android:paddingBottom="100dp"
+                                    android:paddingEnd="16dp"
+                                    android:clipChildren="false"
+                                    android:clipToPadding="false">
                                     <!-- Bars will be added dynamically -->
                                 </LinearLayout>
                             </HorizontalScrollView>

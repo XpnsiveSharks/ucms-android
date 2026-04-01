@@ -216,8 +216,7 @@ public class AdminDashboardFragment extends Fragment {
                 
                 vBar.setBarColor(barColors[i % barColors.length]);
                 
-                String label = data.getCategoryName();
-                if (label.length() > 6) label = label.substring(0, 6).toUpperCase();
+                String label = data.getCategoryName().toUpperCase();
                 tvDay.setText(label);
 
                 // Make individual bars clickable too just in case scrollview consumes parent touches
