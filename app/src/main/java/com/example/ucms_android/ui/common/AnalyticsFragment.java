@@ -148,7 +148,7 @@ public class AnalyticsFragment extends Fragment {
             params.setMargins(dpToPx(4), 0, dpToPx(4), 0);
             bar.setLayoutParams(params);
             bar.setBackgroundResource(R.drawable.bg_button_pill);
-            bar.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorHomeSubmitButton)));
+            bar.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorSecondary)));
             bar.setAlpha(0.8f);
             
             llTimelineChart.addView(bar);
