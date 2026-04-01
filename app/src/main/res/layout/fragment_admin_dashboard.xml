@@ -276,7 +276,7 @@
                         app:layout_constraintTop_toBottomOf="@id/tvResolvedLabel" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </androidx.gridlayout.widget.GridLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Category Trends Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
