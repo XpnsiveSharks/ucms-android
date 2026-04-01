@@ -152,32 +152,20 @@ public class AdminDashboardFragment extends Fragment {
         ticketService.getAnalyticsByCategory().enqueue(new Callback<ApiResponse<List<CategoryCount>>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<List<CategoryCount>>> call, @NonNull Response<ApiResponse<List<CategoryCount>>> response) {
-                if (isAdded()) {
-                    if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                        bindCategoryChart(response.body().getData());
-                    } else {
-                        bindCategoryChart(createMockCategories());
-                    }
+                if (isAdded() && response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    bindCategoryChart(response.body().getData());
+                } else if (isAdded()) {
+                    llCategoryChart.removeAllViews(); // Keep blank if real data is empty
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<List<CategoryCount>>> call, @NonNull Throwable t) {
                 if (isAdded()) {
-                    bindCategoryChart(createMockCategories());
+                    llCategoryChart.removeAllViews();
                 }
             }
         });
-    }
-
-    private List<CategoryCount> createMockCategories() {
-        List<CategoryCount> mock = new ArrayList<>();
-        mock.add(new CategoryCount("Academic", 45));
-        mock.add(new CategoryCount("Facilities", 30));
-        mock.add(new CategoryCount("Technical", 25));
-        mock.add(new CategoryCount("Financial", 20));
-        mock.add(new CategoryCount("Others", 15));
-        return mock;
     }
 
     private void bindCategoryChart(List<CategoryCount> categories) {
@@ -192,8 +180,16 @@ public class AdminDashboardFragment extends Fragment {
             if (v.getTicketCount() > maxCount) maxCount = v.getTicketCount();
         }
 
-        int maxBarHeightDp = 100; // Reduced for label clearance
-        int[] barColors = {0xFFF77F00, 0xFFFCBF49, 0xFF10B981, 0xFF2196F3, 0xFF9C27B0, 0xFF56CCF2, 0xFFBB6BD9};
+        int maxBarHeightDp = 100;
+        int[] barColors = {
+            0xFFF77F00, // colorTrendOrange
+            0xFFFCBF49, // yellow
+            0xFF10B981, // green
+            0xFF2196F3, // blue
+            0xFF9C27B0, // purple
+            0xFF56CCF2, // light blue
+            0xFFBB6BD9  // lavender
+        };
 
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         View.OnClickListener goToAnalytics = v -> {
@@ -345,8 +341,8 @@ public class AdminDashboardFragment extends Fragment {
         if (tvUnresolvedTrend != null) {
             if (total > 0) {
                 int percentage = (int) ((unresolved / (double) total) * 100);
-                tvUnresolvedTrend.setText(String.format(java.util.Locale.getDefault(), "%d%% of\nTotal", percentage));
-            } else { tvUnresolvedTrend.setText("0% of\nTotal"); }
+                tvUnresolvedTrend.setText(String.format(java.util.Locale.getDefault(), "%d%% vs\nTotal", percentage));
+            } else { tvUnresolvedTrend.setText("0% vs\nTotal"); }
         }
         sessionManager.saveAdminStatsCache(total, pending, resolved);
     }

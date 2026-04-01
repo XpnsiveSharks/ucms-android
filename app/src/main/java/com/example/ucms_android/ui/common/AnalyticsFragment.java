@@ -95,8 +95,7 @@ public class AnalyticsFragment extends Fragment {
                     if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                         bindOverview(response.body().getData());
                     } else {
-                        bindOverview(createFallbackData());
-                        Toast.makeText(requireContext(), "Cached insights", Toast.LENGTH_SHORT).show();
+                        handleFetchError("Server returned an empty response.");
                     }
                 }
             }
@@ -105,43 +104,16 @@ public class AnalyticsFragment extends Fragment {
             public void onFailure(@NonNull Call<ApiResponse<AnalyticsOverview>> call, @NonNull Throwable t) {
                 if (isAdded()) {
                     showLoading(false);
-                    bindOverview(createFallbackData());
-                    Toast.makeText(requireContext(), "Offline Mode", Toast.LENGTH_SHORT).show();
+                    handleFetchError("Network failure: " + t.getLocalizedMessage());
                 }
             }
         });
     }
 
-    private AnalyticsOverview createFallbackData() {
-        AnalyticsOverview mock = new AnalyticsOverview();
-        mock.setResolutionRate(88.5);
-        mock.setResolutionTrend(2.1);
-        mock.setAverageWaitTimeHours(3.5);
-        mock.setAverageWaitTimeTrendHours(-0.5);
-        mock.setTotalTickets(150);
-        mock.setPendingCount(45);
-        mock.setInProgressCount(30);
-        mock.setResolvedCount(75);
-
-        List<DailyTicketVolume> volume = new ArrayList<>();
-        volume.add(new DailyTicketVolume("Mon", 12));
-        volume.add(new DailyTicketVolume("Tue", 18));
-        volume.add(new DailyTicketVolume("Wed", 15));
-        volume.add(new DailyTicketVolume("Thu", 22));
-        volume.add(new DailyTicketVolume("Fri", 30));
-        volume.add(new DailyTicketVolume("Sat", 10));
-        volume.add(new DailyTicketVolume("Sun", 8));
-        mock.setTicketVolumeLast7Days(volume);
-
-        List<CategoryCount> categories = new ArrayList<>();
-        categories.add(new CategoryCount("Academic", 45));
-        categories.add(new CategoryCount("Facilities", 30));
-        categories.add(new CategoryCount("Technical", 25));
-        categories.add(new CategoryCount("Financial", 20));
-        categories.add(new CategoryCount("Others", 15));
-        mock.setCategoryBreakdown(categories);
-
-        return mock;
+    private void handleFetchError(String message) {
+        layoutError.setVisibility(View.VISIBLE);
+        nestedScrollView.setVisibility(View.GONE);
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
     }
 
     private void bindOverview(AnalyticsOverview overview) {
@@ -207,7 +179,7 @@ public class AnalyticsFragment extends Fragment {
             if (v.getTicketCount() > maxCount) maxCount = v.getTicketCount();
         }
 
-        int maxBarHeightDp = 100; // Safer height
+        int maxBarHeightDp = 100;
         int[] barColors = {0xFFF77F00, 0xFFFCBF49, 0xFF10B981, 0xFF2196F3, 0xFF9C27B0, 0xFF56CCF2, 0xFFBB6BD9};
 
         LayoutInflater inflater = LayoutInflater.from(requireContext());

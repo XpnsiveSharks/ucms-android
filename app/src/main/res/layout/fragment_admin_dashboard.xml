@@ -210,7 +210,7 @@
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        tools:text="0% of Total" />
+                        tools:text="0% vs Total" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <!-- Pending Action Card -->
