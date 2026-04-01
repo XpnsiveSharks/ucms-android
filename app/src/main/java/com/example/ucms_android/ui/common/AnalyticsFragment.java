@@ -43,7 +43,8 @@ public class AnalyticsFragment extends Fragment {
     private View layoutError;
     private TextView tvResolutionRate, tvResolutionTrend;
     private TextView tvAvgWaitTime, tvWaitTimeTrend;
-    private ViewGroup llCategoryChart, llTimelineChart, llStatusDistribution;
+    private ViewGroup llCategoryChart, llStatusDistribution, llCategoryYAxis;
+    private com.example.ucms_android.ui.view.LineChartView lineChartTimeline;
     private RecyclerView rvCategoryBreakdown;
 
     private AnalyticsService analyticsService;
@@ -68,7 +69,8 @@ public class AnalyticsFragment extends Fragment {
         tvAvgWaitTime = view.findViewById(R.id.tvAvgWaitTime);
         tvWaitTimeTrend = view.findViewById(R.id.tvWaitTimeTrend);
         llCategoryChart = view.findViewById(R.id.llCategoryChart);
-        llTimelineChart = view.findViewById(R.id.llTimelineChart);
+        llCategoryYAxis = view.findViewById(R.id.llCategoryYAxis);
+        lineChartTimeline = view.findViewById(R.id.lineChartTimeline);
         llStatusDistribution = view.findViewById(R.id.llStatusDistribution);
         rvCategoryBreakdown = view.findViewById(R.id.rvCategoryBreakdown);
 
@@ -144,27 +146,36 @@ public class AnalyticsFragment extends Fragment {
     }
 
     private void bindTimelineChart(List<DailyTicketVolume> volume) {
-        if (llTimelineChart == null || volume == null) return;
-        llTimelineChart.removeAllViews();
+        if (lineChartTimeline == null || volume == null) return;
+        
+        List<DailyTicketVolume> sortedVolume = new ArrayList<>(volume);
+        Collections.sort(sortedVolume, (d1, d2) -> Integer.compare(getDayOrder(d1.getDay()), getDayOrder(d2.getDay())));
 
-        long maxCount = 0;
-        for (DailyTicketVolume d : volume) {
-            if (d.getTicketCount() > maxCount) maxCount = d.getTicketCount();
+        List<com.example.ucms_android.ui.view.LineChartView.DataPoint> points = new ArrayList<>();
+        for (DailyTicketVolume d : sortedVolume) {
+            // Shorten day labels (e.g., "Monday" -> "Mon")
+            String label = d.getDay();
+            if (label != null && label.length() > 3) {
+                label = label.substring(0, 3).toUpperCase();
+            } else if (label != null) {
+                label = label.toUpperCase();
+            }
+            points.add(new com.example.ucms_android.ui.view.LineChartView.DataPoint(label, d.getTicketCount()));
         }
+        lineChartTimeline.setData(points);
+    }
 
-        for (DailyTicketVolume d : volume) {
-            View bar = new View(requireContext());
-            int heightPx = maxCount > 0 ? (int) (dpToPx(100) * (d.getTicketCount() / (double) maxCount)) : 0;
-            if (d.getTicketCount() > 0) heightPx = Math.max(heightPx, dpToPx(10));
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, heightPx, 1f);
-            params.setMargins(dpToPx(4), 0, dpToPx(4), 0);
-            bar.setLayoutParams(params);
-            bar.setBackgroundResource(R.drawable.bg_button_pill);
-            bar.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorSecondary)));
-            bar.setAlpha(0.8f);
-            llTimelineChart.addView(bar);
-        }
+    private int getDayOrder(String day) {
+        if (day == null) return 7;
+        String d = day.toUpperCase();
+        if (d.contains("MON")) return 0;
+        if (d.contains("TUE")) return 1;
+        if (d.contains("WED")) return 2;
+        if (d.contains("THU")) return 3;
+        if (d.contains("FRI")) return 4;
+        if (d.contains("SAT")) return 5;
+        if (d.contains("SUN")) return 6;
+        return 7;
     }
 
     private void bindCategoryChart(List<CategoryCount> categories) {
@@ -174,12 +185,50 @@ public class AnalyticsFragment extends Fragment {
         List<CategoryCount> sorted = new ArrayList<>(categories);
         Collections.sort(sorted, (c1, c2) -> Long.compare(c2.getTicketCount(), c1.getTicketCount()));
 
-        long maxCount = 0;
+        long realMax = 0;
         for (CategoryCount v : sorted) {
-            if (v.getTicketCount() > maxCount) maxCount = v.getTicketCount();
+            if (v.getTicketCount() > realMax) realMax = v.getTicketCount();
         }
 
-        int maxBarHeightDp = 100;
+        // Calculate nice scale for 4 intervals (5 lines)
+        long stepSize;
+        int steps = 4;
+        if (realMax <= 4) {
+            stepSize = 1;
+            steps = realMax == 0 ? 1 : (int) realMax;
+        } else {
+            stepSize = (long) Math.ceil(realMax / 4.0);
+            if (stepSize > 2 && stepSize % 2 != 0) stepSize++;
+        }
+        long maxCount = stepSize * steps;
+
+        // Bind Y-Axis numbering (Must have 5 labels if steps=4)
+        if (llCategoryYAxis != null) {
+            llCategoryYAxis.removeAllViews();
+            for (int i = steps; i >= 0; i--) {
+                TextView tv = new TextView(requireContext());
+                tv.setText(String.valueOf(stepSize * i));
+                tv.setTextSize(10);
+                tv.setTextColor(getResources().getColor(R.color.colorTextSecondary));
+                
+                // Use ConstraintLayout params to align perfectly with lines
+                androidx.constraintlayout.widget.ConstraintLayout.LayoutParams lp = 
+                    new androidx.constraintlayout.widget.ConstraintLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID;
+                lp.topToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID;
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID;
+                
+                // Vertical bias: 0.0 for top (i=steps), 1.0 for bottom (i=0)
+                // Since steps might be less than 4 for small data, we need to handle that
+                lp.verticalBias = (steps > 0) ? (1.0f - (float) i / steps) : 0.0f;
+                
+                tv.setLayoutParams(lp);
+                llCategoryYAxis.addView(tv);
+            }
+        }
+
+        int maxBarHeightDp = 200; // Fixed height for bars to leave 80dp for labels
         int[] barColors = {0xFFF77F00, 0xFFFCBF49, 0xFF10B981, 0xFF2196F3, 0xFF9C27B0, 0xFF56CCF2, 0xFFBB6BD9};
 
         LayoutInflater inflater = LayoutInflater.from(requireContext());
@@ -188,22 +237,22 @@ public class AnalyticsFragment extends Fragment {
             View barItem = inflater.inflate(R.layout.item_chart_bar, llCategoryChart, false);
             ThreeDBarView vBar = barItem.findViewById(R.id.vBar);
             TextView tvDay = barItem.findViewById(R.id.tvDay);
+            TextView tvCount = barItem.findViewById(R.id.tvCount);
 
             if (vBar != null && tvDay != null) {
                 ViewGroup.LayoutParams params = vBar.getLayoutParams();
+                // Use maxCount (the rounded up max) for consistent scaling
                 int heightDp = maxCount > 0 ? (int) (maxBarHeightDp * (data.getTicketCount() / (double) maxCount)) : 0;
                 if (data.getTicketCount() > 0) heightDp = Math.max(heightDp, 25);
                 params.height = dpToPx(heightDp);
                 vBar.setLayoutParams(params);
                 vBar.setBarColor(barColors[i % barColors.length]);
                 tvDay.setText(data.getCategoryName().toUpperCase());
+                if (tvCount != null) {
+                    tvCount.setText(String.valueOf(data.getTicketCount()));
+                }
             }
             llCategoryChart.addView(barItem);
-            if (i < sorted.size() - 1) {
-                View spacer = new View(requireContext());
-                spacer.setLayoutParams(new LinearLayout.LayoutParams(dpToPx(24), 1));
-                llCategoryChart.addView(spacer);
-            }
         }
     }
 

@@ -94,9 +94,8 @@
 
     <!-- ===== Bottom Navigation ===== -->
     <style name="TextAppearance.App.BottomNav" parent="TextAppearance.Material3.LabelSmall">
-        <item name="android:fontFamily">monospace</item>
-        <item name="android:textSize">10sp</item>
-        <item name="android:letterSpacing">0.1</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">11sp</item>
     </style>
 
     <!-- ===== FAB ===== -->

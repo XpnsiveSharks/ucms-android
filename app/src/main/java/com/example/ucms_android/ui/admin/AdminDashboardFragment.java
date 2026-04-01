@@ -56,7 +56,7 @@ public class AdminDashboardFragment extends Fragment {
     private ShimmerFrameLayout shimmerRecentTickets;
     private TextView tvEmptyRecent;
     private RecyclerView rvRecentTickets;
-    private ViewGroup llCategoryChart;
+    private ViewGroup llCategoryChart, llCategoryYAxis;
     private RecentTicketAdapter adapter;
     private TicketService ticketService;
     private SessionManager sessionManager;
@@ -86,6 +86,7 @@ public class AdminDashboardFragment extends Fragment {
         tvAvatarSmall = view.findViewById(R.id.tvAvatarSmall);
         viewNotificationBadge = view.findViewById(R.id.viewNotificationBadge);
         llCategoryChart = view.findViewById(R.id.llCategoryChart);
+        llCategoryYAxis = view.findViewById(R.id.llCategoryYAxis);
 
         View flNotification = view.findViewById(R.id.flNotification);
         if (flNotification != null) {
@@ -175,20 +176,50 @@ public class AdminDashboardFragment extends Fragment {
         List<CategoryCount> sorted = new ArrayList<>(categories);
         Collections.sort(sorted, (c1, c2) -> Long.compare(c2.getTicketCount(), c1.getTicketCount()));
 
-        long maxCount = 0;
+        long realMax = 0;
         for (CategoryCount v : sorted) {
-            if (v.getTicketCount() > maxCount) maxCount = v.getTicketCount();
+            if (v.getTicketCount() > realMax) realMax = v.getTicketCount();
         }
 
-        int maxBarHeightDp = 100;
+        // Calculate nice scale for 4 intervals (5 lines)
+        long stepSize;
+        int steps = 4;
+        if (realMax <= 4) {
+            stepSize = 1;
+            steps = realMax == 0 ? 1 : (int) realMax;
+        } else {
+            stepSize = (long) Math.ceil(realMax / 4.0);
+            if (stepSize > 2 && stepSize % 2 != 0) stepSize++;
+        }
+        long maxCount = stepSize * steps;
+
+        // Bind Y-Axis numbering
+        if (llCategoryYAxis != null) {
+            llCategoryYAxis.removeAllViews();
+            for (int i = steps; i >= 0; i--) {
+                TextView tv = new TextView(requireContext());
+                tv.setText(String.valueOf(stepSize * i));
+                tv.setTextSize(8);
+                tv.setTextColor(getResources().getColor(R.color.colorTextSecondary));
+                
+                // Use ConstraintLayout params to align perfectly with lines
+                androidx.constraintlayout.widget.ConstraintLayout.LayoutParams lp = 
+                    new androidx.constraintlayout.widget.ConstraintLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID;
+                lp.topToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID;
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID;
+                
+                lp.verticalBias = (steps > 0) ? (1.0f - (float) i / steps) : 0.0f;
+                
+                tv.setLayoutParams(lp);
+                llCategoryYAxis.addView(tv);
+            }
+        }
+
+        int maxBarHeightDp = 200; // Fixed height for bars to leave 80dp for labels
         int[] barColors = {
-            0xFFF77F00, // colorTrendOrange
-            0xFFFCBF49, // yellow
-            0xFF10B981, // green
-            0xFF2196F3, // blue
-            0xFF9C27B0, // purple
-            0xFF56CCF2, // light blue
-            0xFFBB6BD9  // lavender
+            0xFFF77F00, 0xFFFCBF49, 0xFF10B981, 0xFF2196F3, 0xFF9C27B0, 0xFF56CCF2, 0xFFBB6BD9
         };
 
         LayoutInflater inflater = LayoutInflater.from(requireContext());
@@ -205,6 +236,7 @@ public class AdminDashboardFragment extends Fragment {
             View barItem = inflater.inflate(R.layout.item_chart_bar, llCategoryChart, false);
             ThreeDBarView vBar = barItem.findViewById(R.id.vBar);
             TextView tvDay = barItem.findViewById(R.id.tvDay);
+            TextView tvCount = barItem.findViewById(R.id.tvCount);
 
             if (vBar != null && tvDay != null) {
                 ViewGroup.LayoutParams params = vBar.getLayoutParams();
@@ -214,14 +246,12 @@ public class AdminDashboardFragment extends Fragment {
                 vBar.setLayoutParams(params);
                 vBar.setBarColor(barColors[i % barColors.length]);
                 tvDay.setText(data.getCategoryName().toUpperCase());
+                if (tvCount != null) {
+                    tvCount.setText(String.valueOf(data.getTicketCount()));
+                }
                 barItem.setOnClickListener(goToAnalytics);
             }
             llCategoryChart.addView(barItem);
-            if (i < sorted.size() - 1) {
-                View spacer = new View(requireContext());
-                spacer.setLayoutParams(new LinearLayout.LayoutParams(dpToPx(16), 1));
-                llCategoryChart.addView(spacer);
-            }
         }
     }
 

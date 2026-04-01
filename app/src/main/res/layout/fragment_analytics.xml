@@ -158,32 +158,59 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="24dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="CONCERN VOLUME (7D)"
-                        android:fontFamily="monospace"
-                        android:textColor="?attr/colorTextSecondary"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="CONCERN VOLUME"
+                                android:fontFamily="monospace"
+                                android:textColor="?attr/colorTextSecondary"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Last 7 days activity"
+                                android:textColor="?attr/colorTextPrimary"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_ticket_volume"
+                            android:background="@drawable/bg_home_icon_container"
+                            app:tint="?attr/colorSecondary"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                     
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="160dp"
+                        android:layout_height="180dp"
                         android:layout_marginTop="24dp">
                         
-                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" app:layout_constraintTop_toTopOf="parent" />
-                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent" />
-                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" app:layout_constraintBottom_toBottomOf="parent" />
-
-                        <LinearLayout
-                            android:id="@+id/llTimelineChart"
+                        <com.example.ucms_android.ui.view.LineChartView
+                            android:id="@+id/lineChartTimeline"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="bottom"
-                            android:orientation="horizontal"
-                            android:paddingHorizontal="8dp">
-                        </LinearLayout>
+                            android:layout_height="match_parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -216,33 +243,71 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="240dp"
-                        android:layout_marginTop="24dp">
+                        android:layout_height="300dp"
+                        android:layout_marginTop="24dp"
+                        android:clipChildren="false"
+                        android:clipToPadding="false">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/llCategoryYAxis"
+                            android:layout_width="40dp"
+                            android:layout_height="0dp"
+                            android:layout_marginBottom="80dp"
+                            android:clipChildren="false"
+                            android:background="?attr/colorRecentCardBg"
+                            android:elevation="1dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent">
+                            <!-- Labels will be added dynamically -->
+                        </androidx.constraintlayout.widget.ConstraintLayout>
                         
                         <FrameLayout
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_marginStart="24dp">
-                            
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginBottom="80dp"
-                                android:background="@drawable/bg_chart_grid_lines" />
+                            android:clipChildren="false"
+                            android:clipToPadding="false"
+                            app:layout_constraintStart_toEndOf="@id/llCategoryYAxis"
+                            app:layout_constraintEnd_toEndOf="parent">
 
                             <HorizontalScrollView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:scrollbars="none">
-                                <LinearLayout
-                                    android:id="@+id/llCategoryChart"
+                                android:scrollbars="none"
+                                android:clipChildren="false"
+                                android:clipToPadding="false">
+                                <FrameLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
-                                    android:gravity="bottom"
-                                    android:orientation="horizontal"
-                                    android:paddingBottom="80dp"
-                                    android:paddingEnd="16dp"
-                                    android:clipChildren="false" />
+                                    android:clipChildren="false"
+                                    android:clipToPadding="false">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginBottom="80dp"
+                                        android:orientation="vertical">
+                                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" />
+                                        <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+                                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" />
+                                        <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+                                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" />
+                                        <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+                                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" />
+                                        <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+                                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:id="@+id/llCategoryChart"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:gravity="bottom"
+                                        android:orientation="horizontal"
+                                        android:paddingEnd="24dp"
+                                        android:clipChildren="false"
+                                        android:clipToPadding="false" />
+                                </FrameLayout>
                             </HorizontalScrollView>
                         </FrameLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
