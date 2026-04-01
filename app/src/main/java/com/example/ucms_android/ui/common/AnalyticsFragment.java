@@ -91,7 +91,7 @@ public class AnalyticsFragment extends Fragment {
             if (v.getTicketCount() > maxCount) maxCount = v.getTicketCount();
         }
 
-        int maxBarHeightDp = 180; 
+        int maxBarHeightDp = 140; 
         int[] barColors = {
             0xFFF77F00, // colorTrendOrange
             0xFFFCBF49, // yellow
