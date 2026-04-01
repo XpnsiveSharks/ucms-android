@@ -315,7 +315,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/chartContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="220dp"
                     android:layout_marginTop="32dp"
                     app:layout_constraintTop_toBottomOf="@id/tvTrendsTitle">
 
@@ -338,7 +338,7 @@
                         android:textColor="?attr/colorTextSecondary"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginTop="60dp"/>
+                        android:layout_marginTop="70dp"/>
 
                     <TextView
                         android:layout_width="24dp"
@@ -348,7 +348,7 @@
                         android:textColor="?attr/colorTextSecondary"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginTop="100dp" />
+                        android:layout_marginTop="120dp" />
 
                     <!-- Chart Frame (Grid Lines + Bars) -->
                     <FrameLayout
@@ -361,7 +361,7 @@
                         <!-- Grid Lines View -->
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="81dp"
+                            android:layout_height="101dp"
                             android:layout_marginTop="20dp"
                             android:background="@drawable/bg_chart_grid_lines" />
 
@@ -378,7 +378,7 @@
                                 android:layout_height="match_parent"
                                 android:gravity="bottom"
                                 android:orientation="horizontal"
-                                android:paddingBottom="50dp"
+                                android:paddingBottom="60dp"
                                 android:paddingEnd="16dp"
                                 android:clipChildren="false"
                                 android:clipToPadding="false">
