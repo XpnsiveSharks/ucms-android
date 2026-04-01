@@ -24,11 +24,11 @@
         <item name="colorTextSecondary">@color/colorTextSecondary</item>
 
         <!-- Home Screen Attributes -->
-        <item name="colorHomeTotalTicketsBg">@color/colorSecondary</item>
-        <item name="colorHomeTotalTicketsStroke">@color/colorSecondary</item>
-        <item name="colorHomeTotalTicketsText">@color/white</item>
-        <item name="colorHomeTotalTicketsCount">@color/white</item>
-        <item name="colorHomeTotalTicketsIcon">@color/white</item>
+        <item name="colorHomeTotalTicketsBg">@color/colorOrangeTint</item>
+        <item name="colorHomeTotalTicketsStroke">@color/colorOrange</item>
+        <item name="colorHomeTotalTicketsText">@color/colorOrange</item>
+        <item name="colorHomeTotalTicketsCount">@color/black</item>
+        <item name="colorHomeTotalTicketsIcon">@color/colorOrange</item>
         <item name="colorHomeSubmitButton">@color/colorSecondary</item>
         <item name="colorHomeSubmitButtonGlow">#1A92CD28</item>
         <item name="colorHomeSubmitButtonTint">#0D92CD28</item>

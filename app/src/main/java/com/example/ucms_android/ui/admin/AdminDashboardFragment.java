@@ -49,6 +49,7 @@ public class AdminDashboardFragment extends Fragment {
 
     private TextView tvTotalTickets;
     private TextView tvUnresolvedCount;
+    private TextView tvUnresolvedTrend;
     private TextView tvPendingCount;
     private TextView tvResolvedCount;
     private ShimmerFrameLayout shimmerRecentTickets;
@@ -75,6 +76,7 @@ public class AdminDashboardFragment extends Fragment {
 
         tvTotalTickets = view.findViewById(R.id.tvTotalTickets);
         tvUnresolvedCount = view.findViewById(R.id.tvUnresolvedCount);
+        tvUnresolvedTrend = view.findViewById(R.id.tvUnresolvedTrend);
         tvPendingCount = view.findViewById(R.id.tvPendingCount);
         tvResolvedCount = view.findViewById(R.id.tvResolvedCount);
         rvRecentTickets = view.findViewById(R.id.rvRecentTickets);
@@ -168,11 +170,11 @@ public class AdminDashboardFragment extends Fragment {
 
         int maxBarHeightDp = 140;
         int[] barColors = {
-            0xFF92CD28, // Green
-            0xFFB6EE56, // Light Green
-            0xFFE4FF7F, // Lighter Green
-            0xFFFF4500, // Orange
-            0xFFFF8F6B  // Peach
+            0xFFFF4500, // colorOrange
+            0xFFFF8F6B, // dm_orange_peach
+            0xFF92CD28, // colorSecondary
+            0xFF36B37E, // colorStatusResolved
+            0xFFF2C94C  // colorPriorityHigh
         };
 
         for (int i = 0; i < llCategoryChart.getChildCount(); i++) {
@@ -334,6 +336,15 @@ public class AdminDashboardFragment extends Fragment {
         tvUnresolvedCount.setText(String.valueOf(unresolved));
         tvPendingCount.setText(String.valueOf(pending));
         tvResolvedCount.setText(String.valueOf(resolved));
+
+        if (tvUnresolvedTrend != null) {
+            if (total > 0) {
+                int percentage = (int) ((unresolved / (double) total) * 100);
+                tvUnresolvedTrend.setText(String.format(java.util.Locale.getDefault(), "%d%% of\nTotal", percentage));
+            } else {
+                tvUnresolvedTrend.setText("0% of\nTotal");
+            }
+        }
 
         sessionManager.saveAdminStatsCache(total, pending, resolved);
     }
