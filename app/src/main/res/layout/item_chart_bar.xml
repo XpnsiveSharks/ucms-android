@@ -4,24 +4,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom|center_horizontal"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:orientation="vertical">
 
-    <View
+    <com.example.ucms_android.ui.view.ThreeDBarView
         android:id="@+id/vBar"
         android:layout_width="32dp"
         android:layout_height="60dp"
-        android:background="@drawable/bg_bar_3d"
         tools:layout_height="80dp" />
 
     <TextView
         android:id="@+id/tvDay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="monospace"
         android:textColor="?attr/colorTextSecondary"
-        android:textSize="9sp"
+        android:textSize="8sp"
         android:textStyle="bold"
-        tools:text="MON" />
+        android:rotation="-45"
+        android:gravity="center"
+        tools:text="CATEGORY" />
 
 </LinearLayout>

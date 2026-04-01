@@ -378,7 +378,10 @@
                                 android:layout_height="match_parent"
                                 android:gravity="bottom"
                                 android:orientation="horizontal"
-                                android:paddingEnd="16dp">
+                                android:paddingBottom="40dp"
+                                android:paddingEnd="16dp"
+                                android:clipChildren="false"
+                                android:clipToPadding="false">
                                 <!-- Bars will be added dynamically -->
                             </LinearLayout>
                         </HorizontalScrollView>

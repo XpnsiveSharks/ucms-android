@@ -23,6 +23,7 @@ import com.example.ucms_android.model.CategoryCount;
 import com.example.ucms_android.model.DailyTicketVolume;
 import com.example.ucms_android.network.AnalyticsService;
 import com.example.ucms_android.network.ApiClient;
+import com.example.ucms_android.ui.view.ThreeDBarView;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
@@ -90,7 +91,7 @@ public class AnalyticsFragment extends Fragment {
             if (v.getTicketCount() > maxCount) maxCount = v.getTicketCount();
         }
 
-        int maxBarHeightDp = 180; // Higher for full screen analytics
+        int maxBarHeightDp = 160; 
         int[] barColors = {
             0xFFFF4500, // colorOrange
             0xFFFF8F6B, // dm_orange_peach
@@ -107,31 +108,28 @@ public class AnalyticsFragment extends Fragment {
             CategoryCount data = sorted.get(i);
             
             View barItem = inflater.inflate(R.layout.item_chart_bar, llCategoryChart, false);
-            View vBar = barItem.findViewById(R.id.vBar);
+            ThreeDBarView vBar = barItem.findViewById(R.id.vBar);
             TextView tvDay = barItem.findViewById(R.id.tvDay);
 
             if (vBar != null && tvDay != null) {
                 ViewGroup.LayoutParams params = vBar.getLayoutParams();
                 int heightDp = maxCount > 0 ? (int) (maxBarHeightDp * (data.getTicketCount() / (double) maxCount)) : 0;
-                if (data.getTicketCount() > 0) heightDp = Math.max(heightDp, 15);
+                if (data.getTicketCount() > 0) heightDp = Math.max(heightDp, 20);
 
                 params.height = dpToPx(heightDp);
                 vBar.setLayoutParams(params);
                 
-                vBar.setBackgroundTintList(ColorStateList.valueOf(barColors[i % barColors.length]));
+                vBar.setBarColor(barColors[i % barColors.length]);
                 
-                // Show more naming for analytics screen
-                String label = data.getCategoryName();
-                if (label.length() > 10) label = label.substring(0, 10).toUpperCase();
-                else label = label.toUpperCase();
-                tvDay.setText(label);
+                // Show full naming with rotation
+                tvDay.setText(data.getCategoryName().toUpperCase());
             }
 
             llCategoryChart.addView(barItem);
             
             if (i < sorted.size() - 1) {
                 View spacer = new View(requireContext());
-                spacer.setLayoutParams(new LinearLayout.LayoutParams(dpToPx(20), 1));
+                spacer.setLayoutParams(new LinearLayout.LayoutParams(dpToPx(24), 1));
                 llCategoryChart.addView(spacer);
             }
         }
@@ -175,7 +173,6 @@ public class AnalyticsFragment extends Fragment {
                 waitTrendSign, overview.getAverageWaitTimeTrendHours()));
         
         adapter.setCategories(overview.getCategoryBreakdown());
-        // Use category breakdown for the main chart now as requested
         bindChart(overview.getCategoryBreakdown());
     }
 
