@@ -87,13 +87,12 @@
                     tools:visibility="visible" />
             </FrameLayout>
 
-            <!-- 2x2 Stats Grid -->
-            <androidx.gridlayout.widget.GridLayout
+            <!-- 2x2 Stats Grid using ConstraintLayout -->
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/glStats"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                app:columnCount="2"
                 app:layout_constraintTop_toBottomOf="@id/layoutUserHeader">
 
                 <!-- Total Tickets Card -->
@@ -103,7 +102,10 @@
                     android:layout_height="140dp"
                     android:background="@drawable/bg_card_total_tickets"
                     android:padding="16dp"
-                    app:layout_columnWeight="1">
+                    app:layout_constraintEnd_toStartOf="@+id/cardUnresolvedTickets"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
                         android:id="@+id/tvTotalLabel"
@@ -150,10 +152,13 @@
                     android:id="@+id/cardUnresolvedTickets"
                     android:layout_width="0dp"
                     android:layout_height="140dp"
-                    android:layout_marginLeft="12dp"
+                    android:layout_marginStart="12dp"
                     android:background="@drawable/bg_stat_card_resolved"
                     android:padding="16dp"
-                    app:layout_columnWeight="1">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toEndOf="@+id/cardTotalTickets"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
                         android:id="@+id/tvUnresolvedLabel"
@@ -204,7 +209,10 @@
                     android:layout_marginTop="12dp"
                     android:background="@drawable/bg_stat_card_pending"
                     android:padding="16dp"
-                    app:layout_columnWeight="1">
+                    app:layout_constraintEnd_toStartOf="@+id/cardResolvedToday"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cardTotalTickets">
 
                     <TextView
                         android:id="@+id/tvPendingLabel"
@@ -235,11 +243,14 @@
                     android:id="@+id/cardResolvedToday"
                     android:layout_width="0dp"
                     android:layout_height="140dp"
-                    android:layout_marginLeft="12dp"
+                    android:layout_marginStart="12dp"
                     android:layout_marginTop="12dp"
                     android:background="@drawable/bg_stat_card_pending"
                     android:padding="16dp"
-                    app:layout_columnWeight="1">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toEndOf="@+id/cardPendingAction"
+                    app:layout_constraintTop_toBottomOf="@id/cardUnresolvedTickets">
 
                     <TextView
                         android:id="@+id/tvResolvedLabel"
