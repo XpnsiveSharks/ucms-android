@@ -99,9 +99,9 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cardTotalTickets"
                     android:layout_width="0dp"
-                    android:layout_height="140dp"
+                    android:layout_height="120dp"
                     android:background="@drawable/bg_card_total_tickets"
-                    android:padding="16dp"
+                    android:padding="12dp"
                     app:layout_constraintEnd_toStartOf="@+id/cardUnresolvedTickets"
                     app:layout_constraintHorizontal_weight="1"
                     app:layout_constraintStart_toStartOf="parent"
@@ -113,7 +113,7 @@
                         android:layout_height="wrap_content"
                         android:text="Total Tickets"
                         android:textColor="?attr/colorHomeTotalTicketsText"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -122,25 +122,25 @@
                         android:id="@+id/tvTotalTickets"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="4dp"
                         android:text="24"
                         android:textColor="?attr/colorHomeTotalTicketsCount"
-                        android:textSize="32sp"
+                        android:textSize="28sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvTotalLabel" />
 
                     <FrameLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:background="@drawable/bg_circle_box"
                         android:backgroundTint="#33FFFFFF"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent">
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_database"
                             app:tint="?attr/colorHomeTotalTicketsIcon" />
@@ -151,10 +151,10 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cardUnresolvedTickets"
                     android:layout_width="0dp"
-                    android:layout_height="140dp"
+                    android:layout_height="120dp"
                     android:layout_marginStart="12dp"
                     android:background="@drawable/bg_stat_card_resolved"
-                    android:padding="16dp"
+                    android:padding="12dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_weight="1"
                     app:layout_constraintStart_toEndOf="@+id/cardTotalTickets"
@@ -164,7 +164,7 @@
                         android:id="@+id/tvUnresolvedLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="UNRESOLVED TICKETS"
+                        android:text="UNRESOLVED"
                         android:textColor="?attr/colorTextSecondary"
                         android:textSize="9sp"
                         android:textStyle="bold"
@@ -176,10 +176,10 @@
                         android:id="@+id/tvUnresolvedCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="8dp"
                         android:text="34"
                         android:textColor="?attr/colorOnSurface"
-                        android:textSize="32sp"
+                        android:textSize="28sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvUnresolvedLabel" />
@@ -191,7 +191,7 @@
                         android:background="@drawable/bg_trend_badge"
                         android:backgroundTint="@color/colorGrid"
                         android:paddingHorizontal="6dp"
-                        android:paddingVertical="4dp"
+                        android:paddingVertical="2dp"
                         android:textColor="?attr/colorTextSecondary"
                         android:textSize="8sp"
                         android:gravity="center"
@@ -205,10 +205,10 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cardPendingAction"
                     android:layout_width="0dp"
-                    android:layout_height="140dp"
+                    android:layout_height="120dp"
                     android:layout_marginTop="12dp"
                     android:background="@drawable/bg_stat_card_pending"
-                    android:padding="16dp"
+                    android:padding="12dp"
                     app:layout_constraintEnd_toStartOf="@+id/cardResolvedToday"
                     app:layout_constraintHorizontal_weight="1"
                     app:layout_constraintStart_toStartOf="parent"
@@ -218,7 +218,7 @@
                         android:id="@+id/tvPendingLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Required Pending /\nAction"
+                        android:text="Required Action"
                         android:textColor="?attr/colorTextSecondary"
                         android:textSize="10sp"
                         android:textStyle="bold"
@@ -232,7 +232,7 @@
                         android:layout_marginTop="8dp"
                         android:text="12"
                         android:textColor="?attr/colorOnSurface"
-                        android:textSize="28sp"
+                        android:textSize="24sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvPendingLabel" />
@@ -242,11 +242,11 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cardResolvedToday"
                     android:layout_width="0dp"
-                    android:layout_height="140dp"
+                    android:layout_height="120dp"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="12dp"
                     android:background="@drawable/bg_stat_card_pending"
-                    android:padding="16dp"
+                    android:padding="12dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_weight="1"
                     app:layout_constraintStart_toEndOf="@+id/cardPendingAction"
@@ -258,7 +258,7 @@
                         android:layout_height="wrap_content"
                         android:text="Resolved Today"
                         android:textColor="?attr/colorTextSecondary"
-                        android:textSize="11sp"
+                        android:textSize="10sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -267,10 +267,10 @@
                         android:id="@+id/tvResolvedCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="8dp"
                         android:text="18"
                         android:textColor="?attr/colorOnSurface"
-                        android:textSize="28sp"
+                        android:textSize="24sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvResolvedLabel" />
@@ -312,23 +312,76 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- Mock Bar Chart -->
-                <LinearLayout
-                    android:id="@+id/llCategoryChart"
+                <!-- Chart Container with Grid Lines -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/chartContainer"
                     android:layout_width="match_parent"
                     android:layout_height="180dp"
                     android:layout_marginTop="32dp"
-                    android:gravity="bottom"
-                    android:orientation="horizontal"
                     app:layout_constraintTop_toBottomOf="@id/tvTrendsTitle">
 
-                    <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                    <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                    <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                    <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                    <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+                    <!-- Numerical Labels -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="100"
+                        android:textSize="8sp"
+                        android:textColor="?attr/colorTextSecondary"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="50"
+                        android:textSize="8sp"
+                        android:textColor="?attr/colorTextSecondary"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="8sp"
+                        android:textColor="?attr/colorTextSecondary"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginBottom="24dp" />
+
+                    <!-- Grid Lines Background -->
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="141dp"
+                        android:layout_marginStart="24dp"
+                        android:background="@drawable/bg_chart_grid_lines"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginBottom="24dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <!-- The Bars -->
+                    <LinearLayout
+                        android:id="@+id/llCategoryChart"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="24dp"
+                        android:gravity="bottom"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

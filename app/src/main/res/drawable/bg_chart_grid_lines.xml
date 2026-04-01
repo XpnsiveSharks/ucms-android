@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Bottom line (0) -->
+    <item android:bottom="0dp">
+        <shape android:shape="rectangle">
+            <size android:height="1dp" />
+            <solid android:color="?attr/colorRecentCardStroke" />
+        </shape>
+    </item>
+    <!-- Middle line (50) -->
+    <item android:bottom="70dp">
+        <shape android:shape="rectangle">
+            <size android:height="1dp" />
+            <solid android:color="?attr/colorRecentCardStroke" />
+        </shape>
+    </item>
+    <!-- Top line (100) -->
+    <item android:bottom="140dp">
+        <shape android:shape="rectangle">
+            <size android:height="1dp" />
+            <solid android:color="?attr/colorRecentCardStroke" />
+        </shape>
+    </item>
+</layer-list>
