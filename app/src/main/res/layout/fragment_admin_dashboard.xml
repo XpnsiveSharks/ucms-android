@@ -153,7 +153,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_card_accent_green"
+                    android:background="@drawable/bg_stat_card_resolved"
                     android:padding="20dp">
 
                     <TextView
@@ -213,7 +213,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_card_accent_orange"
+                    android:background="@drawable/bg_stat_card_pending"
                     android:padding="16dp">
 
                     <TextView
@@ -245,7 +245,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_card_accent_orange"
+                    android:background="@drawable/bg_stat_card_pending"
                     android:padding="16dp">
 
                     <TextView
