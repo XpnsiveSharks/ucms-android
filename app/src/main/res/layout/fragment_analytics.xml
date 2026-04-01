@@ -11,7 +11,8 @@
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:visibility="visible">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -140,7 +141,7 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- Concern Volume Timeline (Area/Line style using bars) -->
+            <!-- Concern Volume Timeline -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cvTimeline"
                 android:layout_width="match_parent"
@@ -171,7 +172,6 @@
                         android:layout_height="160dp"
                         android:layout_marginTop="24dp">
                         
-                        <!-- Grid Lines -->
                         <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" app:layout_constraintTop_toTopOf="parent" />
                         <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent" />
                         <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" app:layout_constraintBottom_toBottomOf="parent" />
@@ -183,7 +183,6 @@
                             android:gravity="bottom"
                             android:orientation="horizontal"
                             android:paddingHorizontal="8dp">
-                            <!-- Dynamic bars representing daily volume -->
                         </LinearLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
@@ -282,7 +281,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
                         android:orientation="vertical">
-                        <!-- Dynamic status bars will be added here -->
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -317,6 +315,51 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <!-- Error/Retry Overlay -->
+    <LinearLayout
+        android:id="@+id/layoutError"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:visibility="gone"
+        android:background="?attr/android:colorBackground">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/ic_warning"
+            app:tint="?attr/colorTextSecondary" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Connection Issue"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="We couldn't reach the server. Please check your internet connection and try again."
+            android:textColor="?attr/colorTextSecondary"
+            android:textSize="14sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRetry"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Retry Now"
+            app:icon="@drawable/ic_send" />
+    </LinearLayout>
 
     <!-- Loading Overlay -->
     <com.facebook.shimmer.ShimmerFrameLayout

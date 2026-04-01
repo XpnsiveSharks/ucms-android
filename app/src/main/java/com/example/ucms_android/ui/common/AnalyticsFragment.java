@@ -40,6 +40,7 @@ public class AnalyticsFragment extends Fragment {
 
     private ShimmerFrameLayout shimmerAnalytics;
     private View nestedScrollView;
+    private View layoutError;
     private TextView tvResolutionRate, tvResolutionTrend;
     private TextView tvAvgWaitTime, tvWaitTimeTrend;
     private ViewGroup llCategoryChart, llTimelineChart, llStatusDistribution;
@@ -61,6 +62,7 @@ public class AnalyticsFragment extends Fragment {
 
         shimmerAnalytics = view.findViewById(R.id.shimmerAnalytics);
         nestedScrollView = view.findViewById(R.id.nestedScrollView);
+        layoutError = view.findViewById(R.id.layoutError);
         tvResolutionRate = view.findViewById(R.id.tvResolutionRate);
         tvResolutionTrend = view.findViewById(R.id.tvResolutionTrend);
         tvAvgWaitTime = view.findViewById(R.id.tvAvgWaitTime);
@@ -69,6 +71,8 @@ public class AnalyticsFragment extends Fragment {
         llTimelineChart = view.findViewById(R.id.llTimelineChart);
         llStatusDistribution = view.findViewById(R.id.llStatusDistribution);
         rvCategoryBreakdown = view.findViewById(R.id.rvCategoryBreakdown);
+
+        view.findViewById(R.id.btnRetry).setOnClickListener(v -> fetchAnalytics());
 
         analyticsService = ApiClient.getInstance(requireContext()).create(AnalyticsService.class);
         
@@ -81,13 +85,17 @@ public class AnalyticsFragment extends Fragment {
 
     private void fetchAnalytics() {
         showLoading(true);
+        layoutError.setVisibility(View.GONE);
+
         analyticsService.getOverview().enqueue(new Callback<ApiResponse<AnalyticsOverview>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<AnalyticsOverview>> call, @NonNull Response<ApiResponse<AnalyticsOverview>> response) {
                 if (isAdded()) {
                     showLoading(false);
-                    if (response.isSuccessful() && response.body() != null) {
+                    if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                         bindOverview(response.body().getData());
+                    } else {
+                        handleFetchError("Server returned an empty response.");
                     }
                 }
             }
@@ -96,14 +104,25 @@ public class AnalyticsFragment extends Fragment {
             public void onFailure(@NonNull Call<ApiResponse<AnalyticsOverview>> call, @NonNull Throwable t) {
                 if (isAdded()) {
                     showLoading(false);
-                    Toast.makeText(requireContext(), "Failed to load analytics", Toast.LENGTH_SHORT).show();
+                    handleFetchError("Network failure: " + t.getLocalizedMessage());
                 }
             }
         });
     }
 
+    private void handleFetchError(String message) {
+        layoutError.setVisibility(View.VISIBLE);
+        nestedScrollView.setVisibility(View.GONE);
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
+        
+        // FOR DEBUGGING/OFFLINE: Still try to show mock data if you want to see the UI
+        // bindOverview(createMockData());
+    }
+
     private void bindOverview(AnalyticsOverview overview) {
         if (overview == null) return;
+        layoutError.setVisibility(View.GONE);
+        nestedScrollView.setVisibility(View.VISIBLE);
 
         // 1. Top Metrics
         tvResolutionRate.setText(String.format(Locale.getDefault(), "%.1f%%", overview.getResolutionRate()));
@@ -117,16 +136,18 @@ public class AnalyticsFragment extends Fragment {
         tvWaitTimeTrend.setTextColor(overview.getAverageWaitTimeTrendHours() <= 0 ? getResources().getColor(R.color.dm_mint_green) : getResources().getColor(R.color.dm_orange_peach));
 
         // 2. Timeline Chart
-        bindTimelineChart(overview.getTicketVolumeLast7Days());
+        if (overview.getTicketVolumeLast7Days() != null) {
+            bindTimelineChart(overview.getTicketVolumeLast7Days());
+        }
 
         // 3. Category 3D Chart
-        bindCategoryChart(overview.getCategoryBreakdown());
-
+        if (overview.getCategoryBreakdown() != null) {
+            bindCategoryChart(overview.getCategoryBreakdown());
+            adapter.setCategories(overview.getCategoryBreakdown());
+        }
+        
         // 4. Status Distribution
         bindStatusDistribution(overview);
-
-        // 5. Detailed Table
-        adapter.setCategories(overview.getCategoryBreakdown());
     }
 
     private void bindTimelineChart(List<DailyTicketVolume> volume) {
@@ -138,8 +159,7 @@ public class AnalyticsFragment extends Fragment {
             if (d.getTicketCount() > maxCount) maxCount = d.getTicketCount();
         }
 
-        for (int i = 0; i < volume.size(); i++) {
-            DailyTicketVolume d = volume.get(i);
+        for (DailyTicketVolume d : volume) {
             View bar = new View(requireContext());
             int heightPx = maxCount > 0 ? (int) (dpToPx(120) * (d.getTicketCount() / (double) maxCount)) : 0;
             if (d.getTicketCount() > 0) heightPx = Math.max(heightPx, dpToPx(10));
@@ -180,7 +200,7 @@ public class AnalyticsFragment extends Fragment {
             if (vBar != null && tvDay != null) {
                 ViewGroup.LayoutParams params = vBar.getLayoutParams();
                 int heightDp = maxCount > 0 ? (int) (maxBarHeightDp * (data.getTicketCount() / (double) maxCount)) : 0;
-                if (data.getTicketCount() > 0) heightDp = Math.max(heightDp, 20);
+                if (data.getTicketCount() > 0) heightDp = Math.max(heightDp, 25); // Minimum height for 3D visibility
                 params.height = dpToPx(heightDp);
                 vBar.setLayoutParams(params);
                 vBar.setBarColor(barColors[i % barColors.length]);

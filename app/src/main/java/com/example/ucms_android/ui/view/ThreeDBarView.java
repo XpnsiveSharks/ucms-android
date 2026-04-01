@@ -12,10 +12,9 @@ import androidx.annotation.Nullable;
 
 public class ThreeDBarView extends View {
 
-    private int baseColor = Color.BLUE;
+    private int baseColor = Color.parseColor("#2196F3");
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Path path = new Path();
-    private int depth = 20; // depth in pixels
 
     public ThreeDBarView(Context context) {
         super(context);
@@ -34,14 +33,15 @@ public class ThreeDBarView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        int w = getWidth();
-        int h = getHeight();
-        if (w == 0 || h == 0) return;
+        float w = getWidth();
+        float h = getHeight();
+        if (w <= 0 || h <= 0) return;
 
-        depth = w / 3; // Dynamic depth based on width
+        float depth = w / 3f;
+        if (h <= depth) depth = h / 2f; // Prevent depth from being larger than height
 
         // 1. Top Face (Lighter)
-        paint.setColor(adjustColor(baseColor, 1.2f));
+        paint.setColor(adjustColor(baseColor, 1.15f));
         path.reset();
         path.moveTo(0, depth);
         path.lineTo(depth, 0);
@@ -51,7 +51,7 @@ public class ThreeDBarView extends View {
         canvas.drawPath(path, paint);
 
         // 2. Side Face (Right, Darker)
-        paint.setColor(adjustColor(baseColor, 0.7f));
+        paint.setColor(adjustColor(baseColor, 0.85f));
         path.reset();
         path.moveTo(w - depth, depth);
         path.lineTo(w, 0);
@@ -60,16 +60,16 @@ public class ThreeDBarView extends View {
         path.close();
         canvas.drawPath(path, paint);
 
-        // 3. Front Face (Base)
+        // 3. Front Face (Base Color)
         paint.setColor(baseColor);
         canvas.drawRect(0, depth, w - depth, h, paint);
     }
 
     private int adjustColor(int color, float factor) {
         int a = Color.alpha(color);
-        int r = Math.min(255, (int) (Color.red(color) * factor));
-        int g = Math.min(255, (int) (Color.green(color) * factor));
-        int b = Math.min(255, (int) (Color.blue(color) * factor));
+        int r = Math.min(255, Math.max(0, (int) (Color.red(color) * factor)));
+        int g = Math.min(255, Math.max(0, (int) (Color.green(color) * factor)));
+        int b = Math.min(255, Math.max(0, (int) (Color.blue(color) * factor)));
         return Color.argb(a, r, g, b);
     }
 }
