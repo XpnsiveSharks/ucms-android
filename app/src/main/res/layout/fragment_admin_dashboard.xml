@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_grid">
+    android:background="?attr/android:colorBackground">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -48,7 +48,7 @@
                     android:layout_weight="1"
                     android:text="Overview"
                     android:textColor="?attr/colorOnSurface"
-                    android:textSize="24sp"
+                    android:textSize="28sp"
                     android:textStyle="bold"
                     android:ellipsize="end"
                     android:singleLine="true" />
@@ -74,7 +74,6 @@
                     android:src="@drawable/ic_notifications"
                     app:tint="?attr/colorOnSurface" />
 
-                <!-- Notification Dot -->
                 <View
                     android:id="@+id/viewNotificationBadge"
                     android:layout_width="8dp"
@@ -88,186 +87,385 @@
                     tools:visibility="visible" />
             </FrameLayout>
 
-            <!-- Total Tickets Card -->
-            <LinearLayout
-                android:id="@+id/cardTotalTickets"
-                android:layout_width="0dp"
-                android:layout_height="110dp"
+            <!-- 2x2 Stats Grid using ConstraintLayout -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/glStats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:background="@drawable/bg_card_total_tickets"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layoutUserHeader">
 
-                <LinearLayout
+                <!-- Total Tickets Card -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cardTotalTickets"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_height="100dp"
+                    android:background="@drawable/bg_card_total_tickets"
+                    android:padding="12dp"
+                    app:layout_constraintEnd_toStartOf="@+id/cardUnresolvedTickets"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
+                    <LinearLayout
+                        android:id="@+id/llTotalHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:letterSpacing="0.1"
-                        android:text="TOTAL RECORDS"
-                        android:textColor="?attr/colorHomeTotalTicketsText"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:src="@drawable/ic_database"
+                            app:tint="?attr/colorHomeTotalTicketsIcon" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="TOTAL"
+                            android:textColor="?attr/colorHomeTotalTicketsText"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tvTotalTickets"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
                         android:text="0"
                         android:textColor="?attr/colorHomeTotalTicketsCount"
-                        android:textSize="36sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/llTotalHeader" />
 
-                <FrameLayout
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:background="@drawable/bg_home_icon_container">
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_database"
-                        app:tint="?attr/colorHomeTotalTicketsIcon" />
-                </FrameLayout>
-            </LinearLayout>
-
-            <!-- Stat Cards Row -->
-            <LinearLayout
-                android:id="@+id/llStats"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cardTotalTickets">
-
-                <LinearLayout
+                <!-- Unresolved Tickets Card -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cardUnresolvedTickets"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="6dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_stat_card_pending"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
+                    android:layout_height="100dp"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/bg_stat_card_resolved"
+                    android:padding="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toEndOf="@+id/cardTotalTickets"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
+                    <LinearLayout
+                        android:id="@+id/llUnresolvedHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:letterSpacing="0.05"
-                        android:text="PENDING\nACTION"
-                        android:textColor="?attr/colorHomeStatText"
-                        android:textSize="10sp"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:src="@drawable/ic_warning"
+                            app:tint="?attr/colorTextSecondary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="UNRESOLVED"
+                            android:textColor="?attr/colorTextSecondary"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        app:layout_constraintTop_toBottomOf="@id/llUnresolvedHeader">
+
+                        <TextView
+                            android:id="@+id/tvUnresolvedCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="28sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvUnresolvedTrend"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_trend_badge"
+                            android:backgroundTint="#F0F0F0"
+                            android:gravity="center"
+                            android:lineSpacingExtra="0dp"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="4dp"
+                            android:textColor="#666666"
+                            android:textSize="8sp"
+                            android:textStyle="bold"
+                            tools:text="12% vs\nLast Week" />
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!-- Pending Action Card -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cardPendingAction"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_stat_card_pending"
+                    android:padding="12dp"
+                    app:layout_constraintEnd_toStartOf="@+id/cardResolvedToday"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cardTotalTickets">
+
+                    <LinearLayout
+                        android:id="@+id/llPendingHeader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:src="@drawable/ic_tickets"
+                            app:tint="?attr/colorTextSecondary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="PENDING"
+                            android:textColor="?attr/colorTextSecondary"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tvPendingCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="4dp"
                         android:text="0"
-                        android:textColor="?attr/colorHomeTotalTicketsCount"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="28sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/llPendingHeader" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <LinearLayout
+                <!-- Resolved Today Card -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cardResolvedToday"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="6dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_stat_card_resolved"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
+                    android:layout_height="100dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_stat_card_pending"
+                    android:padding="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toEndOf="@+id/cardPendingAction"
+                    app:layout_constraintTop_toBottomOf="@id/cardUnresolvedTickets">
 
-                    <TextView
+                    <LinearLayout
+                        android:id="@+id/llResolvedHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:letterSpacing="0.05"
-                        android:text="RESOLVED\nTODAY"
-                        android:textColor="?attr/colorHomeStatText"
-                        android:textSize="10sp"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:src="@drawable/ic_check_circle"
+                            app:tint="?attr/colorTextSecondary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="RESOLVED"
+                            android:textColor="?attr/colorTextSecondary"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tvResolvedCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="4dp"
                         android:text="0"
-                        android:textColor="?attr/colorHomeTotalTicketsCount"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="28sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </LinearLayout>
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/llResolvedHeader" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Telemetry Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnTelemetry"
-                android:layout_width="0dp"
-                android:layout_height="64dp"
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Category Trends Section -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cardCategoryTrends"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                app:backgroundTint="@null"
-                android:background="@drawable/bg_button_submit_glow"
-                android:text="VIEW ANALYTICS"
-                android:textAllCaps="true"
-                android:textColor="?attr/colorHomeSubmitButton"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:icon="@drawable/ic_analytics"
-                app:iconGravity="textStart"
-                app:iconPadding="12dp"
-                app:iconSize="20dp"
-                app:iconTint="?attr/colorHomeSubmitButton"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/llStats" />
+                android:background="@drawable/bg_card_chart_trends"
+                android:padding="24dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintTop_toBottomOf="@id/glStats">
 
-            <!-- Recent Logs Section -->
+                <TextView
+                    android:id="@+id/tvTrendsTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
+                    android:letterSpacing="0.1"
+                    android:text="CATEGORY TRENDS"
+                    android:textColor="?attr/colorTextSecondary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Spinner
+                    android:id="@+id/spinnerTimeFilter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_spinner_filter"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Chart Container -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/chartContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_marginTop="32dp"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    app:layout_constraintTop_toBottomOf="@id/tvTrendsTitle">
+
+                    <!-- Numerical Labels -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/llCategoryYAxis"
+                        android:layout_width="32dp"
+                        android:layout_height="0dp"
+                        android:layout_marginBottom="80dp"
+                        android:clipChildren="false"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent">
+                        <!-- Labels will be added dynamically -->
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Chart Frame (Grid Lines + Bars) -->
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/llCategoryYAxis">
+
+                        <!-- Scrollable Bars Container -->
+                        <HorizontalScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scrollbars="none"
+                            android:clipChildren="false"
+                            android:clipToPadding="false">
+
+                            <FrameLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:clipChildren="false"
+                                android:clipToPadding="false">
+
+                                <!-- Grid Lines LinearLayout -->
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginBottom="80dp"
+                                    android:orientation="vertical">
+                                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" />
+                                    <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+                                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" />
+                                    <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+                                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" />
+                                    <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+                                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" />
+                                    <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+                                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/llCategoryChart"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="bottom"
+                                    android:orientation="horizontal"
+                                    android:paddingEnd="24dp"
+                                    android:clipChildren="false"
+                                    android:clipToPadding="false">
+                                    <!-- Bars will be added dynamically -->
+                                </LinearLayout>
+                            </FrameLayout>
+                        </HorizontalScrollView>
+                    </FrameLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Recent Concerns Section -->
             <TextView
-                android:id="@+id/tvRecentLogsLabel"
+                android:id="@+id/tvRecentConcernsLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:fontFamily="monospace"
-                android:letterSpacing="0.2"
-                android:text="RECENT LOGS"
+                android:text="Recent Concerns"
                 android:textColor="?attr/colorOnSurface"
-                android:textSize="12sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btnTelemetry" />
+                app:layout_constraintTop_toBottomOf="@id/cardCategoryTrends" />
 
             <TextView
                 android:id="@+id/tvViewAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:letterSpacing="0.2"
-                android:text="VIEW ALL"
-                android:textColor="?attr/colorHomeViewAllText"
+                android:text="View Tickets"
+                android:textColor="?attr/colorTextSecondary"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:clickable="true"
                 android:focusable="true"
-                app:layout_constraintBottom_toBottomOf="@id/tvRecentLogsLabel"
+                app:layout_constraintBottom_toBottomOf="@id/tvRecentConcernsLabel"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tvRecentLogsLabel" />
+                app:layout_constraintTop_toTopOf="@id/tvRecentConcernsLabel" />
 
             <!-- Loading Skeleton for Recent Tickets -->
             <com.facebook.shimmer.ShimmerFrameLayout
@@ -278,16 +476,14 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvRecentLogsLabel">
+                app:layout_constraintTop_toBottomOf="@id/tvRecentConcernsLabel">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
                     <include layout="@layout/layout_skeleton_ticket" />
                     <include layout="@layout/layout_skeleton_ticket" />
-
                 </LinearLayout>
 
             </com.facebook.shimmer.ShimmerFrameLayout>
@@ -301,13 +497,12 @@
                 android:gravity="center"
                 android:padding="24dp"
                 android:background="@drawable/bg_square_box"
-                android:text="No recent logs found"
-                android:fontFamily="monospace"
+                android:text="No recent concerns found"
                 android:textColor="?attr/colorOnSurface"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvRecentLogsLabel" />
+                app:layout_constraintTop_toBottomOf="@id/tvRecentConcernsLabel" />
 
             <!-- Recent Tickets RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
@@ -319,8 +514,8 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvRecentLogsLabel"
-                tools:itemCount="3"
+                app:layout_constraintTop_toBottomOf="@id/tvRecentConcernsLabel"
+                tools:itemCount="2"
                 tools:listitem="@layout/item_recent_ticket"
                 tools:visibility="visible" />
 

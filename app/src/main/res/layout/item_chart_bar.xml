@@ -1,27 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="70dp"
+    android:layout_height="300dp"
+    android:orientation="vertical"
     android:gravity="bottom|center_horizontal"
-    android:orientation="vertical">
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
-    <View
-        android:id="@+id/vBar"
-        android:layout_width="32dp"
-        android:layout_height="60dp"
-        android:background="?attr/colorHomeSubmitButtonTint"
-        tools:layout_height="80dp" />
+    <!-- Chart Area (220dp to match grid height) -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
-    <TextView
-        android:id="@+id/tvDay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:fontFamily="monospace"
-        android:textColor="?attr/colorTextSecondary"
-        android:textSize="9sp"
-        android:textStyle="bold"
-        tools:text="MON" />
+        <com.example.ucms_android.ui.view.ThreeDBarView
+            android:id="@+id/vBar"
+            android:layout_width="28dp"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            tools:layout_height="140dp" />
+
+        <TextView
+            android:id="@+id/tvCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/vBar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="4dp"
+            android:fontFamily="monospace"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            tools:text="12" />
+    </RelativeLayout>
+
+    <!-- Label Area (80dp) -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <TextView
+            android:id="@+id/tvDay"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="?attr/colorTextPrimary"
+            android:textSize="10sp"
+            android:rotation="-45"
+            android:gravity="center"
+            android:singleLine="true"
+            android:ellipsize="end"
+            tools:text="CATEGORY NAME" />
+    </FrameLayout>
 
 </LinearLayout>

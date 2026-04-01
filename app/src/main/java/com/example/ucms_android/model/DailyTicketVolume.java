@@ -9,6 +9,11 @@ public class DailyTicketVolume {
     @SerializedName("ticketCount")
     private long ticketCount;
 
+    public DailyTicketVolume(String day, long count) {
+        this.day = day;
+        this.ticketCount = count;
+    }
+
     public String getDay() { return day; }
     public long getTicketCount() { return ticketCount; }
 }

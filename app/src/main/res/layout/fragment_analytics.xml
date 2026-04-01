@@ -11,7 +11,8 @@
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:visibility="visible">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -24,7 +25,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Analytics"
+                android:text="System Insights"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="28sp"
                 android:textStyle="bold"
@@ -32,279 +33,406 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Summary Cards Row -->
+            <TextView
+                android:id="@+id/tvScreenSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Monitor concern resolution and trends"
+                android:textColor="?attr/colorTextSecondary"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvScreenTitle" />
+
+            <!-- Summary Cards Row (Rate & Wait) -->
             <LinearLayout
-                android:id="@+id/llSummaryCards"
+                android:id="@+id/llTopMetrics"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/tvScreenTitle">
+                app:layout_constraintTop_toBottomOf="@id/tvScreenSubtitle">
 
-                <!-- Resolution Rate Card -->
+                <!-- Resolution Rate -->
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cvResolutionRate"
                     android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    android:layout_marginEnd="6dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     app:cardBackgroundColor="?attr/colorRecentCardBg"
-                    app:cardCornerRadius="12dp"
+                    app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
                     app:strokeColor="?attr/colorTicketCardStroke"
                     app:strokeWidth="1dp">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <!-- Top Accent -->
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="4dp"
-                            android:background="@color/dm_orange_peach"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="16dp"
-                                    android:layout_height="16dp"
-                                    android:src="@drawable/ic_resolution_rate"
-                                    app:tint="?attr/colorTextSecondary" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="4dp"
-                                    android:fontFamily="monospace"
-                                    android:text="RATE"
-                                    android:textColor="?attr/colorTextSecondary"
-                                    android:textSize="10sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
-
-                            <TextView
-                                android:id="@+id/tvResolutionRate"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:textColor="?attr/colorOnSurface"
-                                android:textSize="24sp"
-                                android:textStyle="bold"
-                                tools:text="94.2%" />
-
-                            <TextView
-                                android:id="@+id/tvResolutionTrend"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:fontFamily="monospace"
-                                android:textColor="@color/dm_mint_green"
-                                android:textSize="9sp"
-                                android:textStyle="bold"
-                                tools:text="+2.4% last week" />
-                        </LinearLayout>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="RESOLVED"
+                            android:fontFamily="monospace"
+                            android:textColor="?attr/colorTextSecondary"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvResolutionRate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            tools:text="92.5%" />
+                        <TextView
+                            android:id="@+id/tvResolutionTrend"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:textColor="@color/dm_mint_green"
+                            android:textSize="10sp"
+                            tools:text="+2.4% vs last week" />
+                    </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Average Wait Time Card -->
+                <!-- Average Response -->
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cvAvgWaitTime"
                     android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    android:layout_marginStart="6dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     app:cardBackgroundColor="?attr/colorRecentCardBg"
-                    app:cardCornerRadius="12dp"
+                    app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
                     app:strokeColor="?attr/colorTicketCardStroke"
                     app:strokeWidth="1dp">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <!-- Top Accent -->
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="4dp"
-                            android:background="@color/colorStatusInProgress"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="16dp"
-                                    android:layout_height="16dp"
-                                    android:src="@drawable/ic_avg_wait_time"
-                                    app:tint="?attr/colorTextSecondary" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="4dp"
-                                    android:fontFamily="monospace"
-                                    android:text="WAIT"
-                                    android:textColor="?attr/colorTextSecondary"
-                                    android:textSize="10sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
-
-                            <TextView
-                                android:id="@+id/tvAvgWaitTime"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:textColor="?attr/colorOnSurface"
-                                android:textSize="24sp"
-                                android:textStyle="bold"
-                                tools:text="4.2h" />
-
-                            <TextView
-                                android:id="@+id/tvWaitTimeTrend"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:fontFamily="monospace"
-                                android:textColor="@color/dm_orange_peach"
-                                android:textSize="9sp"
-                                android:textStyle="bold"
-                                tools:text="-1.1h last week" />
-                        </LinearLayout>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="AVG RESPONSE"
+                            android:fontFamily="monospace"
+                            android:textColor="?attr/colorTextSecondary"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvAvgWaitTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            tools:text="4.2h" />
+                        <TextView
+                            android:id="@+id/tvWaitTimeTrend"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:textColor="@color/dm_orange_peach"
+                            android:textSize="10sp"
+                            tools:text="-1.1h vs last week" />
+                    </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-
             </LinearLayout>
 
-            <!-- Ticket Volume Card -->
+            <!-- Concern Volume Timeline -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cvTicketVolume"
+                android:id="@+id/cvTimeline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:cardBackgroundColor="?attr/colorRecentCardBg"
-                app:cardCornerRadius="12dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
                 app:strokeColor="?attr/colorTicketCardStroke"
                 app:strokeWidth="1dp"
-                app:layout_constraintTop_toBottomOf="@id/llSummaryCards">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
+                app:layout_constraintTop_toBottomOf="@id/llTopMetrics">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     android:padding="24dp">
 
-                    <LinearLayout
-                        android:id="@+id/llVolumeHeader"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:src="@drawable/ic_ticket_volume"
-                            app:tint="?attr/colorHomeSubmitButton" />
-
-                        <TextView
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:fontFamily="monospace"
-                            android:text="TICKET VOLUME (7D)"
-                            android:textColor="?attr/colorTextSecondary"
-                            android:textSize="10sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
+                            android:orientation="vertical"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent">
 
-                    <!-- Mock Bar Chart -->
-                    <LinearLayout
-                        android:id="@+id/llMockChart"
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="CONCERN VOLUME"
+                                android:fontFamily="monospace"
+                                android:textColor="?attr/colorTextSecondary"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Last 7 days activity"
+                                android:textColor="?attr/colorTextPrimary"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_ticket_volume"
+                            android:background="@drawable/bg_home_icon_container"
+                            app:tint="?attr/colorSecondary"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="160dp"
-                        android:layout_marginTop="24dp"
-                        android:gravity="bottom"
-                        android:orientation="horizontal"
-                        app:layout_constraintTop_toBottomOf="@id/llVolumeHeader">
-
-                        <!-- Bars with days -->
-                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-                        <include layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-
-                    </LinearLayout>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        android:layout_height="180dp"
+                        android:layout_marginTop="24dp">
+                        
+                        <com.example.ucms_android.ui.view.LineChartView
+                            android:id="@+id/lineChartTimeline"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Category Breakdown Section -->
+            <!-- Category Distribution (3D Block Chart) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvCategoryTrends"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="?attr/colorRecentCardBg"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="?attr/colorTicketCardStroke"
+                app:strokeWidth="1dp"
+                app:layout_constraintTop_toBottomOf="@id/cvTimeline">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CONCERN BY CATEGORY"
+                        android:fontFamily="monospace"
+                        android:textColor="?attr/colorTextSecondary"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:layout_marginTop="24dp"
+                        android:clipChildren="false"
+                        android:clipToPadding="false">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/llCategoryYAxis"
+                            android:layout_width="40dp"
+                            android:layout_height="0dp"
+                            android:layout_marginBottom="80dp"
+                            android:clipChildren="false"
+                            android:background="?attr/colorRecentCardBg"
+                            android:elevation="1dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent">
+                            <!-- Labels will be added dynamically -->
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                        
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:clipChildren="false"
+                            android:clipToPadding="false"
+                            app:layout_constraintStart_toEndOf="@id/llCategoryYAxis"
+                            app:layout_constraintEnd_toEndOf="parent">
+
+                            <HorizontalScrollView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scrollbars="none"
+                                android:clipChildren="false"
+                                android:clipToPadding="false">
+                                <FrameLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:clipChildren="false"
+                                    android:clipToPadding="false">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginBottom="80dp"
+                                        android:orientation="vertical">
+                                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" />
+                                        <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+                                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" />
+                                        <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+                                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" />
+                                        <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+                                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" />
+                                        <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+                                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorTicketCardStroke" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:id="@+id/llCategoryChart"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:gravity="bottom"
+                                        android:orientation="horizontal"
+                                        android:paddingEnd="24dp"
+                                        android:clipChildren="false"
+                                        android:clipToPadding="false" />
+                                </FrameLayout>
+                            </HorizontalScrollView>
+                        </FrameLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Status Distribution Overview -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="?attr/colorRecentCardBg"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="?attr/colorTicketCardStroke"
+                app:strokeWidth="1dp"
+                app:layout_constraintTop_toBottomOf="@id/cvCategoryTrends">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="STATUS DISTRIBUTION"
+                        android:fontFamily="monospace"
+                        android:textColor="?attr/colorTextSecondary"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:id="@+id/llStatusDistribution"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:orientation="vertical">
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Detailed Table Section -->
             <TextView
-                android:id="@+id/tvCategoryBreakdownLabel"
+                android:id="@+id/tvDetailedLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:fontFamily="monospace"
-                android:text="[ CATEGORY DISTRIBUTION ]"
-                android:textColor="?attr/colorTextSecondary"
-                android:textSize="11sp"
+                android:text="Breakdown Details"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cvTicketVolume" />
+                app:layout_constraintTop_toBottomOf="@id/cvStatus" />
 
-            <!-- Category List -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvCategoryBreakdown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:nestedScrollingEnabled="false"
-                app:layout_constraintTop_toBottomOf="@id/tvCategoryBreakdownLabel"
-                tools:itemCount="4"
+                app:layout_constraintTop_toBottomOf="@id/tvDetailedLabel"
+                tools:itemCount="3"
                 tools:listitem="@layout/item_category_count" />
-
-            <!-- Loading Shimmer -->
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/shimmerAnalytics"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/tvScreenTitle">
-                <include layout="@layout/shimmer_analytics" />
-            </com.facebook.shimmer.ShimmerFrameLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
+                android:layout_height="40dp"
                 app:layout_constraintTop_toBottomOf="@id/rvCategoryBreakdown" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <!-- Error/Retry Overlay -->
+    <LinearLayout
+        android:id="@+id/layoutError"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:visibility="gone"
+        android:background="?attr/android:colorBackground">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/ic_warning"
+            app:tint="?attr/colorTextSecondary" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Connection Issue"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="We couldn't reach the server. Please check your internet connection and try again."
+            android:textColor="?attr/colorTextSecondary"
+            android:textSize="14sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRetry"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Retry Now"
+            app:icon="@drawable/ic_send" />
+    </LinearLayout>
+
+    <!-- Loading Overlay -->
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerAnalytics"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <include layout="@layout/shimmer_analytics" />
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

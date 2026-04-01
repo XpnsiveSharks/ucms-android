@@ -7,6 +7,12 @@ public class CategoryCount {
     private String categoryName;
     @SerializedName("ticketCount")
     private long ticketCount;
+
+    public CategoryCount(String name, long count) {
+        this.categoryName = name;
+        this.ticketCount = count;
+    }
+
     public Long getCategoryId() { return categoryId; }
     public String getCategoryName() { return categoryName; }
     public long getTicketCount() { return ticketCount; }
