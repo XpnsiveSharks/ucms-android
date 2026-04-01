@@ -37,6 +37,18 @@ public class AnalyticsOverview {
     @SerializedName("categoryBreakdown")
     private List<CategoryCount> categoryBreakdown;
 
+    public void setResolutionRate(double resolutionRate) { this.resolutionRate = resolutionRate; }
+    public void setResolutionTrend(double resolutionTrend) { this.resolutionTrend = resolutionTrend; }
+    public void setAverageWaitTimeHours(double averageWaitTimeHours) { this.averageWaitTimeHours = averageWaitTimeHours; }
+    public void setAverageWaitTimeTrendHours(double averageWaitTimeTrendHours) { this.averageWaitTimeTrendHours = averageWaitTimeTrendHours; }
+    public void setTotalTickets(long totalTickets) { this.totalTickets = totalTickets; }
+    public void setResolvedCount(long resolvedCount) { this.resolvedCount = resolvedCount; }
+    public void setPendingCount(long pendingCount) { this.pendingCount = pendingCount; }
+    public void setInProgressCount(long inProgressCount) { this.inProgressCount = inProgressCount; }
+    public void setUnresolvedCount(long unresolvedCount) { this.unresolvedCount = unresolvedCount; }
+    public void setTicketVolumeLast7Days(List<DailyTicketVolume> ticketVolumeLast7Days) { this.ticketVolumeLast7Days = ticketVolumeLast7Days; }
+    public void setCategoryBreakdown(List<CategoryCount> categoryBreakdown) { this.categoryBreakdown = categoryBreakdown; }
+
     public double getResolutionRate() { return resolutionRate; }
     public double getResolutionTrend() { return resolutionTrend; }
     public double getAverageWaitTimeHours() { return averageWaitTimeHours; }
