@@ -101,6 +101,14 @@ public class AdminDashboardFragment extends Fragment {
             }
         });
 
+        view.findViewById(R.id.cardCategoryTrends).setOnClickListener(v -> {
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).loadFragment(new AnalyticsFragment());
+                BottomNavigationView nav = getActivity().findViewById(R.id.bottomNavView);
+                if (nav != null) nav.setSelectedItemId(R.id.nav_admin_analytics);
+            }
+        });
+
         ticketService = ApiClient.getInstance(requireContext()).create(TicketService.class);
         sessionManager = new SessionManager(requireContext());
         gson = new Gson();

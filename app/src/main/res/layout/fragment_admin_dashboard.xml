@@ -87,89 +87,83 @@
                     tools:visibility="visible" />
             </FrameLayout>
 
-            <!-- Total Tickets Card (Same as Student Side) -->
-            <LinearLayout
-                android:id="@+id/cardTotalTickets"
-                android:layout_width="0dp"
-                android:layout_height="110dp"
+            <!-- 2x2 Stats Grid -->
+            <androidx.gridlayout.widget.GridLayout
+                android:id="@+id/glStats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:background="@drawable/bg_card_total_tickets"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:columnCount="2"
                 app:layout_constraintTop_toBottomOf="@id/layoutUserHeader">
 
-                <LinearLayout
+                <!-- Total Tickets Card -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cardTotalTickets"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_height="140dp"
+                    android:background="@drawable/bg_card_total_tickets"
+                    android:padding="16dp"
+                    app:layout_columnWeight="1">
 
                     <TextView
+                        android:id="@+id/tvTotalLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:letterSpacing="0.1"
-                        android:text="TOTAL TICKETS"
+                        android:text="Total Tickets"
                         android:textColor="?attr/colorHomeTotalTicketsText"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/tvTotalTickets"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
+                        android:layout_marginTop="8dp"
+                        android:text="24"
                         android:textColor="?attr/colorHomeTotalTicketsCount"
-                        android:textSize="36sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvTotalLabel" />
 
-                <FrameLayout
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:background="@drawable/bg_home_icon_container">
+                    <FrameLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_circle_box"
+                        android:backgroundTint="#33FFFFFF"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_database"
-                        app:tint="?attr/colorHomeTotalTicketsIcon" />
-                </FrameLayout>
-            </LinearLayout>
-
-            <!-- Stats Row 1: Unresolved & Pending -->
-            <LinearLayout
-                android:id="@+id/rowStats1"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/cardTotalTickets">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_database"
+                            app:tint="?attr/colorHomeTotalTicketsIcon" />
+                    </FrameLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <!-- Unresolved Tickets Card -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cardUnresolvedTickets"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="6dp"
-                    android:layout_weight="1"
+                    android:layout_height="140dp"
+                    android:layout_marginLeft="12dp"
                     android:background="@drawable/bg_stat_card_resolved"
-                    android:padding="16dp">
+                    android:padding="16dp"
+                    app:layout_columnWeight="1">
 
                     <TextView
                         android:id="@+id/tvUnresolvedLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:letterSpacing="0.05"
-                        android:text="UNRESOLVED\nTICKETS"
-                        android:textColor="?attr/colorHomeStatText"
-                        android:textSize="10sp"
+                        android:text="UNRESOLVED TICKETS"
+                        android:textColor="?attr/colorTextSecondary"
+                        android:textSize="9sp"
                         android:textStyle="bold"
+                        android:textAllCaps="true"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -177,25 +171,24 @@
                         android:id="@+id/tvUnresolvedCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="0"
-                        android:textColor="?attr/colorHomeTotalTicketsCount"
-                        android:textSize="28sp"
+                        android:layout_marginTop="12dp"
+                        android:text="34"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="32sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvUnresolvedLabel" />
 
-                    <!-- Trend Badge (The gray box in the image) -->
                     <TextView
                         android:id="@+id/tvUnresolvedTrend"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_trend_badge"
                         android:backgroundTint="@color/colorGrid"
-                        android:paddingHorizontal="8dp"
-                        android:paddingVertical="6dp"
+                        android:paddingHorizontal="6dp"
+                        android:paddingVertical="4dp"
                         android:textColor="?attr/colorTextSecondary"
-                        android:textSize="9sp"
+                        android:textSize="8sp"
                         android:gravity="center"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -207,20 +200,18 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cardPendingAction"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="6dp"
-                    android:layout_weight="1"
+                    android:layout_height="140dp"
+                    android:layout_marginTop="12dp"
                     android:background="@drawable/bg_stat_card_pending"
-                    android:padding="16dp">
+                    android:padding="16dp"
+                    app:layout_columnWeight="1">
 
                     <TextView
                         android:id="@+id/tvPendingLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:letterSpacing="0.05"
-                        android:text="REQUIRED\nPENDING"
-                        android:textColor="?attr/colorHomeStatText"
+                        android:text="Required Pending /\nAction"
+                        android:textColor="?attr/colorTextSecondary"
                         android:textSize="10sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
@@ -231,44 +222,32 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="0"
-                        android:textColor="?attr/colorHomeTotalTicketsCount"
+                        android:text="12"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="28sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvPendingLabel" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </LinearLayout>
-
-            <!-- Stats Row 2: Resolved Today & View More -->
-            <LinearLayout
-                android:id="@+id/rowStats2"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/rowStats1">
-
                 <!-- Resolved Today Card -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cardResolvedToday"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="6dp"
-                    android:layout_weight="1"
+                    android:layout_height="140dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="12dp"
                     android:background="@drawable/bg_stat_card_pending"
-                    android:padding="16dp">
+                    android:padding="16dp"
+                    app:layout_columnWeight="1">
 
                     <TextView
                         android:id="@+id/tvResolvedLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:letterSpacing="0.05"
-                        android:text="RESOLVED\nTODAY"
-                        android:textColor="?attr/colorHomeStatText"
-                        android:textSize="10sp"
+                        android:text="Resolved Today"
+                        android:textColor="?attr/colorTextSecondary"
+                        android:textSize="11sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -277,24 +256,16 @@
                         android:id="@+id/tvResolvedCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="0"
-                        android:textColor="?attr/colorHomeTotalTicketsCount"
+                        android:layout_marginTop="16dp"
+                        android:text="18"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="28sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvResolvedLabel" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <!-- Spacer or Placeholder -->
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="6dp"
-                    android:layout_weight="1"
-                    android:visibility="invisible" />
-
-            </LinearLayout>
+            </androidx.gridlayout.widget.GridLayout>
 
             <!-- Category Trends Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -304,12 +275,16 @@
                 android:layout_marginTop="24dp"
                 android:background="@drawable/bg_card_chart_trends"
                 android:padding="24dp"
-                app:layout_constraintTop_toBottomOf="@id/rowStats2">
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintTop_toBottomOf="@id/glStats">
 
                 <TextView
                     android:id="@+id/tvTrendsTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
+                    android:letterSpacing="0.1"
                     android:text="CATEGORY TRENDS"
                     android:textColor="?attr/colorTextSecondary"
                     android:textSize="12sp"
