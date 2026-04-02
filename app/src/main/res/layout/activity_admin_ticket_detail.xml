@@ -272,27 +272,66 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
                         android:fontFamily="monospace"
-                        android:text="ADMIN LOG COMMENT"
+                        android:text="APPEND TIMELINE COMMENT"
                         android:textColor="?attr/colorTextSecondary"
                         android:textSize="10sp"
                         android:textStyle="bold" />
 
-                    <!-- Response Input -->
-                    <EditText
-                        android:id="@+id/etResponse"
+                    <!-- Response Input with inline send button -->
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_input_rect"
-                        android:fontFamily="monospace"
-                        android:gravity="top"
-                        android:hint="Enter administrator log..."
-                        android:inputType="textMultiLine"
-                        android:minLines="4"
-                        android:padding="16dp"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textColorHint="?attr/colorTextSecondary"
-                        android:textSize="14sp" />
+                        android:layout_marginTop="8dp">
+
+                        <EditText
+                            android:id="@+id/etResponse"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_input_rect"
+                            android:fontFamily="monospace"
+                            android:gravity="top"
+                            android:hint="Enter administrator log..."
+                            android:inputType="textMultiLine"
+                            android:minLines="4"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:paddingTop="16dp"
+                            android:paddingBottom="52dp"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textColorHint="?attr/colorTextSecondary"
+                            android:textSize="14sp" />
+
+                        <ImageButton
+                            android:id="@+id/btnSendComment"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_gravity="bottom|end"
+                            android:layout_margin="10dp"
+                            android:background="@android:color/transparent"
+                            android:src="@drawable/ic_send"
+                            android:contentDescription="Send comment"
+                            app:tint="?attr/colorHomeSubmitButton" />
+
+                        <ProgressBar
+                            android:id="@+id/pbSendComment"
+                            style="?android:attr/progressBarStyleSmall"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="bottom|end"
+                            android:layout_margin="14dp"
+                            android:indeterminateTint="?attr/colorHomeSubmitButton"
+                            android:visibility="gone" />
+
+                        <ImageView
+                            android:id="@+id/ivSendError"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="bottom|end"
+                            android:layout_margin="18dp"
+                            android:src="@drawable/ic_warning"
+                            android:contentDescription="Send failed"
+                            android:visibility="gone"
+                            app:tint="#F44336" /></FrameLayout>
 
                     <!-- Execute Button -->
                     <com.google.android.material.button.MaterialButton
@@ -300,14 +339,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="64dp"
                         android:layout_marginTop="32dp"
-                        app:backgroundTint="@null"
-                        android:background="@drawable/bg_button_submit_glow"
                         android:text="UPDATE STATUS"
                         android:textAllCaps="true"
                         android:textColor="?attr/colorHomeSubmitButton"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        app:icon="@drawable/ic_save"
+                        app:backgroundTint="?attr/colorHomeSubmitButtonTint"
+                        app:rippleColor="?attr/colorHomeSubmitButtonGlow"
+                        app:strokeColor="?attr/colorHomeSubmitButton"
+                        app:strokeWidth="2dp"
+                        app:cornerRadius="16dp"
+                        app:icon="@drawable/ic_send"
                         app:iconGravity="textStart"
                         app:iconPadding="12dp"
                         app:iconSize="20dp"

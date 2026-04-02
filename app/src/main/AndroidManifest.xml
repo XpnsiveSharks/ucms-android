@@ -29,6 +29,9 @@
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.auth.BootstrapActivity"
+            android:exported="false" />
         <!-- SECURITY: Token received via deep link fragment must be verified server-side before use -->
         <activity
             android:name=".ResetPasswordActivity"

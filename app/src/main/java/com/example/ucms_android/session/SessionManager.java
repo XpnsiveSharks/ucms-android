@@ -4,6 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class SessionManager {
+    public static final String DOMAIN_PROFILE = "profile";
+    public static final String DOMAIN_TICKETS = "tickets";
+    public static final String DOMAIN_NOTIFICATIONS = "notifications";
+    public static final String DOMAIN_ANALYTICS = "analytics";
+
     private static final String PREF_NAME = "ucms_session";
     private static final String KEY_TOKEN = "access_token";
     private static final String KEY_ROLE = "user_role";
@@ -22,6 +27,10 @@ public class SessionManager {
     private static final String KEY_ADMIN_ALL_TICKETS_JSON = "admin_all_tickets_json";
     private static final String KEY_STUDENT_RECENT_TICKETS_JSON = "student_recent_tickets_json";
     private static final String KEY_STUDENT_ALL_TICKETS_JSON = "student_all_tickets_json";
+    private static final String KEY_NOTIFICATIONS_JSON = "notifications_json";
+    private static final String KEY_CURRENT_USER_ID = "current_user_id";
+    private static final String KEY_TICKETS_SIGNATURE = "tickets_signature";
+    private static final String KEY_NOTIFICATIONS_SIGNATURE = "notifications_signature";
 
     private final SharedPreferences sharedPreferences;
     private final SharedPreferences.Editor editor;
@@ -96,6 +105,67 @@ public class SessionManager {
     public void clearSession() {
         editor.clear();
         editor.apply();
+    }
+
+    public void setCurrentUserId(String userId) {
+        editor.putString(KEY_CURRENT_USER_ID, userId);
+        editor.apply();
+    }
+
+    public String getCurrentUserId() {
+        return sharedPreferences.getString(KEY_CURRENT_USER_ID, null);
+    }
+
+    public void markDomainSynced(String domain) {
+        editor.putLong(syncKey(domain), System.currentTimeMillis());
+        editor.apply();
+    }
+
+    public long getDomainLastSyncedAt(String domain) {
+        return sharedPreferences.getLong(syncKey(domain), 0L);
+    }
+
+    public boolean hasBootstrapCache(String role) {
+        boolean hasProfile = !getCachedName().isEmpty();
+        if ("ADMIN".equalsIgnoreCase(role)) {
+            return hasProfile && getAdminAllTicketsJson() != null;
+        }
+        return hasProfile && getStudentAllTicketsJson() != null;
+    }
+
+    public void saveTicketsSignature(String signature) {
+        editor.putString(KEY_TICKETS_SIGNATURE, signature);
+        editor.apply();
+    }
+
+    public String getTicketsSignature() {
+        return sharedPreferences.getString(KEY_TICKETS_SIGNATURE, "");
+    }
+
+    public void saveNotificationsSignature(String signature) {
+        editor.putString(KEY_NOTIFICATIONS_SIGNATURE, signature);
+        editor.apply();
+    }
+
+    public String getNotificationsSignature() {
+        return sharedPreferences.getString(KEY_NOTIFICATIONS_SIGNATURE, "");
+    }
+
+    public void saveNotificationsJson(String json) {
+        editor.putString(KEY_NOTIFICATIONS_JSON, json);
+        editor.apply();
+    }
+
+    public String getNotificationsJson() {
+        return sharedPreferences.getString(KEY_NOTIFICATIONS_JSON, null);
+    }
+
+    private String syncKey(String domain) {
+        String userId = getCurrentUserId();
+        if (userId == null || userId.trim().isEmpty()) {
+            userId = "anonymous";
+        }
+        return "last_sync_" + userId + "_" + domain;
     }
 
     // Admin stats cache

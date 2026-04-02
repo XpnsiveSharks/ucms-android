@@ -25,6 +25,7 @@ import com.example.ucms_android.network.NotificationService;
 import com.example.ucms_android.network.TicketService;
 import com.example.ucms_android.network.UserService;
 import com.example.ucms_android.session.SessionManager;
+import com.example.ucms_android.sync.SyncUpdateBus;
 import com.example.ucms_android.ui.adapter.RecentTicketAdapter;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.Gson;
@@ -50,6 +51,22 @@ public class StudentHomeFragment extends Fragment {
     private ShimmerFrameLayout shimmerRecentNotifications;
     private TextView tvEmptyRecentNotifications;
     private View viewNotificationBadge;
+    private final SyncUpdateBus.Listener syncListener = domain -> {
+        if (!isAdded()) return;
+        if (SyncUpdateBus.DOMAIN_TICKETS.equals(domain)) {
+            loadTickets();
+        } else if (SyncUpdateBus.DOMAIN_NOTIFICATIONS.equals(domain)) {
+            loadUnreadCount();
+        } else if (SyncUpdateBus.DOMAIN_PROFILE.equals(domain)) {
+            String cachedName = sessionManager.getCachedName();
+            if (tvUserName != null && cachedName != null && !cachedName.isEmpty()) {
+                tvUserName.setText(cachedName);
+            }
+            if (tvAvatarSmall != null && cachedName != null && !cachedName.isEmpty()) {
+                tvAvatarSmall.setText(getInitials(cachedName));
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -170,8 +187,15 @@ public class StudentHomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        SyncUpdateBus.getInstance().register(syncListener);
         loadTickets();
         loadUnreadCount();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        SyncUpdateBus.getInstance().unregister(syncListener);
     }
 
     private void loadUnreadCount() {

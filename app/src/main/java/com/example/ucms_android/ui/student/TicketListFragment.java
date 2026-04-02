@@ -22,8 +22,10 @@ import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.TicketService;
 import com.example.ucms_android.session.SessionManager;
+import com.example.ucms_android.sync.SyncUpdateBus;
 import com.example.ucms_android.ui.adapter.TicketAdapter;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
@@ -53,6 +55,7 @@ public class TicketListFragment extends Fragment {
     private View btnSubmitTicket;
     private ShimmerFrameLayout shimmerLayout;
     private LinearLayout layoutError;
+    private SwipeRefreshLayout swipeRefresh;
     private TextView tabAll, tabInProgress, tabResolved;
     private View tabIndicator;
     private TicketAdapter adapter;
@@ -60,6 +63,11 @@ public class TicketListFragment extends Fragment {
     private SessionManager sessionManager;
     private Gson gson;
     private List<Ticket> allTickets = new ArrayList<>();
+    private final SyncUpdateBus.Listener syncListener = domain -> {
+        if (SyncUpdateBus.DOMAIN_TICKETS.equals(domain) && isAdded()) {
+            refreshFromCache();
+        }
+    };
 
     private String statusFilter = "ALL";
     private String sortFilter = "NEWEST";
@@ -84,11 +92,18 @@ public class TicketListFragment extends Fragment {
         btnSubmitTicket = view.findViewById(R.id.btnSubmitTicket);
         shimmerLayout = view.findViewById(R.id.shimmerLayout);
         layoutError = view.findViewById(R.id.layoutError);
+        swipeRefresh = view.findViewById(R.id.swipeRefresh);
         tabAll = view.findViewById(R.id.tabAll);
         tabInProgress = view.findViewById(R.id.tabInProgress);
         tabResolved = view.findViewById(R.id.tabResolved);
         tabIndicator = view.findViewById(R.id.tabIndicator);
         view.findViewById(R.id.btnRetry).setOnClickListener(v -> loadTickets());
+
+        swipeRefresh.setOnRefreshListener(() -> {
+            swipeRefresh.setRefreshing(false);
+            showState("LOADING");
+            loadTickets();
+        });
 
         ticketService = ApiClient.getInstance(requireContext()).create(TicketService.class);
         sessionManager = new SessionManager(requireContext());
@@ -114,8 +129,10 @@ public class TicketListFragment extends Fragment {
         });
 
         setupTabs();
-        loadFromCache();
-        loadTickets();
+        boolean hasCached = loadFromCache();
+        if (!hasCached) {
+            loadTickets();
+        }
     }
 
     private void setupTabs() {
@@ -162,7 +179,14 @@ public class TicketListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadTickets();
+        SyncUpdateBus.getInstance().register(syncListener);
+        refreshFromCache();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        SyncUpdateBus.getInstance().unregister(syncListener);
     }
 
     private void showState(String state) {
@@ -189,7 +213,7 @@ public class TicketListFragment extends Fragment {
         }
     }
 
-    private void loadFromCache() {
+    private boolean loadFromCache() {
         String cachedJson = sessionManager.getStudentAllTicketsJson();
         if (cachedJson != null) {
             Type type = new TypeToken<List<Ticket>>() {}.getType();
@@ -197,10 +221,22 @@ public class TicketListFragment extends Fragment {
             if (cached != null && !cached.isEmpty()) {
                 allTickets = cached;
                 applyFilters();
-                return;
+                return true;
             }
         }
         showState("LOADING");
+        return false;
+    }
+
+    private void refreshFromCache() {
+        String cachedJson = sessionManager.getStudentAllTicketsJson();
+        if (cachedJson == null) return;
+        Type type = new TypeToken<List<Ticket>>() {}.getType();
+        List<Ticket> cached = gson.fromJson(cachedJson, type);
+        if (cached != null) {
+            allTickets = cached;
+            applyFilters();
+        }
     }
 
     private void loadTickets() {

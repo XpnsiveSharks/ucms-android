@@ -20,6 +20,9 @@
     <string name="send_verification">Send Verification Email</string>
     <string name="skip">Skip for now</string>
     <string name="loading">Please wait…</string>
+    <string name="bootstrap_loading">Preparing your dashboard…</string>
+    <string name="bootstrap_failed">Could not sync latest data.</string>
+    <string name="retry">Retry</string>
     <string name="error_empty_fields">Please fill in all fields</string>
     <string name="error_invalid_student_id">Invalid student ID format (e.g. 20230733-N)</string>
     <string name="error_login_failed">Login failed. Check your credentials.</string>

@@ -22,9 +22,11 @@ import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.TicketService;
 import com.example.ucms_android.session.SessionManager;
+import com.example.ucms_android.sync.SyncUpdateBus;
 import com.example.ucms_android.ui.adapter.TicketAdapter;
 import com.example.ucms_android.util.StatusChipHelper;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
@@ -52,6 +54,7 @@ public class AdminTicketListFragment extends Fragment {
     private View tabIndicator;
     private RecyclerView rvTickets;
     private ShimmerFrameLayout shimmerLayout;
+    private SwipeRefreshLayout swipeRefresh;
     private TextView tvEmptyState;
     private LinearLayout layoutError;
     private TicketAdapter adapter;
@@ -67,6 +70,11 @@ public class AdminTicketListFragment extends Fragment {
     private String categoryFilter = "ALL";
     private String adminResponseFilter = "ALL";
     private String dateRangeFilter = "ALL";
+    private final SyncUpdateBus.Listener syncListener = domain -> {
+        if (SyncUpdateBus.DOMAIN_TICKETS.equals(domain) && isAdded()) {
+            refreshFromCache();
+        }
+    };
 
     @Nullable
     @Override
@@ -88,9 +96,16 @@ public class AdminTicketListFragment extends Fragment {
         shimmerLayout = view.findViewById(R.id.shimmerLayout);
         tvEmptyState = view.findViewById(R.id.tvEmptyState);
         layoutError = view.findViewById(R.id.layoutError);
+        swipeRefresh = view.findViewById(R.id.swipeRefresh);
 
         view.findViewById(R.id.btnRetry).setOnClickListener(v -> loadTickets());
         view.findViewById(R.id.btnFilter).setOnClickListener(v -> showFilterDialog());
+
+        swipeRefresh.setOnRefreshListener(() -> {
+            swipeRefresh.setRefreshing(false);
+            showState("LOADING");
+            loadTickets();
+        });
 
         ticketService = ApiClient.getInstance(requireContext()).create(TicketService.class);
         sessionManager = new SessionManager(requireContext());
@@ -104,15 +119,23 @@ public class AdminTicketListFragment extends Fragment {
         rvTickets.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvTickets.setAdapter(adapter);
 
-        loadFromCache();
+        boolean hasCached = loadFromCache();
         setupTabs();
-        loadTickets();
+        if (!hasCached) {
+            loadTickets();
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        loadTickets();
+        SyncUpdateBus.getInstance().register(syncListener);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        SyncUpdateBus.getInstance().unregister(syncListener);
     }
 
     private void setupTabs() {
@@ -270,7 +293,7 @@ public class AdminTicketListFragment extends Fragment {
         }
     }
 
-    private void loadFromCache() {
+    private boolean loadFromCache() {
         String cachedJson = sessionManager.getAdminAllTicketsJson();
         if (cachedJson != null) {
             Type type = new TypeToken<List<Ticket>>() {}.getType();
@@ -278,10 +301,23 @@ public class AdminTicketListFragment extends Fragment {
             if (cached != null && !cached.isEmpty()) {
                 allTickets = cached;
                 applyFilter();
-                return;
+                return true;
             }
         }
         showState("LOADING");
+        return false;
+    }
+
+    /** Called by syncListener — cache already updated by BootstrapCoordinator, just re-bind. */
+    private void refreshFromCache() {
+        String cachedJson = sessionManager.getAdminAllTicketsJson();
+        if (cachedJson == null) return;
+        Type type = new TypeToken<List<Ticket>>() {}.getType();
+        List<Ticket> cached = gson.fromJson(cachedJson, type);
+        if (cached != null) {
+            allTickets = cached;
+            applyFilter();
+        }
     }
 
     private void loadTickets() {

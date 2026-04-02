@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ucms_android.R;
 import com.example.ucms_android.model.AnalyticsOverview;
@@ -23,9 +24,12 @@ import com.example.ucms_android.model.CategoryCount;
 import com.example.ucms_android.model.DailyTicketVolume;
 import com.example.ucms_android.network.AnalyticsService;
 import com.example.ucms_android.network.ApiClient;
+import com.example.ucms_android.session.SessionManager;
+import com.example.ucms_android.sync.SyncUpdateBus;
 import com.example.ucms_android.ui.view.ThreeDBarView;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,6 +43,7 @@ import retrofit2.Response;
 public class AnalyticsFragment extends Fragment {
 
     private ShimmerFrameLayout shimmerAnalytics;
+    private SwipeRefreshLayout swipeRefresh;
     private View nestedScrollView;
     private View layoutError;
     private TextView tvResolutionRate, tvResolutionTrend;
@@ -49,6 +54,14 @@ public class AnalyticsFragment extends Fragment {
 
     private AnalyticsService analyticsService;
     private CategoryBreakdownAdapter adapter;
+    private SessionManager sessionManager;
+    private Gson gson;
+
+    private final SyncUpdateBus.Listener syncListener = domain -> {
+        if (SyncUpdateBus.DOMAIN_ANALYTICS.equals(domain) && isAdded()) {
+            loadFromCacheAndBind();
+        }
+    };
 
     @Nullable
     @Override
@@ -62,6 +75,7 @@ public class AnalyticsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         shimmerAnalytics = view.findViewById(R.id.shimmerAnalytics);
+        swipeRefresh = view.findViewById(R.id.swipeRefresh);
         nestedScrollView = view.findViewById(R.id.nestedScrollView);
         layoutError = view.findViewById(R.id.layoutError);
         tvResolutionRate = view.findViewById(R.id.tvResolutionRate);
@@ -77,25 +91,86 @@ public class AnalyticsFragment extends Fragment {
         view.findViewById(R.id.btnRetry).setOnClickListener(v -> fetchAnalytics());
 
         analyticsService = ApiClient.getInstance(requireContext()).create(AnalyticsService.class);
-        
+        sessionManager = new SessionManager(requireContext());
+        gson = new Gson();
+
         adapter = new CategoryBreakdownAdapter(new ArrayList<>());
         rvCategoryBreakdown.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvCategoryBreakdown.setAdapter(adapter);
 
-        fetchAnalytics();
+        // Pull-to-refresh shows shimmer
+        swipeRefresh.setOnRefreshListener(() -> {
+            swipeRefresh.setRefreshing(false);
+            fetchAnalytics();
+        });
+
+        // Load from cache first; if empty fetch with shimmer
+        if (!loadFromCacheAndBind()) {
+            fetchAnalytics();
+        } else {
+            // Cache hit — silently refresh in background
+            fetchAnalyticsSilently();
+        }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        SyncUpdateBus.getInstance().register(syncListener);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        SyncUpdateBus.getInstance().unregister(syncListener);
+    }
+
+    /** Reads cache, binds UI without shimmer. Returns true if cache was available. */
+    private boolean loadFromCacheAndBind() {
+        String cachedJson = sessionManager.getAnalyticsSummaryJson();
+        if (cachedJson == null) return false;
+        AnalyticsOverview cached = gson.fromJson(cachedJson, AnalyticsOverview.class);
+        if (cached == null) return false;
+        bindOverview(cached);
+        return true;
+    }
+
+    /** Silent background refresh — no shimmer, updates cache and UI when done. */
+    private void fetchAnalyticsSilently() {
+        analyticsService.getOverview().enqueue(new Callback<ApiResponse<AnalyticsOverview>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<AnalyticsOverview>> call,
+                                   @NonNull Response<ApiResponse<AnalyticsOverview>> response) {
+                if (isAdded() && response.isSuccessful() && response.body() != null
+                        && response.body().getData() != null) {
+                    AnalyticsOverview overview = response.body().getData();
+                    sessionManager.saveAnalyticsSummaryJson(gson.toJson(overview));
+                    bindOverview(overview);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<AnalyticsOverview>> call, @NonNull Throwable t) {
+                // Silent failure — cached data remains displayed
+            }
+        });
+    }
+
+    /** Fetch with shimmer — used on first load (no cache) and manual pull-to-refresh. */
     private void fetchAnalytics() {
         showLoading(true);
         layoutError.setVisibility(View.GONE);
 
         analyticsService.getOverview().enqueue(new Callback<ApiResponse<AnalyticsOverview>>() {
             @Override
-            public void onResponse(@NonNull Call<ApiResponse<AnalyticsOverview>> call, @NonNull Response<ApiResponse<AnalyticsOverview>> response) {
+            public void onResponse(@NonNull Call<ApiResponse<AnalyticsOverview>> call,
+                                   @NonNull Response<ApiResponse<AnalyticsOverview>> response) {
                 if (isAdded()) {
                     showLoading(false);
                     if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                        bindOverview(response.body().getData());
+                        AnalyticsOverview overview = response.body().getData();
+                        sessionManager.saveAnalyticsSummaryJson(gson.toJson(overview));
+                        bindOverview(overview);
                     } else {
                         handleFetchError("Server returned an empty response.");
                     }
@@ -141,13 +216,13 @@ public class AnalyticsFragment extends Fragment {
             bindCategoryChart(overview.getCategoryBreakdown());
             adapter.setCategories(overview.getCategoryBreakdown());
         }
-        
+
         bindStatusDistribution(overview);
     }
 
     private void bindTimelineChart(List<DailyTicketVolume> volume) {
         if (lineChartTimeline == null || volume == null) return;
-        
+
         List<DailyTicketVolume> sortedVolume = new ArrayList<>(volume);
         Collections.sort(sortedVolume, (d1, d2) -> Integer.compare(getDayOrder(d1.getDay()), getDayOrder(d2.getDay())));
 
@@ -210,19 +285,19 @@ public class AnalyticsFragment extends Fragment {
                 tv.setText(String.valueOf(stepSize * i));
                 tv.setTextSize(10);
                 tv.setTextColor(getResources().getColor(R.color.colorTextSecondary));
-                
+
                 // Use ConstraintLayout params to align perfectly with lines
-                androidx.constraintlayout.widget.ConstraintLayout.LayoutParams lp = 
+                androidx.constraintlayout.widget.ConstraintLayout.LayoutParams lp =
                     new androidx.constraintlayout.widget.ConstraintLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID;
                 lp.topToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID;
                 lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID;
-                
+
                 // Vertical bias: 0.0 for top (i=steps), 1.0 for bottom (i=0)
                 // Since steps might be less than 4 for small data, we need to handle that
                 lp.verticalBias = (steps > 0) ? (1.0f - (float) i / steps) : 0.0f;
-                
+
                 tv.setLayoutParams(lp);
                 llCategoryYAxis.addView(tv);
             }

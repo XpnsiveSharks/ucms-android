@@ -112,84 +112,93 @@
             android:background="?attr/colorHomeSubmitButton" />
     </RelativeLayout>
 
-    <!-- Loading Skeleton -->
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/shimmerLayout"
+    <!-- SwipeRefreshLayout wrapping content area -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:paddingHorizontal="24dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rlIndicatorContainer">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <include layout="@layout/layout_skeleton_ticket" />
-            <include layout="@layout/layout_skeleton_ticket" />
-            <include layout="@layout/layout_skeleton_ticket" />
-        </LinearLayout>
-
-    </com.facebook.shimmer.ShimmerFrameLayout>
-
-    <!-- Empty State -->
-    <TextView
-        android:id="@+id/tvEmptyState"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:text="No tickets found"
-        android:fontFamily="monospace"
-        android:textColor="?attr/colorTextSecondary"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rlIndicatorContainer" />
-
-    <!-- Error State -->
-    <LinearLayout
-        android:id="@+id/layoutError"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rlIndicatorContainer">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Something went wrong"
-            android:textColor="?attr/colorOnSurface"
-            android:textStyle="bold" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnRetry"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Retry"
-            android:textAllCaps="false"
-            app:cornerRadius="12dp"
-            app:strokeColor="?attr/colorHomeSubmitButton"
-            android:textColor="?attr/colorHomeSubmitButton" />
-
-    </LinearLayout>
-
-    <!-- Ticket List -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTickets"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:paddingHorizontal="24dp"
-        android:paddingTop="16dp"
-        android:clipToPadding="false"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rlIndicatorContainer"
-        tools:listitem="@layout/item_ticket" />
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- Loading Skeleton -->
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingHorizontal="24dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <include layout="@layout/layout_skeleton_ticket" />
+                    <include layout="@layout/layout_skeleton_ticket" />
+                    <include layout="@layout/layout_skeleton_ticket" />
+                </LinearLayout>
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <!-- Empty State -->
+            <TextView
+                android:id="@+id/tvEmptyState"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="No tickets found"
+                android:fontFamily="monospace"
+                android:textColor="?attr/colorTextSecondary"
+                android:visibility="gone" />
+
+            <!-- Error State -->
+            <LinearLayout
+                android:id="@+id/layoutError"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Something went wrong"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRetry"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Retry"
+                    android:textAllCaps="false"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="?attr/colorHomeSubmitButton"
+                    android:textColor="?attr/colorHomeSubmitButton" />
+
+            </LinearLayout>
+
+            <!-- Ticket List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTickets"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="24dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="88dp"
+                android:clipToPadding="false"
+                android:visibility="gone"
+                tools:listitem="@layout/item_ticket" />
+
+        </FrameLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

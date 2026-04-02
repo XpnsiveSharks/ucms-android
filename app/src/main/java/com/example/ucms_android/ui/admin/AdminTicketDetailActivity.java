@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -20,8 +21,10 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import com.example.ucms_android.R;
 import com.example.ucms_android.model.AttachmentResponse;
 import com.example.ucms_android.model.ApiResponse;
+import com.example.ucms_android.model.CreateResponseRequest;
 import com.example.ucms_android.model.StatusUpdateRequest;
 import com.example.ucms_android.model.Ticket;
+import com.example.ucms_android.model.TicketResponse;
 import com.example.ucms_android.model.UrgencyOverrideRequest;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.TicketService;
@@ -29,7 +32,9 @@ import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.util.StatusChipHelper;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,6 +48,9 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
     private TextView tvTitle, tvDescription, tvAttachmentName;
     private View btnBack, cvAttachment, cvAiScoring;
     private MaterialButton btnUpdateStatus;
+    private ImageButton btnSendComment;
+    private ProgressBar pbSendComment;
+    private ImageView ivSendError;
     private View btnOverrideUrgency;
     private EditText etResponse, etUrgencyOverrideReason;
     private AutoCompleteTextView dropUrgencyLevel;
@@ -74,7 +82,8 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
         gson = new Gson();
         
         btnBack.setOnClickListener(v -> finish());
-        
+        btnSendComment.setOnClickListener(v -> appendComment());
+
         btnOverrideUrgency.setOnClickListener(v -> {
             if (dropUrgencyLevel.getVisibility() == View.GONE) {
                 dropUrgencyLevel.setVisibility(View.VISIBLE);
@@ -109,7 +118,10 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
         
         tvSelectedCategory = findViewById(R.id.tvSelectedCategory);
         etResponse = findViewById(R.id.etResponse);
-        
+        btnSendComment = findViewById(R.id.btnSendComment);
+        pbSendComment = findViewById(R.id.pbSendComment);
+        ivSendError = findViewById(R.id.ivSendError);
+
         btnOverrideUrgency = findViewById(R.id.btnOverrideUrgency);
         
         progressBar = findViewById(R.id.progressBar);
@@ -140,6 +152,24 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
 
     private void loadFromCache() {
         String cachedJson = sessionManager.getTicketDetailJson(ticketId);
+
+        // Fallback: find the ticket inside the all-tickets cache
+        if (cachedJson == null) {
+            String allJson = sessionManager.getAdminAllTicketsJson();
+            if (allJson != null) {
+                Type listType = new TypeToken<List<Ticket>>() {}.getType();
+                List<Ticket> all = gson.fromJson(allJson, listType);
+                if (all != null) {
+                    for (Ticket t : all) {
+                        if (ticketId.equals(t.getId())) {
+                            cachedJson = gson.toJson(t);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         if (cachedJson != null) {
             Ticket cached = gson.fromJson(cachedJson, Ticket.class);
             if (cached != null) {
@@ -325,6 +355,56 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
                         Toast.makeText(AdminTicketDetailActivity.this, "Network error", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void appendComment() {
+        String message = etResponse.getText().toString().trim();
+        if (message.isEmpty()) {
+            Toast.makeText(this, "Enter a comment first", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        setSendState("SENDING");
+        ticketService.postResponse(ticketId, new CreateResponseRequest(message))
+                .enqueue(new Callback<ApiResponse<TicketResponse>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse<TicketResponse>> call,
+                                           @NonNull Response<ApiResponse<TicketResponse>> response) {
+                        if (response.isSuccessful()) {
+                            etResponse.setText("");
+                            setSendState("IDLE");
+                        } else {
+                            setSendState("ERROR");
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse<TicketResponse>> call, @NonNull Throwable t) {
+                        setSendState("ERROR");
+                    }
+                });
+    }
+
+    private void setSendState(String state) {
+        switch (state) {
+            case "SENDING":
+                btnSendComment.setVisibility(View.INVISIBLE);
+                ivSendError.setVisibility(View.GONE);
+                pbSendComment.setVisibility(View.VISIBLE);
+                break;
+            case "ERROR":
+                pbSendComment.setVisibility(View.GONE);
+                btnSendComment.setVisibility(View.GONE);
+                ivSendError.setVisibility(View.VISIBLE);
+                // Tap the error icon to retry
+                ivSendError.setOnClickListener(v -> appendComment());
+                Toast.makeText(this, "Failed to send — tap to retry", Toast.LENGTH_SHORT).show();
+                break;
+            case "IDLE":
+            default:
+                pbSendComment.setVisibility(View.GONE);
+                ivSendError.setVisibility(View.GONE);
+                btnSendComment.setVisibility(View.VISIBLE);
+                break;
+        }
     }
 
     private String buildUrgencyDetails(Ticket ticket) {
