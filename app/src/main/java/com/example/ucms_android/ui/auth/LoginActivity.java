@@ -20,6 +20,7 @@ import com.example.ucms_android.model.LoginRequest;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.AuthService;
 import com.example.ucms_android.session.SessionManager;
+import com.example.ucms_android.sync.BootstrapCoordinator;
 import com.example.ucms_android.auth.TokenManager;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -95,7 +96,13 @@ public class LoginActivity extends AppCompatActivity {
                             sessionManager.saveSession(authResponse.getAccessToken(), role);
                             TokenManager.getInstance().saveToken(LoginActivity.this, authResponse.getAccessToken());
                             TokenManager.getInstance().saveRole(LoginActivity.this, role);
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
+                            if (sessionManager.hasBootstrapCache(role)) {
+                                new BootstrapCoordinator(getApplicationContext()).runBackgroundSync();
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            } else {
+                                startActivity(new Intent(LoginActivity.this, BootstrapActivity.class));
+                            }
                             finish();
                             return;
                         }

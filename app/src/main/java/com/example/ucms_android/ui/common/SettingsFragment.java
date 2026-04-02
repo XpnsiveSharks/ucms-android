@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -21,6 +19,7 @@ import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.UserService;
 import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.ui.auth.LoginActivity;
+import com.example.ucms_android.ui.admin.AdminEditProfileFragment;
 import com.example.ucms_android.ui.student.StudentEditProfileFragment;
 import com.google.android.material.card.MaterialCardView;
 
@@ -75,12 +74,11 @@ public class SettingsFragment extends Fragment {
         fetchLiveData();
         if (cvEditProfile != null) {
             cvEditProfile.setOnClickListener(v -> {
-                if (isAdmin) {
-                    Toast.makeText(requireContext(), getString(R.string.coming_soon), Toast.LENGTH_SHORT).show();
-                } else {
-                    if (getActivity() instanceof MainActivity) {
-                        ((MainActivity) getActivity()).loadFragment(new StudentEditProfileFragment(), true);
-                    }
+                if (getActivity() instanceof MainActivity) {
+                    Fragment editFragment = isAdmin
+                            ? new AdminEditProfileFragment()
+                            : new StudentEditProfileFragment();
+                    ((MainActivity) getActivity()).loadFragment(editFragment, true);
                 }
             });
         }

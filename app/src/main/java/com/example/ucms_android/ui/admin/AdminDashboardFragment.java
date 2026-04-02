@@ -27,6 +27,7 @@ import com.example.ucms_android.network.NotificationService;
 import com.example.ucms_android.network.TicketService;
 import com.example.ucms_android.network.UserService;
 import com.example.ucms_android.session.SessionManager;
+import com.example.ucms_android.sync.SyncUpdateBus;
 import com.example.ucms_android.MainActivity;
 import com.example.ucms_android.ui.common.AnalyticsFragment;
 import com.example.ucms_android.ui.student.NotificationsActivity;
@@ -63,6 +64,19 @@ public class AdminDashboardFragment extends Fragment {
     private Gson gson;
     private TextView tvAvatarSmall;
     private View viewNotificationBadge;
+    private final SyncUpdateBus.Listener syncListener = domain -> {
+        if (!isAdded()) return;
+        if (SyncUpdateBus.DOMAIN_TICKETS.equals(domain)) {
+            refreshFromCache();
+        } else if (SyncUpdateBus.DOMAIN_NOTIFICATIONS.equals(domain)) {
+            loadUnreadCount();
+        } else if (SyncUpdateBus.DOMAIN_PROFILE.equals(domain)) {
+            String cachedName = sessionManager.getCachedName();
+            if (tvAvatarSmall != null && cachedName != null && !cachedName.isEmpty()) {
+                tvAvatarSmall.setText(getInitials(cachedName));
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -287,9 +301,13 @@ public class AdminDashboardFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadTickets();
-        loadUnreadCount();
-        fetchCategoryAnalytics();
+        SyncUpdateBus.getInstance().register(syncListener);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        SyncUpdateBus.getInstance().unregister(syncListener);
     }
 
     private void loadTickets() {
@@ -333,6 +351,25 @@ public class AdminDashboardFragment extends Fragment {
             }
         }
         showRecentState("LOADING");
+    }
+
+    /** Called by syncListener — cache already updated by BootstrapCoordinator, just re-bind. */
+    private void refreshFromCache() {
+        int cachedTotal = sessionManager.getAdminCachedTotal();
+        int cachedPending = sessionManager.getAdminCachedPending();
+        int cachedResolved = sessionManager.getAdminCachedResolved();
+        if (cachedTotal >= 0) tvTotalTickets.setText(String.valueOf(cachedTotal));
+        if (cachedPending >= 0) tvPendingCount.setText(String.valueOf(cachedPending));
+        if (cachedResolved >= 0) tvResolvedCount.setText(String.valueOf(cachedResolved));
+
+        String cachedJson = sessionManager.getAdminRecentTicketsJson();
+        if (cachedJson == null) return;
+        Type type = new TypeToken<List<Ticket>>() {}.getType();
+        List<Ticket> cachedTickets = gson.fromJson(cachedJson, type);
+        if (cachedTickets != null) {
+            adapter.updateData(cachedTickets);
+            showRecentState(cachedTickets.isEmpty() ? "EMPTY" : "DATA");
+        }
     }
 
     private void showRecentState(String state) {

@@ -5,6 +5,8 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.example.ucms_android.session.SessionManager;
+import com.example.ucms_android.sync.LiveUpdatePoller;
+import com.example.ucms_android.sync.RealtimeStreamManager;
 import com.example.ucms_android.ui.admin.AdminDashboardFragment;
 import com.example.ucms_android.ui.admin.AdminTicketListFragment;
 import com.example.ucms_android.ui.common.AnalyticsFragment;
@@ -20,12 +22,16 @@ public class MainActivity extends AppCompatActivity {
     private static final String ROLE_ADMIN = "ADMIN";
     private boolean isAdmin;
     private SessionManager sessionManager;
+    private LiveUpdatePoller liveUpdatePoller;
+    private RealtimeStreamManager realtimeStreamManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         sessionManager = new SessionManager(this);
+        liveUpdatePoller = new LiveUpdatePoller(this);
+        realtimeStreamManager = new RealtimeStreamManager(this);
         
         setContentView(R.layout.activity_main);
 
@@ -70,6 +76,26 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (sessionManager != null && sessionManager.isLoggedIn()) {
+            liveUpdatePoller.start();
+            realtimeStreamManager.start();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (liveUpdatePoller != null) {
+            liveUpdatePoller.stop();
+        }
+        if (realtimeStreamManager != null) {
+            realtimeStreamManager.stop();
+        }
     }
 
     public void loadFragment(Fragment fragment) {

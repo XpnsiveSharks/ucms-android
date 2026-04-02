@@ -26,6 +26,7 @@ import com.example.ucms_android.ui.adapter.TimelineAdapter;
 import com.example.ucms_android.util.DateFormatter;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.card.MaterialCardView;
+import com.example.ucms_android.sync.SyncUpdateBus;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -216,6 +217,8 @@ public class TicketDetailActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     currentTicket = response.body().getData();
                     sessionManager.saveTicketDetailJson(ticketId, gson.toJson(currentTicket));
+                    updateTicketInListCache(currentTicket);
+                    SyncUpdateBus.getInstance().publish(SyncUpdateBus.DOMAIN_TICKETS);
                     populateViews(currentTicket);
                     buildTimeline();
                 } else {
@@ -234,6 +237,21 @@ public class TicketDetailActivity extends AppCompatActivity {
                         getString(R.string.error_close_ticket), android.widget.Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void updateTicketInListCache(Ticket updated) {
+        String allJson = sessionManager.getStudentAllTicketsJson();
+        if (allJson == null) return;
+        Type listType = new TypeToken<List<Ticket>>() {}.getType();
+        List<Ticket> all = gson.fromJson(allJson, listType);
+        if (all == null) return;
+        for (int i = 0; i < all.size(); i++) {
+            if (updated.getId() != null && updated.getId().equals(all.get(i).getId())) {
+                all.set(i, updated);
+                break;
+            }
+        }
+        sessionManager.saveStudentAllTicketsJson(gson.toJson(all));
     }
 
     private void buildTimeline() {
