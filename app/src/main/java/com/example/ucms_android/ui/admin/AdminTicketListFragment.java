@@ -29,6 +29,7 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -66,7 +67,7 @@ public class AdminTicketListFragment extends Fragment {
     private String activeFilter = "ALL";
 
     private String statusFilter = "ALL";
-    private String sortFilter = "NEWEST";
+    private String sortFilter = "PRIORITY_HIGH";
     private String categoryFilter = "ALL";
     private String adminResponseFilter = "ALL";
     private String dateRangeFilter = "ALL";
@@ -192,6 +193,7 @@ public class AdminTicketListFragment extends Fragment {
         AutoCompleteTextView dropCategory = dialogView.findViewById(R.id.dropCategory);
         AutoCompleteTextView dropAdminResponse = dialogView.findViewById(R.id.dropAdminResponse);
         AutoCompleteTextView dropDateRange = dialogView.findViewById(R.id.dropDateRange);
+        MaterialCardView btnClose = dialogView.findViewById(R.id.btnClose);
         MaterialButton btnResetFilters = dialogView.findViewById(R.id.btnResetFilters);
         MaterialButton btnApplyFilters = dialogView.findViewById(R.id.btnApplyFilters);
 
@@ -204,7 +206,9 @@ public class AdminTicketListFragment extends Fragment {
         };
         String[] sortOptions = new String[] {
                 getString(R.string.filter_newest),
-                getString(R.string.filter_oldest)
+                getString(R.string.filter_oldest),
+                getString(R.string.filter_priority_high_to_low),
+                getString(R.string.filter_priority_low_to_high)
         };
 
         List<String> categoryOptions = new ArrayList<>();
@@ -244,9 +248,11 @@ public class AdminTicketListFragment extends Fragment {
         BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
         dialog.setContentView(dialogView);
 
+        btnClose.setOnClickListener(v -> dialog.dismiss());
+
         btnResetFilters.setOnClickListener(v -> {
             statusFilter = "ALL";
-            sortFilter = "NEWEST";
+            sortFilter = "PRIORITY_HIGH";
             categoryFilter = "ALL";
             adminResponseFilter = "ALL";
             dateRangeFilter = "ALL";
@@ -372,9 +378,22 @@ public class AdminTicketListFragment extends Fragment {
             filtered.add(ticket);
         }
 
-        Comparator<Ticket> comparator = Comparator.comparingLong(this::ticketTimestamp);
-        if (!"OLDEST".equals(sortFilter)) {
-            comparator = comparator.reversed();
+        Comparator<Ticket> comparator;
+        switch (sortFilter) {
+            case "OLDEST":
+                comparator = Comparator.comparingLong(this::ticketTimestamp);
+                break;
+            case "PRIORITY_HIGH":
+                comparator = Comparator.comparingInt(this::priorityRank)
+                        .thenComparingLong(this::ticketTimestamp);
+                break;
+            case "PRIORITY_LOW":
+                comparator = Comparator.comparingInt(this::priorityRankLowFirst)
+                        .thenComparing(Comparator.comparingLong(this::ticketTimestamp).reversed());
+                break;
+            default:
+                comparator = Comparator.comparingLong(this::ticketTimestamp).reversed();
+                break;
         }
         filtered.sort(comparator);
 
@@ -389,6 +408,16 @@ public class AdminTicketListFragment extends Fragment {
         if ("HIGH".equals(priority)) return 1;
         if ("LOW".equals(priority)) return 2;
         if ("MUTED".equals(priority)) return 3;
+        return 4;
+    }
+
+    private int priorityRankLowFirst(Ticket ticket) {
+        if (ticket == null) return 5;
+        String priority = StatusChipHelper.resolvePriorityLevel(ticket);
+        if ("MUTED".equals(priority)) return 0;
+        if ("LOW".equals(priority)) return 1;
+        if ("HIGH".equals(priority)) return 2;
+        if ("CRITICAL".equals(priority)) return 3;
         return 4;
     }
 
@@ -415,7 +444,10 @@ public class AdminTicketListFragment extends Fragment {
     }
 
     private String sortLabel(String value) {
-        return "OLDEST".equals(value) ? getString(R.string.filter_oldest) : getString(R.string.filter_newest);
+        if ("OLDEST".equals(value)) return getString(R.string.filter_oldest);
+        if ("PRIORITY_HIGH".equals(value)) return getString(R.string.filter_priority_high_to_low);
+        if ("PRIORITY_LOW".equals(value)) return getString(R.string.filter_priority_low_to_high);
+        return getString(R.string.filter_newest);
     }
 
     private String categoryLabel(String value) {
@@ -443,7 +475,10 @@ public class AdminTicketListFragment extends Fragment {
     }
 
     private String sortValue(String label) {
-        return label.equals(getString(R.string.filter_oldest)) ? "OLDEST" : "NEWEST";
+        if (label.equals(getString(R.string.filter_oldest))) return "OLDEST";
+        if (label.equals(getString(R.string.filter_priority_high_to_low))) return "PRIORITY_HIGH";
+        if (label.equals(getString(R.string.filter_priority_low_to_high))) return "PRIORITY_LOW";
+        return "NEWEST";
     }
 
     private String categoryValue(String label) {

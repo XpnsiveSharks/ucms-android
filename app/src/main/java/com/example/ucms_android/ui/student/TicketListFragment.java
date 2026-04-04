@@ -28,6 +28,7 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -275,6 +276,7 @@ public class TicketListFragment extends Fragment {
         AutoCompleteTextView dropCategory = dialogView.findViewById(R.id.dropCategory);
         AutoCompleteTextView dropAdminResponse = dialogView.findViewById(R.id.dropAdminResponse);
         AutoCompleteTextView dropDateRange = dialogView.findViewById(R.id.dropDateRange);
+        MaterialCardView btnClose = dialogView.findViewById(R.id.btnClose);
         MaterialButton btnResetFilters = dialogView.findViewById(R.id.btnResetFilters);
         MaterialButton btnApplyFilters = dialogView.findViewById(R.id.btnApplyFilters);
 
@@ -326,6 +328,8 @@ public class TicketListFragment extends Fragment {
 
         BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
         dialog.setContentView(dialogView);
+
+        btnClose.setOnClickListener(v -> dialog.dismiss());
 
         btnResetFilters.setOnClickListener(v -> {
             statusFilter = "ALL";
