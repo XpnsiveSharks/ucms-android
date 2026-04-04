@@ -28,9 +28,12 @@
             android:layout_height="40dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:clickable="true"
+            android:focusable="true"
             app:cardBackgroundColor="?attr/colorHomeGridBg"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
+            app:rippleColor="?attr/colorControlHighlight"
             app:strokeColor="?attr/colorTicketCardStroke"
             app:strokeWidth="1dp">
 

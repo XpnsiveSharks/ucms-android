@@ -14,6 +14,7 @@ import com.example.ucms_android.R;
 import com.example.ucms_android.model.Notification;
 import com.example.ucms_android.util.DateFormatter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
@@ -26,13 +27,25 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     private final OnNotificationClickListener listener;
 
     public NotificationAdapter(List<Notification> notifications, OnNotificationClickListener listener) {
-        this.notifications = notifications;
+        this.notifications = notifications != null ? new ArrayList<>(notifications) : new ArrayList<>();
         this.listener = listener;
     }
 
     public void updateData(List<Notification> newData) {
-        this.notifications = newData;
+        this.notifications = newData != null ? new ArrayList<>(newData) : new ArrayList<>();
         notifyDataSetChanged();
+    }
+
+    public void removeById(Long notificationId) {
+        if (notificationId == null || notifications == null || notifications.isEmpty()) return;
+        for (int i = 0; i < notifications.size(); i++) {
+            Notification n = notifications.get(i);
+            if (n != null && notificationId.equals(n.getId())) {
+                notifications.remove(i);
+                notifyItemRemoved(i);
+                return;
+            }
+        }
     }
 
     @NonNull

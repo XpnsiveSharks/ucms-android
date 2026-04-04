@@ -16,7 +16,11 @@ import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.Notification;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.NotificationService;
+import com.example.ucms_android.session.SessionManager;
+import com.example.ucms_android.sync.SyncUpdateBus;
+import com.example.ucms_android.ui.admin.AdminTicketDetailActivity;
 import com.example.ucms_android.ui.adapter.NotificationAdapter;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +36,7 @@ public class NotificationsActivity extends AppCompatActivity {
     private TextView tvEmpty;
     private NotificationAdapter adapter;
     private NotificationService notificationService;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,7 @@ public class NotificationsActivity extends AppCompatActivity {
         View btnMarkAllRead = findViewById(R.id.btnMarkAllRead);
 
         notificationService = ApiClient.getInstance(this).create(NotificationService.class);
+        sessionManager = new SessionManager(this);
 
         adapter = new NotificationAdapter(new ArrayList<>(), notification -> {
             // Mark as read if unread
@@ -52,7 +58,16 @@ public class NotificationsActivity extends AppCompatActivity {
                 notificationService.markAsRead(notification.getId()).enqueue(new Callback<ApiResponse<Notification>>() {
                     @Override
                     public void onResponse(@NonNull Call<ApiResponse<Notification>> call,
-                                           @NonNull Response<ApiResponse<Notification>> response) {}
+                                           @NonNull Response<ApiResponse<Notification>> response) {
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            adapter.removeById(notification.getId());
+                            if (adapter.getItemCount() == 0) {
+                                rvNotifications.setVisibility(View.GONE);
+                                tvEmpty.setVisibility(View.VISIBLE);
+                            }
+                            SyncUpdateBus.getInstance().publish(SyncUpdateBus.DOMAIN_NOTIFICATIONS);
+                        }
+                    }
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse<Notification>> call, @NonNull Throwable t) {}
                 });
@@ -60,7 +75,8 @@ public class NotificationsActivity extends AppCompatActivity {
 
             // Open ticket detail
             if (notification.getTicketId() != null) {
-                Intent intent = new Intent(this, TicketDetailActivity.class);
+                boolean isAdmin = "ADMIN".equalsIgnoreCase(sessionManager.getRole());
+                Intent intent = new Intent(this, isAdmin ? AdminTicketDetailActivity.class : TicketDetailActivity.class);
                 intent.putExtra("ticketId", notification.getTicketId());
                 startActivity(intent);
             }
@@ -79,7 +95,15 @@ public class NotificationsActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NonNull Call<ApiResponse<Void>> call,
                                            @NonNull Response<ApiResponse<Void>> response) {
-                        loadNotifications();
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            adapter.updateData(new ArrayList<>());
+                            rvNotifications.setVisibility(View.GONE);
+                            tvEmpty.setVisibility(View.VISIBLE);
+                            SyncUpdateBus.getInstance().publish(SyncUpdateBus.DOMAIN_NOTIFICATIONS);
+                            Snackbar.make(findViewById(android.R.id.content), "Marked all as read", Snackbar.LENGTH_SHORT).show();
+                        } else {
+                            loadNotifications();
+                        }
                     }
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse<Void>> call, @NonNull Throwable t) {}
@@ -101,11 +125,24 @@ public class NotificationsActivity extends AppCompatActivity {
                                    @NonNull Response<ApiResponse<List<Notification>>> response) {
                 progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful() && response.body() != null
-                        && response.body().getData() != null
-                        && !response.body().getData().isEmpty()) {
-                    adapter.updateData(response.body().getData());
-                    rvNotifications.setVisibility(View.VISIBLE);
+                        && response.body().getData() != null) {
+                    List<Notification> unread = new ArrayList<>();
+                    for (Notification notification : response.body().getData()) {
+                        if (notification != null && !notification.isRead()) {
+                            unread.add(notification);
+                        }
+                    }
+
+                    if (!unread.isEmpty()) {
+                        adapter.updateData(unread);
+                        rvNotifications.setVisibility(View.VISIBLE);
+                        tvEmpty.setVisibility(View.GONE);
+                    } else {
+                        rvNotifications.setVisibility(View.GONE);
+                        tvEmpty.setVisibility(View.VISIBLE);
+                    }
                 } else {
+                    rvNotifications.setVisibility(View.GONE);
                     tvEmpty.setVisibility(View.VISIBLE);
                 }
             }
