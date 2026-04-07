@@ -18,6 +18,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.signature.ObjectKey;
 import com.example.ucms_android.R;
 import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.AttachmentResponse;
@@ -60,12 +61,17 @@ public class ImageViewerActivity extends AppCompatActivity {
                         && response.body().getData() != null
                         && !response.body().getData().isEmpty()) {
 
-                    String freshUrl = response.body().getData().get(0).getSignedUrl();
+                    AttachmentResponse att = response.body().getData().get(0);
+                    String freshUrl = att.getSignedUrl();
+                    ObjectKey stableKey = att.getId() != null
+                            ? new ObjectKey("attachment-" + att.getId())
+                            : new ObjectKey("ticket-attachment-" + ticketId);
                     progressBar.setVisibility(View.VISIBLE);
 
                     Glide.with(ImageViewerActivity.this)
                             .load(freshUrl)
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .signature(stableKey)
+                            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .listener(new RequestListener<Drawable>() {
                                 @Override
