@@ -294,8 +294,7 @@ public class StudentHomeFragment extends Fragment {
     private void updateStats(List<Ticket> tickets) {
         int total = tickets.size();
         int pending = 0;
-        int resolvedToday = 0;
-        String today = LocalDate.now().toString();
+        int resolved = 0;
 
         for (Ticket ticket : tickets) {
             String status = ticket.getStatus();
@@ -303,17 +302,14 @@ public class StudentHomeFragment extends Fragment {
                 pending++;
             }
             if ("RESOLVED".equalsIgnoreCase(status) || "CLOSED".equalsIgnoreCase(status)) {
-                String updatedAt = ticket.getUpdatedAt();
-                if (updatedAt != null && updatedAt.startsWith(today)) {
-                    resolvedToday++;
-                }
+                resolved++;
             }
         }
 
         tvTotalTicketsCount.setText(String.valueOf(total));
         tvPendingCount.setText(String.valueOf(pending));
-        tvResolvedCount.setText(String.valueOf(resolvedToday));
+        tvResolvedCount.setText(String.valueOf(resolved));
 
-        sessionManager.saveTicketStatsCache(total, pending, resolvedToday);
+        sessionManager.saveTicketStatsCache(total, pending, resolved);
     }
 }

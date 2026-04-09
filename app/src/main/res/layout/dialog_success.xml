@@ -5,8 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="24dp"
-    app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="0dp"
+    app:cardBackgroundColor="?attr/colorSurface"
+    app:cardCornerRadius="12dp"
     app:cardElevation="8dp"
     app:strokeColor="@color/colorSuccess"
     app:strokeWidth="1dp">
@@ -40,7 +40,7 @@
             android:fontFamily="sans-serif-black"
             android:letterSpacing="0.1"
             android:text="SUCCESS"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/text_size_h2" />
 
         <TextView
@@ -51,7 +51,7 @@
             android:fontFamily="monospace"
             android:gravity="center"
             android:text="Your request has been received. A school staff member will handle it soon."
-            android:textColor="@color/colorTextSecondary"
+            android:textColor="?attr/colorTextSecondary"
             android:textSize="@dimen/text_size_body" />
 
         <com.google.android.material.button.MaterialButton
@@ -60,7 +60,7 @@
             android:layout_height="56dp"
             android:layout_marginTop="32dp"
             app:backgroundTint="@color/colorSuccess"
-            app:cornerRadius="0dp"
+            app:cornerRadius="12dp"
             android:text="ACKNOWLEDGE"
             android:textAllCaps="true"
             android:textColor="@color/white"
