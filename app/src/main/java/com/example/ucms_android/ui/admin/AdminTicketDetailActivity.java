@@ -416,7 +416,25 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
                     String mime = attachment.getMimeType();
                     if (mime != null && mime.startsWith("image/")) {
                         ivAttachmentImage.setVisibility(View.VISIBLE);
-                        Glide.with(AdminTicketDetailActivity.this).load(attachment.getSignedUrl()).into(ivAttachmentImage);
+                        com.bumptech.glide.signature.ObjectKey stableKey = attachment.getId() != null
+                                ? new com.bumptech.glide.signature.ObjectKey("attachment-" + attachment.getId())
+                                : new com.bumptech.glide.signature.ObjectKey("ticket-attachment-" + ticketId);
+                        Glide.with(AdminTicketDetailActivity.this)
+                                .load(attachment.getSignedUrl())
+                                .signature(stableKey)
+                                .diskCacheStrategy(com.bumptech.glide.load.engine.DiskCacheStrategy.AUTOMATIC)
+                                .into(ivAttachmentImage);
+                        cvAttachment.setOnClickListener(v -> {
+                            android.content.Intent intent = new android.content.Intent(
+                                    AdminTicketDetailActivity.this,
+                                    com.example.ucms_android.ui.ImageViewerActivity.class);
+                            intent.putExtra(
+                                    com.example.ucms_android.ui.ImageViewerActivity.EXTRA_TICKET_ID,
+                                    ticketId);
+                            startActivity(intent);
+                        });
+                    } else {
+                        cvAttachment.setOnClickListener(null);
                     }
                 }
             }

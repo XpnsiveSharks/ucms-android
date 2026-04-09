@@ -21,7 +21,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -176,6 +176,12 @@ public class BootstrapCoordinator {
                 List<Ticket> tickets = response.body().getData().getItems();
                 boolean isFullRefresh = response.body().getData().isFullRefresh();
                 String role = sessionManager.getRole();
+                boolean isFullSync = since == null;
+
+                String existingJson = ROLE_ADMIN.equalsIgnoreCase(role)
+                        ? sessionManager.getAdminAllTicketsJson()
+                        : sessionManager.getStudentAllTicketsJson();
+                List<Ticket> tickets = isFullSync ? delta : mergeTickets(existingJson, delta);
 
                 if (ROLE_ADMIN.equalsIgnoreCase(role)) {
                     cacheAdminTicketData(tickets, isFullRefresh);
@@ -250,6 +256,32 @@ public class BootstrapCoordinator {
                 callback.onFailure("Failed to sync notifications.");
             }
         });
+    }
+
+    /**
+     * Merge an incremental ticket delta into the existing cached list by id.
+     * Incoming items overwrite existing entries with the same id; new items are appended.
+     * Order is preserved (existing first, new ones at the end) so downstream sorting still applies.
+     */
+    private List<Ticket> mergeTickets(String existingJson, List<Ticket> delta) {
+        Map<Long, Ticket> merged = new LinkedHashMap<>();
+        if (existingJson != null) {
+            try {
+                Type type = new TypeToken<List<Ticket>>() {}.getType();
+                List<Ticket> existing = gson.fromJson(existingJson, type);
+                if (existing != null) {
+                    for (Ticket t : existing) {
+                        if (t != null && t.getId() != null) merged.put(t.getId(), t);
+                    }
+                }
+            } catch (Exception ignored) { }
+        }
+        if (delta != null) {
+            for (Ticket t : delta) {
+                if (t != null && t.getId() != null) merged.put(t.getId(), t);
+            }
+        }
+        return new ArrayList<>(merged.values());
     }
 
     private String getSinceParam(String domain) {
