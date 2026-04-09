@@ -31,6 +31,7 @@ public class SessionManager {
     private static final String KEY_CURRENT_USER_ID = "current_user_id";
     private static final String KEY_TICKETS_SIGNATURE = "tickets_signature";
     private static final String KEY_NOTIFICATIONS_SIGNATURE = "notifications_signature";
+    private static final String KEY_THEME_MODE = "theme_mode";
 
     private final SharedPreferences sharedPreferences;
     private final SharedPreferences.Editor editor;
@@ -38,6 +39,16 @@ public class SessionManager {
     public SessionManager(Context context) {
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
+    }
+
+    public void setThemeMode(int mode) {
+        editor.putInt(KEY_THEME_MODE, mode);
+        editor.apply();
+    }
+
+    public int getThemeMode() {
+        // Default to MODE_NIGHT_FOLLOW_SYSTEM (-1)
+        return sharedPreferences.getInt(KEY_THEME_MODE, -1);
     }
 
     public void saveSession(String token, String role) {

@@ -7,9 +7,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.ucms_android.MainActivity;
 import com.example.ucms_android.R;
+import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.sync.BootstrapCoordinator;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -23,6 +25,9 @@ public class BootstrapActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SessionManager sessionManager = new SessionManager(this);
+        AppCompatDelegate.setDefaultNightMode(sessionManager.getThemeMode());
+        
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bootstrap);
 

@@ -52,8 +52,8 @@
     <color name="dm_yellow_gold">#FFD066</color>
     <color name="dm_slate_bg">#2C333D</color>
     <color name="dm_slate_text">#A0B1C5</color>
-    <color name="dm_text_primary">#E0E0E0</color>
-    <color name="dm_text_secondary">#888888</color>
+    <color name="dm_text_primary">#FFFFFF</color>
+    <color name="dm_text_secondary">#B0B0B0</color>
     <color name="dm_orange_glow">#33FF8F6B</color> <!-- 30% alpha for glow -->
 
     <!-- Status Badges -->

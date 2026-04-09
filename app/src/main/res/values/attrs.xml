@@ -45,4 +45,6 @@
     <attr name="colorTicketTimelineLine" format="color" />
     <attr name="colorTicketResponseBg" format="color" />
     <attr name="colorTicketResponseStroke" format="color" />
+    <attr name="colorLoadingOverlayBackground" format="color" />
+    <attr name="colorNotificationCategory" format="color" />
 </resources>

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.ucms_android.MainActivity;
 import com.example.ucms_android.R;
@@ -39,24 +40,26 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etStudentId;
     private EditText etPassword;
     private MaterialButton btnLogin;
-    private ProgressBar progressBar;
+    private View loadingOverlay;
     private View rootView;
     private AuthService authService;
     private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        sessionManager = new SessionManager(this);
+        AppCompatDelegate.setDefaultNightMode(sessionManager.getThemeMode());
+        
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         authService = ApiClient.getInstance(this).create(AuthService.class);
-        sessionManager = new SessionManager(this);
 
         rootView = findViewById(android.R.id.content);
         etStudentId = findViewById(R.id.etStudentId);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
-        progressBar = findViewById(R.id.progressBar);
+        loadingOverlay = findViewById(R.id.loadingOverlay);
 
         btnLogin.setOnClickListener(v -> attemptLogin());
         
@@ -155,7 +158,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setLoading(boolean loading) {
-        progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisibility(loading ? View.VISIBLE : View.GONE);
+        }
         btnLogin.setEnabled(!loading);
     }
 

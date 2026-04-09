@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -63,6 +66,33 @@ public class SettingsFragment extends Fragment {
         cvEditProfile = view.findViewById(R.id.cvEditProfile);
         cvChangePassword = view.findViewById(R.id.cvChangePassword);
         cvLogout = view.findViewById(R.id.cvLogout);
+
+        // Theme selection logic
+        RadioGroup rgTheme = view.findViewById(R.id.rgTheme);
+        if (rgTheme != null) {
+            int currentMode = sessionManager.getThemeMode();
+            if (currentMode == AppCompatDelegate.MODE_NIGHT_YES) {
+                rgTheme.check(R.id.rbDark);
+            } else if (currentMode == AppCompatDelegate.MODE_NIGHT_NO) {
+                rgTheme.check(R.id.rbLight);
+            } else {
+                rgTheme.check(R.id.rbSystem);
+            }
+
+            rgTheme.setOnCheckedChangeListener((group, checkedId) -> {
+                int mode;
+                if (checkedId == R.id.rbLight) {
+                    mode = AppCompatDelegate.MODE_NIGHT_NO;
+                } else if (checkedId == R.id.rbDark) {
+                    mode = AppCompatDelegate.MODE_NIGHT_YES;
+                } else {
+                    mode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+                }
+                
+                sessionManager.setThemeMode(mode);
+                AppCompatDelegate.setDefaultNightMode(mode);
+            });
+        }
 
         // Update title based on role
         TextView tvTitle = view.findViewById(R.id.tvTitle);
