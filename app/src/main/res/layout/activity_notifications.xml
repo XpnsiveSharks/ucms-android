@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorHomeGridBg">
+    android:background="?attr/colorTicketDetailBg">
 
     <!-- Modal Container -->
     <com.google.android.material.card.MaterialCardView
@@ -116,29 +116,36 @@
                 app:layout_constraintStart_toStartOf="@id/rvNotifications"
                 app:layout_constraintTop_toTopOf="@id/rvNotifications" />
 
+            <!-- Footer Divider -->
+            <View
+                android:id="@+id/footerDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/colorTicketCardStroke"
+                app:layout_constraintBottom_toTopOf="@id/layoutFooter" />
+
             <!-- Footer -->
-            <LinearLayout
+            <FrameLayout
                 android:id="@+id/layoutFooter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorHomeGridBg"
-                android:gravity="center"
-                android:paddingVertical="16dp"
+                android:paddingVertical="12dp"
+                android:paddingHorizontal="24dp"
                 app:layout_constraintBottom_toBottomOf="parent">
 
-                <TextView
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMarkAllRead"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:fontFamily="monospace"
-                    android:letterSpacing="0.1"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
                     android:text="MARK ALL AS READ"
                     android:textColor="?attr/colorHomeSubmitButton"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:fontFamily="monospace"
+                    android:letterSpacing="0.1"
+                    app:rippleColor="?attr/colorHomeSubmitButtonGlow" />
+            </FrameLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

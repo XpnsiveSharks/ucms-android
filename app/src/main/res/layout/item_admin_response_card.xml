@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
-    app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="0dp"
+    app:cardBackgroundColor="?attr/colorRecentCardBg"
+    app:cardCornerRadius="12dp"
     app:cardElevation="0dp"
-    app:strokeColor="@color/colorDivider"
+    app:strokeColor="?attr/colorTicketCardStroke"
     app:strokeWidth="1dp">
 
     <LinearLayout
@@ -29,7 +29,7 @@
                 android:letterSpacing="0.1"
                 android:text="ADMIN RESPONSE"
                 android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                android:textColor="@color/colorTextSecondary" />
+                android:textColor="?attr/colorTextSecondary" />
 
             <TextView
                 android:id="@+id/tvResponseTime"
@@ -39,7 +39,7 @@
                 android:fontFamily="monospace"
                 android:letterSpacing="0.05"
                 android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                android:textColor="@color/colorTextSecondary" />
+                android:textColor="?attr/colorTextSecondary" />
 
         </RelativeLayout>
 
@@ -48,7 +48,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="12dp"
-            android:background="@color/colorDivider" />
+            android:background="?attr/colorTicketCardStroke" />
 
         <TextView
             android:id="@+id/tvAdminMessage"
@@ -57,7 +57,7 @@
             android:fontFamily="monospace"
             android:lineSpacingMultiplier="1.4"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textColor="@color/colorTextPrimary" />
+            android:textColor="?attr/colorTextPrimary" />
 
     </LinearLayout>
 

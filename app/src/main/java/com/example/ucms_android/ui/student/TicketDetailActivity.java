@@ -32,6 +32,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -260,15 +261,11 @@ public class TicketDetailActivity extends AppCompatActivity {
         List<TimelineAdapter.TimelineEvent> events = new ArrayList<>();
         String status = currentTicket.getStatus();
 
-        java.util.Map<String, List<TicketResponse>> responsesByStatus = new java.util.LinkedHashMap<>();
-        for (TicketResponse r : currentResponses) {
-            String s = r.getTicketStatus() != null ? r.getTicketStatus().toUpperCase() : "PENDING";
-            if (!responsesByStatus.containsKey(s)) {
-                responsesByStatus.put(s, new ArrayList<>());
-            }
-            responsesByStatus.get(s).add(r);
-        }
+        // Sort responses by date ascending for timeline flow
+        List<TicketResponse> sortedResponses = new ArrayList<>(currentResponses);
+        sortedResponses.sort(Comparator.comparing(TicketResponse::getCreatedAt, Comparator.nullsLast(String::compareTo)));
 
+        // 1. Ticket Created Event
         events.add(new TimelineAdapter.TimelineEvent(
                 DateFormatter.formatDate(currentTicket.getCreatedAt()),
                 "Ticket Created",
@@ -276,62 +273,53 @@ public class TicketDetailActivity extends AppCompatActivity {
                 android.graphics.Color.parseColor("#9E9E9E")
         ));
 
-        List<TicketResponse> pendingResponses = responsesByStatus.get("PENDING");
-        if (pendingResponses != null && !pendingResponses.isEmpty()) {
-            List<TimelineAdapter.AdminResponse> adminResponses = new ArrayList<>();
-            for (TicketResponse r : pendingResponses) {
-                adminResponses.add(new TimelineAdapter.AdminResponse(
-                        r.getAdminName(), r.getMessage(),
-                        DateFormatter.formatDate(r.getCreatedAt())));
+        // Group responses by status to show them in the correct status section
+        java.util.Map<String, List<TimelineAdapter.AdminResponse>> statusResponses = new java.util.HashMap<>();
+        for (TicketResponse r : sortedResponses) {
+            String s = r.getTicketStatus() != null ? r.getTicketStatus().toUpperCase() : "PENDING";
+            if (!statusResponses.containsKey(s)) {
+                statusResponses.put(s, new ArrayList<>());
             }
+            statusResponses.get(s).add(new TimelineAdapter.AdminResponse(
+                    r.getAdminName(), r.getMessage(), DateFormatter.formatDate(r.getCreatedAt())));
+        }
+
+        // 2. Pending Responses (Initial phase)
+        List<TimelineAdapter.AdminResponse> pendingRes = statusResponses.get("PENDING");
+        if (pendingRes != null) {
             events.add(new TimelineAdapter.TimelineEvent(
-                    DateFormatter.formatDate(pendingResponses.get(0).getCreatedAt()),
+                    pendingRes.get(0).time,
                     "Admin Responded",
-                    adminResponses,
+                    pendingRes,
                     android.graphics.Color.parseColor("#FFAA33")
             ));
         }
 
+        // 3. In Progress Event
         if ("IN_PROGRESS".equalsIgnoreCase(status) || "RESOLVED".equalsIgnoreCase(status) || "CLOSED".equalsIgnoreCase(status)) {
-            List<TicketResponse> inProgressResponses = responsesByStatus.get("IN_PROGRESS");
-            List<TimelineAdapter.AdminResponse> adminResponses = new ArrayList<>();
-            if (inProgressResponses != null) {
-                for (TicketResponse r : inProgressResponses) {
-                    adminResponses.add(new TimelineAdapter.AdminResponse(
-                            r.getAdminName(), r.getMessage(),
-                            DateFormatter.formatDate(r.getCreatedAt())));
-                }
-            }
-            String time = (inProgressResponses != null && !inProgressResponses.isEmpty())
-                    ? DateFormatter.formatDate(inProgressResponses.get(0).getCreatedAt()) : "";
+            List<TimelineAdapter.AdminResponse> inProgRes = statusResponses.get("IN_PROGRESS");
+            String time = (inProgRes != null && !inProgRes.isEmpty()) ? inProgRes.get(0).time : "";
             events.add(new TimelineAdapter.TimelineEvent(
                     time,
                     "Status changed to In-Progress",
-                    adminResponses.isEmpty() ? null : adminResponses,
+                    inProgRes,
                     android.graphics.Color.parseColor("#FFA726")
             ));
         }
 
+        // 4. Resolved Event
         if ("RESOLVED".equalsIgnoreCase(status) || "CLOSED".equalsIgnoreCase(status)) {
-            List<TicketResponse> resolvedResponses = responsesByStatus.get("RESOLVED");
-            List<TimelineAdapter.AdminResponse> adminResponses = new ArrayList<>();
-            if (resolvedResponses != null) {
-                for (TicketResponse r : resolvedResponses) {
-                    adminResponses.add(new TimelineAdapter.AdminResponse(
-                            r.getAdminName(), r.getMessage(),
-                            DateFormatter.formatDate(r.getCreatedAt())));
-                }
-            }
-            String resolvedTime = (resolvedResponses != null && !resolvedResponses.isEmpty())
-                    ? DateFormatter.formatDate(resolvedResponses.get(0).getCreatedAt())
-                    : DateFormatter.formatDate(currentTicket.getUpdatedAt());
+            List<TimelineAdapter.AdminResponse> resRes = statusResponses.get("RESOLVED");
+            String time = (resRes != null && !resRes.isEmpty()) ? resRes.get(0).time : DateFormatter.formatDate(currentTicket.getUpdatedAt());
             events.add(new TimelineAdapter.TimelineEvent(
-                    resolvedTime, "Concern Resolved",
-                    adminResponses.isEmpty() ? null : adminResponses,
+                    time,
+                    "Concern Resolved",
+                    resRes,
                     android.graphics.Color.parseColor("#66BB6A")
             ));
         }
 
+        // 5. Closed Event
         if ("CLOSED".equalsIgnoreCase(status)) {
             events.add(new TimelineAdapter.TimelineEvent(
                     DateFormatter.formatDate(currentTicket.getUpdatedAt()),

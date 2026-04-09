@@ -57,6 +57,8 @@
         <item name="colorTicketTimelineLine">#333333</item>
         <item name="colorTicketResponseBg">@color/dm_card_bg</item>
         <item name="colorTicketResponseStroke">#333333</item>
+        <item name="colorLoadingOverlayBackground">#80000000</item>
+        <item name="colorNotificationCategory">#FFFFFF</item>
 
         <!-- Bottom Nav Customization -->
         <item name="colorContainer">@android:color/transparent</item>

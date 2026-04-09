@@ -196,7 +196,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="monospace"
                     android:letterSpacing="0.05"
-                    android:text="RESOLVED\nTODAY"
+                    android:text="TOTAL\nRESOLVED"
                     android:textColor="?attr/colorHomeStatText"
                     android:textSize="10sp"
                     android:textStyle="bold" />

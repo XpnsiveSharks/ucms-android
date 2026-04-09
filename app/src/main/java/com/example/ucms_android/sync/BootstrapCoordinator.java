@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -172,7 +173,8 @@ public class BootstrapCoordinator {
                     return;
                 }
 
-                List<Ticket> delta = response.body().getData().getItems();
+                List<Ticket> tickets = response.body().getData().getItems();
+                boolean isFullRefresh = response.body().getData().isFullRefresh();
                 String role = sessionManager.getRole();
                 boolean isFullSync = since == null;
 
@@ -182,13 +184,20 @@ public class BootstrapCoordinator {
                 List<Ticket> tickets = isFullSync ? delta : mergeTickets(existingJson, delta);
 
                 if (ROLE_ADMIN.equalsIgnoreCase(role)) {
-                    cacheAdminTicketData(tickets);
+                    cacheAdminTicketData(tickets, isFullRefresh);
                 } else {
-                    cacheStudentTicketData(tickets);
+                    cacheStudentTicketData(tickets, isFullRefresh);
                 }
 
                 String previousSignature = sessionManager.getTicketsSignature();
-                String signature = buildTicketSignature(tickets);
+                // We should build the signature from the FULL list if it's available
+                List<Ticket> fullList;
+                if (ROLE_ADMIN.equalsIgnoreCase(role)) {
+                    fullList = getAdminFullList();
+                } else {
+                    fullList = getStudentFullList();
+                }
+                String signature = buildTicketSignature(fullList != null ? fullList : tickets);
                 sessionManager.saveTicketsSignature(signature);
                 sessionManager.markDomainSynced(SessionManager.DOMAIN_TICKETS);
                 if (!signature.equals(previousSignature)) {
@@ -222,9 +231,18 @@ public class BootstrapCoordinator {
                 }
 
                 List<Notification> notifications = response.body().getData().getItems();
+                boolean isFullRefresh = response.body().getData().isFullRefresh();
                 String previousSignature = sessionManager.getNotificationsSignature();
-                sessionManager.saveNotificationsJson(gson.toJson(notifications));
-                String signature = buildNotificationSignature(notifications);
+                
+                List<Notification> fullNotifications;
+                if (isFullRefresh) {
+                    fullNotifications = notifications;
+                } else {
+                    fullNotifications = mergeNotifications(getNotificationsFullList(), notifications);
+                }
+                
+                sessionManager.saveNotificationsJson(gson.toJson(fullNotifications));
+                String signature = buildNotificationSignature(fullNotifications);
                 sessionManager.saveNotificationsSignature(signature);
                 sessionManager.markDomainSynced(SessionManager.DOMAIN_NOTIFICATIONS);
                 if (!signature.equals(previousSignature)) {
@@ -274,7 +292,14 @@ public class BootstrapCoordinator {
         return Instant.ofEpochMilli(lastSyncedAt).toString();
     }
 
-    private void cacheStudentTicketData(List<Ticket> allTickets) {
+    private void cacheStudentTicketData(List<Ticket> newTickets, boolean isFullRefresh) {
+        List<Ticket> allTickets;
+        if (isFullRefresh) {
+            allTickets = newTickets;
+        } else {
+            allTickets = mergeTickets(getStudentFullList(), newTickets);
+        }
+
         sessionManager.saveStudentAllTicketsJson(gson.toJson(allTickets));
 
         List<Ticket> recent = allTickets.size() > 3 ? allTickets.subList(0, 3) : allTickets;
@@ -283,18 +308,27 @@ public class BootstrapCoordinator {
         int total = allTickets.size();
         int pending = 0;
         int resolved = 0;
+
         for (Ticket ticket : allTickets) {
-            if ("PENDING".equalsIgnoreCase(ticket.getStatus()) || "IN_PROGRESS".equalsIgnoreCase(ticket.getStatus())) {
+            String status = ticket.getStatus();
+            if ("PENDING".equalsIgnoreCase(status) || "IN_PROGRESS".equalsIgnoreCase(status)) {
                 pending++;
             }
-            if ("RESOLVED".equalsIgnoreCase(ticket.getStatus()) || "CLOSED".equalsIgnoreCase(ticket.getStatus())) {
+            if ("RESOLVED".equalsIgnoreCase(status) || "CLOSED".equalsIgnoreCase(status)) {
                 resolved++;
             }
         }
         sessionManager.saveTicketStatsCache(total, pending, resolved);
     }
 
-    private void cacheAdminTicketData(List<Ticket> allTickets) {
+    private void cacheAdminTicketData(List<Ticket> newTickets, boolean isFullRefresh) {
+        List<Ticket> allTickets;
+        if (isFullRefresh) {
+            allTickets = newTickets;
+        } else {
+            allTickets = mergeTickets(getAdminFullList(), newTickets);
+        }
+
         sessionManager.saveAdminAllTicketsJson(gson.toJson(allTickets));
 
         int total = allTickets.size();
@@ -310,11 +344,69 @@ public class BootstrapCoordinator {
         for (Ticket ticket : allTickets) {
             if ("PENDING".equalsIgnoreCase(ticket.getStatus())) {
                 pendingTickets.add(ticket);
-                if (pendingTickets.size() == 5) break;
             }
         }
         pendingTickets.sort(Comparator.comparing(Ticket::getCreatedAt, Comparator.nullsLast(String::compareTo)).reversed());
+        if (pendingTickets.size() > 5) {
+            pendingTickets = pendingTickets.subList(0, 5);
+        }
         sessionManager.saveAdminRecentTicketsJson(gson.toJson(pendingTickets));
+    }
+
+    private List<Ticket> mergeTickets(List<Ticket> existing, List<Ticket> deltas) {
+        if (existing == null || existing.isEmpty()) return deltas;
+        if (deltas == null || deltas.isEmpty()) return existing;
+
+        Map<Long, Ticket> map = new HashMap<>();
+        for (Ticket t : existing) {
+            if (t.getId() != null) map.put(t.getId(), t);
+        }
+        for (Ticket t : deltas) {
+            if (t.getId() != null) map.put(t.getId(), t);
+        }
+
+        List<Ticket> merged = new ArrayList<>(map.values());
+        merged.sort(Comparator.comparing(Ticket::getCreatedAt, Comparator.nullsLast(String::compareTo)).reversed());
+        return merged;
+    }
+
+    private List<Notification> mergeNotifications(List<Notification> existing, List<Notification> deltas) {
+        if (existing == null || existing.isEmpty()) return deltas;
+        if (deltas == null || deltas.isEmpty()) return existing;
+
+        Map<Long, Notification> map = new HashMap<>();
+        for (Notification n : existing) {
+            if (n.getId() != null) map.put(n.getId(), n);
+        }
+        for (Notification n : deltas) {
+            if (n.getId() != null) map.put(n.getId(), n);
+        }
+
+        List<Notification> merged = new ArrayList<>(map.values());
+        // Sort by ID descending (assuming newer IDs are higher) or use a date field if available
+        merged.sort((n1, n2) -> Long.compare(n2.getId(), n1.getId()));
+        return merged;
+    }
+
+    private List<Ticket> getStudentFullList() {
+        String json = sessionManager.getStudentAllTicketsJson();
+        if (json == null) return null;
+        Type type = new TypeToken<List<Ticket>>(){}.getType();
+        return gson.fromJson(json, type);
+    }
+
+    private List<Ticket> getAdminFullList() {
+        String json = sessionManager.getAdminAllTicketsJson();
+        if (json == null) return null;
+        Type type = new TypeToken<List<Ticket>>(){}.getType();
+        return gson.fromJson(json, type);
+    }
+
+    private List<Notification> getNotificationsFullList() {
+        String json = sessionManager.getNotificationsJson();
+        if (json == null) return null;
+        Type type = new TypeToken<List<Notification>>(){}.getType();
+        return gson.fromJson(json, type);
     }
 
     private String buildTicketSignature(List<Ticket> tickets) {

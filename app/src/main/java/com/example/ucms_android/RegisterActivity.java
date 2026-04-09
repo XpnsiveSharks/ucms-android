@@ -37,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText etYearLevel;
     private TextInputEditText etPassword;
     private MaterialButton btnRegister;
-    private ProgressBar progressBar;
+    private View loadingOverlay;
     private View rootView;
     private AuthService authService;
 
@@ -55,7 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
         etYearLevel = findViewById(R.id.etYearLevel);
         etPassword = findViewById(R.id.etPassword);
         btnRegister = findViewById(R.id.btnRegister);
-        progressBar = findViewById(R.id.progressBar);
+        loadingOverlay = findViewById(R.id.loadingOverlay);
 
         btnRegister.setOnClickListener(v -> attemptRegister());
         findViewById(R.id.tvGoToLogin).setOnClickListener(v -> {
@@ -123,7 +123,9 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void setLoading(boolean loading) {
-        progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisibility(loading ? View.VISIBLE : View.GONE);
+        }
         btnRegister.setEnabled(!loading);
     }
 

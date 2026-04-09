@@ -1,120 +1,257 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_grid">
+    android:layout_height="match_parent">
 
-    <!-- App Bar -->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clTopBar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_grid">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:cardBackgroundColor="?attr/colorHomeGridBg"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
-            app:strokeColor="?attr/colorTicketCardStroke"
-            app:strokeWidth="1dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <!-- App Bar -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clTopBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_arrow_back"
-                app:tint="?attr/colorOnSurface" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@id/btnBack"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/btnBack"
-            app:layout_constraintTop_toTopOf="@id/btnBack">
-
-            <TextView
-                android:id="@+id/tvTicketId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:textColor="?attr/colorOnSurface"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                tools:text="TKT-20260315-0002" />
-
-            <TextView
-                android:id="@+id/tvCategory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:textColor="?attr/colorTextSecondary"
-                android:textSize="11sp"
-                android:textAllCaps="true"
-                tools:text="ACADEMIC-RELATED" />
-
-        </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <View
-        android:id="@+id/headerDivider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?attr/colorTicketCardStroke"
-        app:layout_constraintTop_toBottomOf="@id/clTopBar" />
-
-    <!-- Content Area -->
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/scrollContent"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:fillViewport="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/headerDivider">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
-
-            <!-- Ticket Info Card -->
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="?attr/colorRecentCardBg"
+                android:id="@+id/btnBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="?attr/colorHomeGridBg"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
                 app:strokeColor="?attr/colorTicketCardStroke"
-                app:strokeWidth="1dp">
+                app:strokeWidth="1dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <LinearLayout
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_arrow_back"
+                    app:tint="?attr/colorOnSurface" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@id/btnBack"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btnBack"
+                app:layout_constraintTop_toTopOf="@id/btnBack">
+
+                <TextView
+                    android:id="@+id/tvTicketId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="TKT-20260315-0002" />
+
+                <TextView
+                    android:id="@+id/tvCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
+                    android:textColor="?attr/colorTextSecondary"
+                    android:textSize="11sp"
+                    android:textAllCaps="true"
+                    tools:text="ACADEMIC-RELATED" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/headerDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/colorTicketCardStroke"
+            app:layout_constraintTop_toBottomOf="@id/clTopBar" />
+
+        <!-- Content Area -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollContent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/headerDivider">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <!-- Ticket Info Card -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    app:cardBackgroundColor="?attr/colorRecentCardBg"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="?attr/colorTicketCardStroke"
+                    app:strokeWidth="1dp">
 
-                    <View
-                        android:layout_width="4dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/dm_orange_peach" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="4dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/dm_orange_peach" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp">
+
+                            <TextView
+                                android:id="@+id/tvTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="?attr/colorOnSurface"
+                                android:textSize="22sp"
+                                android:textStyle="bold"
+                                tools:text="Change of Major Application" />
+
+                            <TextView
+                                android:id="@+id/tvDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:fontFamily="monospace"
+                                android:textColor="?attr/colorTextSecondary"
+                                android:textSize="13sp"
+                                android:lineSpacingMultiplier="1.2"
+                                tools:text="Student requests assistance in processing a transfer to a different academic program." />
+
+                            <!-- Attachment Section -->
+                            <LinearLayout
+                                android:id="@+id/cvAttachment"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="20dp"
+                                android:background="@drawable/bg_attachment_box"
+                                android:padding="12dp"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:visibility="gone"
+                                tools:visibility="visible">
+
+                                <ImageView
+                                    android:id="@+id/ivAttachmentImage"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_attachment"
+                                    app:tint="?attr/colorTextSecondary" />
+
+                                <TextView
+                                    android:id="@+id/tvAttachmentName"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:layout_weight="1"
+                                    android:fontFamily="monospace"
+                                    android:textColor="?attr/colorOnSurface"
+                                    android:textSize="12sp"
+                                    tools:text="image_1000000186.jpg" />
+
+                                <ImageView
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:src="@drawable/ic_chevron_right"
+                                    app:tint="?attr/colorTextSecondary" />
+
+                            </LinearLayout>
+
+                            <com.facebook.shimmer.ShimmerFrameLayout
+                                android:id="@+id/shimmerAttachment"
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:layout_marginTop="20dp"
+                                android:visibility="gone">
+                                <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="?attr/colorTicketCardStroke" />
+                            </com.facebook.shimmer.ShimmerFrameLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Timeline Section -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:fontFamily="monospace"
+                    android:text="[ TIMELINE HISTORY ]"
+                    android:textColor="?attr/colorHomeSubmitButton"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.15" />
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerTimeline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <include layout="@layout/layout_skeleton_ticket" />
+                        <include layout="@layout/layout_skeleton_ticket" />
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvTimeline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:nestedScrollingEnabled="false"
+                    android:visibility="gone"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_timeline_event"
+                    tools:visibility="visible" />
+
+                <!-- Hidden logic IDs -->
+                <TextView android:id="@+id/tvUrgencyReason" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+                <com.google.android.material.card.MaterialCardView android:id="@+id/cvAiScoring" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+                <View android:id="@+id/btnOverrideUrgency" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+                <AutoCompleteTextView android:id="@+id/dropUrgencyLevel" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+                <EditText android:id="@+id/etUrgencyOverrideReason" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+
+                <!-- Admin Actions Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:cardBackgroundColor="?attr/colorRecentCardBg"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="?attr/colorTicketCardStroke"
+                    app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -123,299 +260,184 @@
                         android:padding="20dp">
 
                         <TextView
-                            android:id="@+id/tvTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnSurface"
-                            android:textSize="22sp"
-                            android:textStyle="bold"
-                            tools:text="Change of Major Application" />
-
-                        <TextView
-                            android:id="@+id/tvDescription"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
                             android:fontFamily="monospace"
+                            android:text="UPDATE STATUS"
                             android:textColor="?attr/colorTextSecondary"
-                            android:textSize="13sp"
-                            android:lineSpacingMultiplier="1.2"
-                            tools:text="Student requests assistance in processing a transfer to a different academic program." />
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
 
-                        <!-- Attachment Section -->
-                        <LinearLayout
-                            android:id="@+id/cvAttachment"
+                        <!-- Next Status Selector -->
+                        <FrameLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
-                            android:background="@drawable/bg_attachment_box"
-                            android:padding="12dp"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:visibility="gone"
-                            tools:visibility="visible">
-
-                            <ImageView
-                                android:id="@+id/ivAttachmentImage"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:src="@drawable/ic_attachment"
-                                app:tint="?attr/colorTextSecondary" />
+                            android:layout_height="56dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/bg_input_rect">
 
                             <TextView
-                                android:id="@+id/tvAttachmentName"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="12dp"
-                                android:layout_weight="1"
+                                android:id="@+id/tvSelectedCategory"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:paddingHorizontal="16dp"
                                 android:fontFamily="monospace"
                                 android:textColor="?attr/colorOnSurface"
-                                android:textSize="12sp"
-                                tools:text="image_1000000186.jpg" />
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                tools:text="IN_PROGRESS" />
 
                             <ImageView
-                                android:layout_width="16dp"
-                                android:layout_height="16dp"
-                                android:src="@drawable/ic_chevron_right"
-                                app:tint="?attr/colorTextSecondary" />
-
-                        </LinearLayout>
-
-                        <com.facebook.shimmer.ShimmerFrameLayout
-                            android:id="@+id/shimmerAttachment"
-                            android:layout_width="match_parent"
-                            android:layout_height="48dp"
-                            android:layout_marginTop="20dp"
-                            android:visibility="gone">
-                            <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="?attr/colorTicketCardStroke" />
-                        </com.facebook.shimmer.ShimmerFrameLayout>
-
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Admin actions header -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:fontFamily="monospace"
-                android:text="[ ADMIN CONTROL PANEL ]"
-                android:textColor="?attr/colorHomeSubmitButton"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.15" />
-
-            <!-- Hidden logic IDs -->
-            <TextView android:id="@+id/tvUrgencyReason" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
-            <com.google.android.material.card.MaterialCardView android:id="@+id/cvAiScoring" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
-            <View android:id="@+id/btnOverrideUrgency" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
-            <AutoCompleteTextView android:id="@+id/dropUrgencyLevel" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
-            <EditText android:id="@+id/etUrgencyOverrideReason" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
-
-            <!-- Admin Actions Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardBackgroundColor="?attr/colorRecentCardBg"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeColor="?attr/colorTicketCardStroke"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:text="UPDATE STATUS"
-                        android:textColor="?attr/colorTextSecondary"
-                        android:textSize="10sp"
-                        android:textStyle="bold" />
-
-                    <!-- Next Status Selector -->
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_input_rect">
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="end|center_vertical"
+                                android:layout_marginEnd="16dp"
+                                android:src="@drawable/ic_arrow_drop_down"
+                                app:tint="?attr/colorHomeSubmitButton" />
+                        </FrameLayout>
 
                         <TextView
-                            android:id="@+id/tvSelectedCategory"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="16dp"
-                            android:fontFamily="monospace"
-                            android:textColor="?attr/colorOnSurface"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            tools:text="IN_PROGRESS" />
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_gravity="end|center_vertical"
-                            android:layout_marginEnd="16dp"
-                            android:src="@drawable/ic_arrow_drop_down"
-                            app:tint="?attr/colorHomeSubmitButton" />
-                    </FrameLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:fontFamily="monospace"
-                        android:text="APPEND TIMELINE COMMENT"
-                        android:textColor="?attr/colorTextSecondary"
-                        android:textSize="10sp"
-                        android:textStyle="bold" />
-
-                    <!-- Response Input with inline send button -->
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp">
-
-                        <EditText
-                            android:id="@+id/etResponse"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/bg_input_rect"
+                            android:layout_marginTop="24dp"
                             android:fontFamily="monospace"
-                            android:gravity="top"
-                            android:hint="Enter administrator log..."
-                            android:inputType="textMultiLine"
-                            android:minLines="4"
-                            android:paddingStart="16dp"
-                            android:paddingEnd="16dp"
-                            android:paddingTop="16dp"
-                            android:paddingBottom="52dp"
-                            android:textColor="?attr/colorOnSurface"
-                            android:textColorHint="?attr/colorTextSecondary"
-                            android:textSize="14sp" />
+                            android:text="APPEND TIMELINE COMMENT"
+                            android:textColor="?attr/colorTextSecondary"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
 
-                        <ImageButton
-                            android:id="@+id/btnSendComment"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:layout_gravity="bottom|end"
-                            android:layout_margin="10dp"
-                            android:background="@android:color/transparent"
-                            android:src="@drawable/ic_send"
-                            android:contentDescription="Send comment"
-                            app:tint="?attr/colorHomeSubmitButton" />
+                        <!-- Response Input with inline send button -->
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp">
 
-                        <ProgressBar
-                            android:id="@+id/pbSendComment"
-                            style="?android:attr/progressBarStyleSmall"
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_gravity="bottom|end"
-                            android:layout_margin="14dp"
-                            android:indeterminateTint="?attr/colorHomeSubmitButton"
-                            android:visibility="gone" />
+                            <EditText
+                                android:id="@+id/etResponse"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_input_rect"
+                                android:fontFamily="monospace"
+                                android:gravity="top"
+                                android:hint="Enter administrator log..."
+                                android:inputType="textMultiLine"
+                                android:minLines="4"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="16dp"
+                                android:paddingTop="16dp"
+                                android:paddingBottom="52dp"
+                                android:textColor="?attr/colorOnSurface"
+                                android:textColorHint="?attr/colorTextSecondary"
+                                android:textSize="14sp" />
 
-                        <ImageView
-                            android:id="@+id/ivSendError"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_gravity="bottom|end"
-                            android:layout_margin="18dp"
-                            android:src="@drawable/ic_warning"
-                            android:contentDescription="Send failed"
-                            android:visibility="gone"
-                            app:tint="#F44336" /></FrameLayout>
+                            <ImageButton
+                                android:id="@+id/btnSendComment"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:layout_gravity="bottom|end"
+                                android:layout_margin="10dp"
+                                android:background="@android:color/transparent"
+                                android:src="@drawable/ic_send"
+                                android:contentDescription="Send comment"
+                                app:tint="?attr/colorHomeSubmitButton" />
 
-                    <!-- Execute Button -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnUpdateStatus"
-                        android:layout_width="match_parent"
-                        android:layout_height="64dp"
-                        android:layout_marginTop="32dp"
-                        android:text="UPDATE STATUS"
-                        android:textAllCaps="true"
-                        android:textColor="?attr/colorHomeSubmitButton"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:backgroundTint="?attr/colorHomeSubmitButtonTint"
-                        app:rippleColor="?attr/colorHomeSubmitButtonGlow"
-                        app:strokeColor="?attr/colorHomeSubmitButton"
-                        app:strokeWidth="2dp"
-                        app:cornerRadius="16dp"
-                        app:icon="@drawable/ic_send"
-                        app:iconGravity="textStart"
-                        app:iconPadding="12dp"
-                        app:iconSize="20dp"
-                        app:iconTint="?attr/colorHomeSubmitButton" />
+                            <ProgressBar
+                                android:id="@+id/pbSendComment"
+                                style="?android:attr/progressBarStyleSmall"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_gravity="bottom|end"
+                                android:layout_margin="14dp"
+                                android:indeterminateTint="?attr/colorHomeSubmitButton"
+                                android:visibility="gone" />
 
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                            <ImageView
+                                android:id="@+id/ivSendError"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="bottom|end"
+                                android:layout_margin="18dp"
+                                android:src="@drawable/ic_warning"
+                                android:contentDescription="Send failed"
+                                android:visibility="gone"
+                                app:tint="#F44336" /></FrameLayout>
 
-            <!-- Hidden logic IDs -->
-            <TextView android:id="@+id/tvAvatarInitials" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
-            <TextView android:id="@+id/tvStudentName" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
-            <TextView android:id="@+id/tvStudentId" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
-            <TextView android:id="@+id/tvStudentCourse" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
-            <LinearLayout android:id="@+id/layoutStatusChips" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
-            <TextView android:id="@+id/tvStatus" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
-            <TextView android:id="@+id/tvActionTitle" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
-            <TextView android:id="@+id/tvDate" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
-            
-            <View android:layout_width="match_parent" android:layout_height="32dp" />
+                        <!-- Execute Button -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnUpdateStatus"
+                            android:layout_width="match_parent"
+                            android:layout_height="64dp"
+                            android:layout_marginTop="32dp"
+                            android:text="UPDATE STATUS"
+                            android:textAllCaps="true"
+                            android:textColor="?attr/colorHomeSubmitButton"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:backgroundTint="?attr/colorHomeSubmitButtonTint"
+                            app:rippleColor="?attr/colorHomeSubmitButtonGlow"
+                            app:strokeColor="?attr/colorHomeSubmitButton"
+                            app:strokeWidth="2dp"
+                            app:cornerRadius="16dp"
+                            app:icon="@drawable/ic_send"
+                            app:iconGravity="textStart"
+                            app:iconPadding="12dp"
+                            app:iconSize="20dp"
+                            app:iconTint="?attr/colorHomeSubmitButton" />
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Hidden logic IDs -->
+                <TextView android:id="@+id/tvAvatarInitials" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+                <TextView android:id="@+id/tvStudentName" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+                <TextView android:id="@+id/tvStudentId" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+                <TextView android:id="@+id/tvStudentCourse" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+                <LinearLayout android:id="@+id/layoutStatusChips" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+                <TextView android:id="@+id/tvStatus" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+                <TextView android:id="@+id/tvActionTitle" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+                <TextView android:id="@+id/tvActionDate" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+                
+                <View android:layout_width="match_parent" android:layout_height="32dp" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- Error -->
+        <LinearLayout
+            android:id="@+id/layoutError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Failed to load ticket"
+                android:textColor="?attr/colorOnSurface"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRetry"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Retry"
+                android:textAllCaps="false"
+                app:cornerRadius="12dp"
+                app:strokeColor="?attr/colorHomeSubmitButton"
+                android:textColor="?attr/colorHomeSubmitButton" />
 
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
 
-    <!-- Loading -->
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Error -->
-    <LinearLayout
-        android:id="@+id/layoutError"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <include layout="@layout/layout_loading_overlay" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Failed to load ticket"
-            android:textColor="?attr/colorOnSurface"
-            android:textStyle="bold" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnRetry"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Retry"
-            android:textAllCaps="false"
-            app:cornerRadius="12dp"
-            app:strokeColor="?attr/colorHomeSubmitButton"
-            android:textColor="?attr/colorHomeSubmitButton" />
-
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

@@ -61,6 +61,8 @@
         <item name="colorTicketTimelineLine">@color/colorDivider</item>
         <item name="colorTicketResponseBg">@color/colorSurface</item>
         <item name="colorTicketResponseStroke">@color/colorDivider</item>
+        <item name="colorLoadingOverlayBackground">#80FFFFFF</item>
+        <item name="colorNotificationCategory">@color/colorSecondary</item>
 
         <!-- Bottom Nav Customization -->
         <item name="colorContainer">@android:color/transparent</item>

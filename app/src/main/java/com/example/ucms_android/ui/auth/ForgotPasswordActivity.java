@@ -32,7 +32,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private TextInputEditText etEmail;
     private MaterialButton btnSendReset;
     private TextView tvBackToLogin;
-    private ProgressBar progressBar;
+    private View loadingOverlay;
 
     private AuthService authService;
 
@@ -45,7 +45,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etEmail);
         btnSendReset = findViewById(R.id.btnSendReset);
         tvBackToLogin = findViewById(R.id.tvBackToLogin);
-        progressBar = findViewById(R.id.progressBar);
+        loadingOverlay = findViewById(R.id.loadingOverlay);
 
         authService = ApiClient.getInstance(this).create(AuthService.class);
 
@@ -97,7 +97,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     private void setLoading(boolean isLoading) {
-        progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        }
         btnSendReset.setEnabled(!isLoading);
     }
 }
