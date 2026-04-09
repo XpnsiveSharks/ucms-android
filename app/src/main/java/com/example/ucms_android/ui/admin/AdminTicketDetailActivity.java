@@ -15,6 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -29,12 +31,16 @@ import com.example.ucms_android.model.UrgencyOverrideRequest;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.TicketService;
 import com.example.ucms_android.session.SessionManager;
+import com.example.ucms_android.ui.adapter.TimelineAdapter;
+import com.example.ucms_android.util.DateFormatter;
 import com.example.ucms_android.util.StatusChipHelper;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,15 +61,20 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
     private EditText etResponse, etUrgencyOverrideReason;
     private AutoCompleteTextView dropUrgencyLevel;
     private ImageView ivAttachmentImage;
-    private ProgressBar progressBar;
+    private View loadingOverlay;
     private LinearLayout layoutError;
     private NestedScrollView scrollContent;
     private TicketService ticketService;
     private Long ticketId;
     private String currentStatus;
     private ShimmerFrameLayout shimmerAttachment;
+    private ShimmerFrameLayout shimmerTimeline;
+    private RecyclerView rvTimeline;
+    private TimelineAdapter timelineAdapter;
     private SessionManager sessionManager;
     private Gson gson;
+    private Ticket currentTicket;
+    private List<TicketResponse> currentResponses = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,12 +104,20 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
                 applyUrgencyOverride();
             }
         });
-        findViewById(R.id.btnRetry).setOnClickListener(v -> loadTicketDetails());
+        findViewById(R.id.btnRetry).setOnClickListener(v -> {
+            loadTicketDetails();
+            loadResponses();
+        });
 
         setupUrgencyOverrideDropdown();
+
+        timelineAdapter = new TimelineAdapter(new ArrayList<>());
+        rvTimeline.setLayoutManager(new LinearLayoutManager(this));
+        rvTimeline.setAdapter(timelineAdapter);
         
         loadFromCache();
         loadTicketDetails();
+        loadResponses();
     }
 
     private void initViews() {
@@ -124,22 +143,129 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
 
         btnOverrideUrgency = findViewById(R.id.btnOverrideUrgency);
         
-        progressBar = findViewById(R.id.progressBar);
+        loadingOverlay = findViewById(R.id.loadingOverlay);
         layoutError = findViewById(R.id.layoutError);
         scrollContent = findViewById(R.id.scrollContent);
         shimmerAttachment = findViewById(R.id.shimmerAttachment);
+        shimmerTimeline = findViewById(R.id.shimmerTimeline);
+        rvTimeline = findViewById(R.id.rvTimeline);
         
         dropUrgencyLevel = findViewById(R.id.dropUrgencyLevel);
         etUrgencyOverrideReason = findViewById(R.id.etUrgencyOverrideReason);
     }
 
+    private void showTimelineShimmer() {
+        shimmerTimeline.setVisibility(View.VISIBLE);
+        shimmerTimeline.startShimmer();
+        rvTimeline.setVisibility(View.GONE);
+    }
+
+    private void hideTimelineShimmer() {
+        shimmerTimeline.stopShimmer();
+        shimmerTimeline.setVisibility(View.GONE);
+        rvTimeline.setVisibility(View.VISIBLE);
+    }
+
+    private void loadResponses() {
+        if (sessionManager.getTicketResponsesJson(ticketId) == null) {
+            showTimelineShimmer();
+        }
+        ticketService.getTicketResponses(ticketId).enqueue(new Callback<ApiResponse<List<TicketResponse>>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<List<TicketResponse>>> call,
+                                   @NonNull Response<ApiResponse<List<TicketResponse>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    currentResponses = response.body().getData();
+                    sessionManager.saveTicketResponsesJson(ticketId, gson.toJson(currentResponses));
+                    buildTimeline();
+                }
+                hideTimelineShimmer();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<List<TicketResponse>>> call, @NonNull Throwable t) {
+                hideTimelineShimmer();
+            }
+        });
+    }
+
+    private void buildTimeline() {
+        if (currentTicket == null) return;
+
+        List<TimelineAdapter.TimelineEvent> events = new ArrayList<>();
+        String status = currentTicket.getStatus();
+
+        List<TicketResponse> sortedResponses = new ArrayList<>(currentResponses);
+        sortedResponses.sort(Comparator.comparing(TicketResponse::getCreatedAt, Comparator.nullsLast(String::compareTo)));
+
+        events.add(new TimelineAdapter.TimelineEvent(
+                DateFormatter.formatDate(currentTicket.getCreatedAt()),
+                "Ticket Created",
+                null,
+                android.graphics.Color.parseColor("#9E9E9E")
+        ));
+
+        java.util.Map<String, List<TimelineAdapter.AdminResponse>> statusResponses = new java.util.HashMap<>();
+        for (TicketResponse r : sortedResponses) {
+            String s = r.getTicketStatus() != null ? r.getTicketStatus().toUpperCase() : "PENDING";
+            if (!statusResponses.containsKey(s)) {
+                statusResponses.put(s, new ArrayList<>());
+            }
+            statusResponses.get(s).add(new TimelineAdapter.AdminResponse(
+                    r.getAdminName(), r.getMessage(), DateFormatter.formatDate(r.getCreatedAt())));
+        }
+
+        List<TimelineAdapter.AdminResponse> pendingRes = statusResponses.get("PENDING");
+        if (pendingRes != null) {
+            events.add(new TimelineAdapter.TimelineEvent(
+                    pendingRes.get(0).time,
+                    "Admin Responded",
+                    pendingRes,
+                    android.graphics.Color.parseColor("#FFAA33")
+            ));
+        }
+
+        if ("IN_PROGRESS".equalsIgnoreCase(status) || "RESOLVED".equalsIgnoreCase(status) || "CLOSED".equalsIgnoreCase(status)) {
+            List<TimelineAdapter.AdminResponse> inProgRes = statusResponses.get("IN_PROGRESS");
+            String time = (inProgRes != null && !inProgRes.isEmpty()) ? inProgRes.get(0).time : "";
+            events.add(new TimelineAdapter.TimelineEvent(
+                    time,
+                    "Status changed to In-Progress",
+                    inProgRes,
+                    android.graphics.Color.parseColor("#FFA726")
+            ));
+        }
+
+        if ("RESOLVED".equalsIgnoreCase(status) || "CLOSED".equalsIgnoreCase(status)) {
+            List<TimelineAdapter.AdminResponse> resRes = statusResponses.get("RESOLVED");
+            String time = (resRes != null && !resRes.isEmpty()) ? resRes.get(0).time : DateFormatter.formatDate(currentTicket.getUpdatedAt());
+            events.add(new TimelineAdapter.TimelineEvent(
+                    time,
+                    "Concern Resolved",
+                    resRes,
+                    android.graphics.Color.parseColor("#66BB6A")
+            ));
+        }
+
+        if ("CLOSED".equalsIgnoreCase(status)) {
+            events.add(new TimelineAdapter.TimelineEvent(
+                    DateFormatter.formatDate(currentTicket.getUpdatedAt()),
+                    "Ticket Closed",
+                    null,
+                    android.graphics.Color.parseColor("#78909C")
+            ));
+        }
+
+        timelineAdapter.updateData(events);
+    }
+
     private void showState(String state) {
-        progressBar.setVisibility(View.GONE);
+        if (loadingOverlay != null) loadingOverlay.setVisibility(View.GONE);
         layoutError.setVisibility(View.GONE);
         scrollContent.setVisibility(View.GONE);
         switch (state) {
             case "LOADING":
-                progressBar.setVisibility(View.VISIBLE);
+                if (loadingOverlay != null) loadingOverlay.setVisibility(View.VISIBLE);
                 break;
             case "ERROR":
                 layoutError.setVisibility(View.VISIBLE);
@@ -188,11 +314,12 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<Ticket>> call, @NonNull Response<ApiResponse<Ticket>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                    Ticket ticket = response.body().getData();
-                    sessionManager.saveTicketDetailJson(ticketId, gson.toJson(ticket));
-                    displayTicket(ticket);
+                    currentTicket = response.body().getData();
+                    sessionManager.saveTicketDetailJson(ticketId, gson.toJson(currentTicket));
+                    displayTicket(currentTicket);
                     showState("DATA");
                     loadAttachments();
+                    buildTimeline();
                 } else {
                     if (scrollContent.getVisibility() != View.VISIBLE) {
                         showState("ERROR");
@@ -344,7 +471,9 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
                         if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                             Toast.makeText(AdminTicketDetailActivity.this, "Status updated", Toast.LENGTH_SHORT).show();
                             etResponse.setText("");
-                            displayTicket(response.body().getData());
+                            currentTicket = response.body().getData();
+                            displayTicket(currentTicket);
+                            loadResponses();
                         } else {
                             btnUpdateStatus.setEnabled(true);
                         }
@@ -372,6 +501,7 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             etResponse.setText("");
                             setSendState("IDLE");
+                            loadResponses();
                         } else {
                             setSendState("ERROR");
                         }

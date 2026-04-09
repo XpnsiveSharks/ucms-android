@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:fontFamily="monospace"
-                android:textColor="?attr/colorHomeSubmitButton"
+                android:textColor="?attr/colorNotificationCategory"
                 android:textSize="11sp"
                 android:textStyle="bold"
                 tools:text="Ticket Update" />

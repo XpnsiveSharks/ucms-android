@@ -71,9 +71,18 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         boolean isRead = notification.isRead();
         holder.viewUnreadIndicator.setVisibility(isRead ? View.INVISIBLE : View.VISIBLE);
         
-        int orange = ContextCompat.getColor(holder.itemView.getContext(), R.color.colorOrange);
-        int grey = ContextCompat.getColor(holder.itemView.getContext(), R.color.colorTextSecondary);
-        int black = ContextCompat.getColor(holder.itemView.getContext(), R.color.black);
+        // Resolve theme colors dynamically
+        android.util.TypedValue typedValue = new android.util.TypedValue();
+        android.content.res.Resources.Theme theme = holder.itemView.getContext().getTheme();
+        
+        theme.resolveAttribute(R.attr.colorHomeSubmitButton, typedValue, true);
+        int orange = typedValue.data;
+        
+        theme.resolveAttribute(R.attr.colorTextSecondary, typedValue, true);
+        int grey = typedValue.data;
+        
+        theme.resolveAttribute(R.attr.colorRecentTitleText, typedValue, true);
+        int onSurface = typedValue.data;
 
         if (isRead) {
             holder.tvCategory.setTextColor(grey);
@@ -83,7 +92,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         } else {
             holder.tvCategory.setTextColor(orange);
             holder.tvTime.setTextColor(orange);
-            holder.tvTitle.setTextColor(black);
+            holder.tvTitle.setTextColor(onSurface);
             holder.tvMessage.setTextColor(grey);
         }
 
