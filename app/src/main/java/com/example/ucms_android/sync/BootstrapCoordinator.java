@@ -176,12 +176,6 @@ public class BootstrapCoordinator {
                 List<Ticket> tickets = response.body().getData().getItems();
                 boolean isFullRefresh = response.body().getData().isFullRefresh();
                 String role = sessionManager.getRole();
-                boolean isFullSync = since == null;
-
-                String existingJson = ROLE_ADMIN.equalsIgnoreCase(role)
-                        ? sessionManager.getAdminAllTicketsJson()
-                        : sessionManager.getStudentAllTicketsJson();
-                List<Ticket> tickets = isFullSync ? delta : mergeTickets(existingJson, delta);
 
                 if (ROLE_ADMIN.equalsIgnoreCase(role)) {
                     cacheAdminTicketData(tickets, isFullRefresh);
