@@ -2,40 +2,52 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="24dp">
+    android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/progressBootstrap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/tvBootstrapMessage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+    <!-- Shimmer Skeleton Loading -->
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerBootstrap"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        app:shimmer_auto_start="true">
 
-    <TextView
-        android:id="@+id/tvBootstrapMessage"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        <include layout="@layout/layout_skeleton_dashboard" />
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <!-- Error State (Hidden by default) -->
+    <LinearLayout
+        android:id="@+id/layoutBootstrapError"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:colorBackground"
         android:gravity="center"
-        android:text="@string/bootstrap_loading"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progressBootstrap" />
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:visibility="gone">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnRetryBootstrap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/retry"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvBootstrapMessage" />
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_warning"
+            app:tint="@color/colorOrange" />
+
+        <TextView
+            android:id="@+id/tvBootstrapMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="@string/bootstrap_failed"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRetryBootstrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/retry" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -81,6 +81,7 @@
                 app:hintEnabled="false"
                 app:boxBackgroundMode="none"
                 app:endIconMode="password_toggle"
+                app:passwordToggleDrawable="@drawable/sel_password_toggle_swapped"
                 app:endIconTint="?attr/colorOnSurface"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
