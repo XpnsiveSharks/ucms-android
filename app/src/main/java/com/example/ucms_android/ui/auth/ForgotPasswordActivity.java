@@ -28,8 +28,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     private static final String TAG = "ForgotPassword";
 
-    private TextInputLayout tilEmail;
-    private TextInputEditText etEmail;
+    private TextInputLayout tilStudentId;
+    private TextInputEditText etStudentId;
     private MaterialButton btnSendReset;
     private TextView tvBackToLogin;
     private View loadingOverlay;
@@ -41,8 +41,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
 
-        tilEmail = findViewById(R.id.tilEmail);
-        etEmail = findViewById(R.id.etEmail);
+        tilStudentId = findViewById(R.id.tilStudentId);
+        etStudentId = findViewById(R.id.etStudentId);
         btnSendReset = findViewById(R.id.btnSendReset);
         tvBackToLogin = findViewById(R.id.tvBackToLogin);
         loadingOverlay = findViewById(R.id.loadingOverlay);
@@ -58,12 +58,12 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     private void handleSendReset() {
-        String studentId = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
+        String studentId = etStudentId.getText() != null ? etStudentId.getText().toString().trim() : "";
 
-        tilEmail.setError(null);
+        tilStudentId.setError(null);
 
         if (studentId.isEmpty()) {
-            tilEmail.setError(getString(R.string.error_invalid_student_id));
+            tilStudentId.setError(getString(R.string.error_invalid_student_id));
             return;
         }
 
