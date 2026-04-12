@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.example.ucms_android.R;
+import com.example.ucms_android.model.AssignTicketRequest;
 import com.example.ucms_android.model.AttachmentResponse;
 import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.CreateResponseRequest;
@@ -52,6 +53,8 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
 
     private TextView tvTicketId, tvCategory, tvUrgencyReason, tvSelectedCategory;
     private TextView tvTitle, tvDescription, tvAttachmentName;
+    private TextView tvAssignedAdminLabel, tvAssignedAdmin;
+    private MaterialButton btnAssignToMe;
     private View btnBack, cvAttachment, cvAiScoring;
     private MaterialButton btnUpdateStatus;
     private ImageButton btnSendComment;
@@ -94,6 +97,7 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
         
         btnBack.setOnClickListener(v -> finish());
         btnSendComment.setOnClickListener(v -> appendComment());
+        btnAssignToMe.setOnClickListener(v -> assignToMe());
 
         btnOverrideUrgency.setOnClickListener(v -> {
             if (dropUrgencyLevel.getVisibility() == View.GONE) {
@@ -152,6 +156,10 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
         
         dropUrgencyLevel = findViewById(R.id.dropUrgencyLevel);
         etUrgencyOverrideReason = findViewById(R.id.etUrgencyOverrideReason);
+
+        tvAssignedAdminLabel = findViewById(R.id.tvAssignedAdminLabel);
+        tvAssignedAdmin = findViewById(R.id.tvAssignedAdmin);
+        btnAssignToMe = findViewById(R.id.btnAssignToMe);
     }
 
     private void showTimelineShimmer() {
@@ -360,6 +368,7 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
 
         currentStatus = ticket.getStatus();
         configureStatusActions();
+        configureAssignSection(ticket);
     }
 
     private void setupUrgencyOverrideDropdown() {
@@ -553,6 +562,58 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
                 btnSendComment.setVisibility(View.VISIBLE);
                 break;
         }
+    }
+
+    private void configureAssignSection(Ticket ticket) {
+        String assignedName = ticket.getAssignedAdminName();
+        boolean isPending = "PENDING".equalsIgnoreCase(ticket.getStatus());
+
+        if (assignedName != null && !assignedName.isEmpty()) {
+            tvAssignedAdminLabel.setVisibility(View.VISIBLE);
+            tvAssignedAdmin.setVisibility(View.VISIBLE);
+            tvAssignedAdmin.setText(assignedName);
+            btnAssignToMe.setVisibility(View.GONE);
+        } else if (isPending) {
+            tvAssignedAdminLabel.setVisibility(View.VISIBLE);
+            tvAssignedAdmin.setVisibility(View.GONE);
+            btnAssignToMe.setVisibility(View.VISIBLE);
+            btnAssignToMe.setEnabled(true);
+        } else {
+            tvAssignedAdminLabel.setVisibility(View.GONE);
+            tvAssignedAdmin.setVisibility(View.GONE);
+            btnAssignToMe.setVisibility(View.GONE);
+        }
+    }
+
+    private void assignToMe() {
+        btnAssignToMe.setEnabled(false);
+        btnAssignToMe.setText("Assigning...");
+        ticketService.assignAdmin(ticketId, new AssignTicketRequest())
+                .enqueue(new Callback<ApiResponse<Ticket>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse<Ticket>> call,
+                                           @NonNull Response<ApiResponse<Ticket>> response) {
+                        if (response.isSuccessful() && response.body() != null
+                                && response.body().getData() != null) {
+                            currentTicket = response.body().getData();
+                            displayTicket(currentTicket);
+                            Toast.makeText(AdminTicketDetailActivity.this,
+                                    "Ticket assigned to you", Toast.LENGTH_SHORT).show();
+                        } else {
+                            btnAssignToMe.setEnabled(true);
+                            btnAssignToMe.setText("ASSIGN TO ME");
+                            Toast.makeText(AdminTicketDetailActivity.this,
+                                    "Assignment failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse<Ticket>> call, @NonNull Throwable t) {
+                        btnAssignToMe.setEnabled(true);
+                        btnAssignToMe.setText("ASSIGN TO ME");
+                        Toast.makeText(AdminTicketDetailActivity.this,
+                                "Network error", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private String buildUrgencyDetails(Ticket ticket) {

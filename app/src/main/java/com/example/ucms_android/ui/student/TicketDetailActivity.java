@@ -42,7 +42,8 @@ import retrofit2.Response;
 public class TicketDetailActivity extends AppCompatActivity {
 
     private ImageView btnBack;
-    private TextView tvTicketNumber, tvCategoryName, tvTicketTitle, tvDescription, tvAttachmentName;
+    private TextView tvTicketNumber, tvCategoryName, tvTicketTitle, tvDescription, tvAttachmentName, tvAssignedAdmin;
+    private View layoutAssignedAdmin;
     private ImageView ivAttachmentPreview;
     private View cvAttachment;
     private LinearLayout layoutAttachmentContent;
@@ -101,6 +102,8 @@ public class TicketDetailActivity extends AppCompatActivity {
         ivAttachmentPreview = findViewById(R.id.ivAttachmentPreview);
         cvAttachment = findViewById(R.id.cvAttachment);
         layoutAttachmentContent = findViewById(R.id.layoutAttachmentContent);
+        layoutAssignedAdmin = findViewById(R.id.layoutAssignedAdmin);
+        tvAssignedAdmin = findViewById(R.id.tvAssignedAdmin);
         shimmerAttachment = findViewById(R.id.shimmerAttachment);
         shimmerTimeline = findViewById(R.id.shimmerTimeline);
         rvTimeline = findViewById(R.id.rvTimeline);
@@ -202,6 +205,13 @@ public class TicketDetailActivity extends AppCompatActivity {
         tvTicketTitle.setText(ticket.getTitle());
         tvDescription.setText(ticket.getDescription());
         layoutAttachmentContent.setVisibility(View.GONE);
+        String assignedName = ticket.getAssignedAdminName();
+        if (assignedName != null && !assignedName.isEmpty()) {
+            tvAssignedAdmin.setText(assignedName);
+            layoutAssignedAdmin.setVisibility(View.VISIBLE);
+        } else {
+            layoutAssignedAdmin.setVisibility(View.GONE);
+        }
         boolean showClose = "RESOLVED".equalsIgnoreCase(ticket.getStatus()) && !ticket.isConfirmedResolved();
         btnCloseTicket.setVisibility(showClose ? View.VISIBLE : View.GONE);
         btnCloseTicket.setEnabled(true);

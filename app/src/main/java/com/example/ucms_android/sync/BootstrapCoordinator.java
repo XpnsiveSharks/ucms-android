@@ -144,6 +144,7 @@ public class BootstrapCoordinator {
 
                 User user = response.body().getData().getItems();
                 sessionManager.saveProfileCache(user.getName(), user.getStudentId(), user.getCourse(), user.getYearLevel());
+                sessionManager.updateRole(user.getRole());
 
                 String userId = user.getAuthUserId() != null ? user.getAuthUserId() : user.getStudentId();
                 if (userId != null && !userId.trim().isEmpty()) {
@@ -209,11 +210,6 @@ public class BootstrapCoordinator {
     }
 
     private void fetchNotifications(StepCallback callback) {
-        if (ROLE_ADMIN.equalsIgnoreCase(sessionManager.getRole())) {
-            callback.onSuccess();
-            return;
-        }
-
         String since = getSinceParam(SessionManager.DOMAIN_NOTIFICATIONS);
         syncService.syncNotifications(since).enqueue(new Callback<ApiResponse<SyncPayload<List<Notification>>>>() {
             @Override

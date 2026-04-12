@@ -151,6 +151,10 @@ public class LoginActivity extends AppCompatActivity {
                 org.json.JSONObject meta = obj.getJSONObject("user_metadata");
                 if (meta.has("role")) return meta.getString("role");
             }
+            if (obj.has("app_metadata")) {
+                org.json.JSONObject app = obj.getJSONObject("app_metadata");
+                if (app.has("role")) return app.getString("role");
+            }
             return "STUDENT";
         } catch (Exception e) {
             return "STUDENT";

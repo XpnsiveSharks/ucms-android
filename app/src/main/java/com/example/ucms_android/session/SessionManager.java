@@ -118,6 +118,12 @@ public class SessionManager {
         editor.apply();
     }
 
+    public void updateRole(String role) {
+        if (role == null || role.trim().isEmpty()) return;
+        editor.putString(KEY_ROLE, role.trim().toUpperCase());
+        editor.apply();
+    }
+
     public void setCurrentUserId(String userId) {
         editor.putString(KEY_CURRENT_USER_ID, userId);
         editor.apply();

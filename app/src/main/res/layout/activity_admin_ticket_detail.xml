@@ -259,6 +259,50 @@
                         android:orientation="vertical"
                         android:padding="20dp">
 
+                        <!-- Assign Admin Section -->
+                        <TextView
+                            android:id="@+id/tvAssignedAdminLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:fontFamily="monospace"
+                            android:text="ASSIGNED ADMIN"
+                            android:textColor="?attr/colorTextSecondary"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/tvAssignedAdmin"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_input_rect"
+                            android:fontFamily="monospace"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="16dp"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnAssignToMe"
+                            android:layout_width="match_parent"
+                            android:layout_height="64dp"
+                            android:layout_marginBottom="24dp"
+                            android:text="ASSIGN TO ME"
+                            android:textAllCaps="true"
+                            android:textColor="?attr/colorHomeSubmitButton"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:backgroundTint="?attr/colorHomeSubmitButtonTint"
+                            app:rippleColor="?attr/colorHomeSubmitButtonGlow"
+                            app:strokeColor="?attr/colorHomeSubmitButton"
+                            app:strokeWidth="2dp"
+                            app:cornerRadius="16dp"
+                            android:visibility="gone" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
