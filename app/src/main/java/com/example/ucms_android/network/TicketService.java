@@ -2,6 +2,7 @@ package com.example.ucms_android.network;
 
 import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.AnalyticsSummary;
+import com.example.ucms_android.model.AssignTicketRequest;
 import com.example.ucms_android.model.AttachmentResponse;
 import com.example.ucms_android.model.CategoryCount;
 import com.example.ucms_android.model.CreateResponseRequest;
@@ -40,6 +41,9 @@ public interface TicketService {
 
     @PATCH("api/admin/ai/tickets/{id}/urgency-override")
     Call<ApiResponse<Ticket>> overrideTicketUrgency(@Path("id") Long id, @Body UrgencyOverrideRequest request);
+
+    @PATCH("api/tickets/{id}/assign")
+    Call<ApiResponse<Ticket>> assignAdmin(@Path("id") Long id, @Body AssignTicketRequest request);
 
     @PATCH("api/tickets/{id}/confirm-resolved")
     Call<ApiResponse<Ticket>> confirmResolved(@Path("id") Long id);

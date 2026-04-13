@@ -12,6 +12,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
+import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
@@ -21,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.example.ucms_android.R;
+import com.example.ucms_android.model.AssignTicketRequest;
 import com.example.ucms_android.model.AttachmentResponse;
 import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.CreateResponseRequest;
@@ -28,8 +32,10 @@ import com.example.ucms_android.model.StatusUpdateRequest;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.model.TicketResponse;
 import com.example.ucms_android.model.UrgencyOverrideRequest;
+import com.example.ucms_android.model.User;
 import com.example.ucms_android.network.ApiClient;
 import com.example.ucms_android.network.TicketService;
+import com.example.ucms_android.network.UserService;
 import com.example.ucms_android.session.SessionManager;
 import com.example.ucms_android.ui.adapter.TimelineAdapter;
 import com.example.ucms_android.util.DateFormatter;
@@ -52,6 +58,10 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
 
     private TextView tvTicketId, tvCategory, tvUrgencyReason, tvSelectedCategory;
     private TextView tvTitle, tvDescription, tvAttachmentName;
+    private TextView tvAssignedAdminLabel, tvAssignedAdmin;
+    private TextInputLayout tilAdminSelect;
+    private MaterialAutoCompleteTextView dropAdminSelect;
+    private MaterialButton btnAssignToMe;
     private View btnBack, cvAttachment, cvAiScoring;
     private MaterialButton btnUpdateStatus;
     private ImageButton btnSendComment;
@@ -65,6 +75,7 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
     private LinearLayout layoutError;
     private NestedScrollView scrollContent;
     private TicketService ticketService;
+    private UserService userService;
     private Long ticketId;
     private String currentStatus;
     private ShimmerFrameLayout shimmerAttachment;
@@ -75,6 +86,7 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
     private Gson gson;
     private Ticket currentTicket;
     private List<TicketResponse> currentResponses = new ArrayList<>();
+    private List<User> loadedAdmins = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,11 +101,14 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
 
         initViews();
         ticketService = ApiClient.getInstance(this).create(TicketService.class);
+        userService = ApiClient.getInstance(this).create(UserService.class);
         sessionManager = new SessionManager(this);
         gson = new Gson();
-        
+
         btnBack.setOnClickListener(v -> finish());
         btnSendComment.setOnClickListener(v -> appendComment());
+        btnAssignToMe.setOnClickListener(v -> assignAdmin());
+        fetchAdmins();
 
         btnOverrideUrgency.setOnClickListener(v -> {
             if (dropUrgencyLevel.getVisibility() == View.GONE) {
@@ -152,6 +167,12 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
         
         dropUrgencyLevel = findViewById(R.id.dropUrgencyLevel);
         etUrgencyOverrideReason = findViewById(R.id.etUrgencyOverrideReason);
+
+        tvAssignedAdminLabel = findViewById(R.id.tvAssignedAdminLabel);
+        tvAssignedAdmin = findViewById(R.id.tvAssignedAdmin);
+        tilAdminSelect = findViewById(R.id.tilAdminSelect);
+        dropAdminSelect = findViewById(R.id.dropAdminSelect);
+        btnAssignToMe = findViewById(R.id.btnAssignToMe);
     }
 
     private void showTimelineShimmer() {
@@ -360,6 +381,7 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
 
         currentStatus = ticket.getStatus();
         configureStatusActions();
+        configureAssignSection(ticket);
     }
 
     private void setupUrgencyOverrideDropdown() {
@@ -553,6 +575,123 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
                 btnSendComment.setVisibility(View.VISIBLE);
                 break;
         }
+    }
+
+    private void configureAssignSection(Ticket ticket) {
+        String assignedName = ticket.getAssignedAdminName();
+        boolean isPending = "PENDING".equalsIgnoreCase(ticket.getStatus());
+
+        if (isPending) {
+            tvAssignedAdminLabel.setVisibility(View.VISIBLE);
+            tvAssignedAdmin.setVisibility(View.GONE);
+            tilAdminSelect.setVisibility(View.VISIBLE);
+            btnAssignToMe.setVisibility(View.VISIBLE);
+            btnAssignToMe.setEnabled(true);
+            btnAssignToMe.setText("ASSIGN");
+            // Pre-fill with current assignee so the admin knows who it's currently assigned to
+            if (assignedName != null && !assignedName.isEmpty()) {
+                dropAdminSelect.setText(assignedName, false);
+            }
+        } else if (assignedName != null && !assignedName.isEmpty()) {
+            tvAssignedAdminLabel.setVisibility(View.VISIBLE);
+            tvAssignedAdmin.setVisibility(View.VISIBLE);
+            tvAssignedAdmin.setText(assignedName);
+            tilAdminSelect.setVisibility(View.GONE);
+            btnAssignToMe.setVisibility(View.GONE);
+        } else {
+            tvAssignedAdminLabel.setVisibility(View.GONE);
+            tvAssignedAdmin.setVisibility(View.GONE);
+            tilAdminSelect.setVisibility(View.GONE);
+            btnAssignToMe.setVisibility(View.GONE);
+        }
+    }
+
+    private void fetchAdmins() {
+        userService.getAdmins().enqueue(new Callback<ApiResponse<List<User>>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<List<User>>> call,
+                                   @NonNull Response<ApiResponse<List<User>>> response) {
+                if (response.isSuccessful() && response.body() != null
+                        && response.body().getData() != null) {
+                    loadedAdmins = response.body().getData();
+                    List<String> names = new ArrayList<>();
+                    names.add("Assign to Me");
+                    for (User admin : loadedAdmins) {
+                        names.add(admin.getName());
+                    }
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                            AdminTicketDetailActivity.this,
+                            android.R.layout.simple_dropdown_item_1line,
+                            names
+                    );
+                    dropAdminSelect.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<List<User>>> call, @NonNull Throwable t) {
+                // Non-critical — assignment still works via self-assign if admins fail to load
+            }
+        });
+    }
+
+    private void assignAdmin() {
+        String selectedName = dropAdminSelect.getText() != null
+                ? dropAdminSelect.getText().toString().trim()
+                : "";
+
+        if (selectedName.isEmpty()) {
+            tilAdminSelect.setError("Select an admin");
+            return;
+        }
+        tilAdminSelect.setError(null);
+
+        String adminId = null;
+        if (!selectedName.equals("Assign to Me")) {
+            for (User admin : loadedAdmins) {
+                if (selectedName.equals(admin.getName())) {
+                    adminId = admin.getAuthUserId();
+                    break;
+                }
+            }
+            if (adminId == null) {
+                Toast.makeText(this, "Admin not found — please reselect from the list", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        AssignTicketRequest request = new AssignTicketRequest(adminId);
+        btnAssignToMe.setEnabled(false);
+        btnAssignToMe.setText("Assigning...");
+        final String assignedLabel = adminId == null ? "Ticket assigned to you" : "Ticket assigned to " + selectedName;
+
+        ticketService.assignAdmin(ticketId, request)
+                .enqueue(new Callback<ApiResponse<Ticket>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse<Ticket>> call,
+                                           @NonNull Response<ApiResponse<Ticket>> response) {
+                        if (response.isSuccessful() && response.body() != null
+                                && response.body().getData() != null) {
+                            currentTicket = response.body().getData();
+                            displayTicket(currentTicket);
+                            Toast.makeText(AdminTicketDetailActivity.this,
+                                    assignedLabel, Toast.LENGTH_SHORT).show();
+                        } else {
+                            btnAssignToMe.setEnabled(true);
+                            btnAssignToMe.setText("ASSIGN");
+                            Toast.makeText(AdminTicketDetailActivity.this,
+                                    "Assignment failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse<Ticket>> call, @NonNull Throwable t) {
+                        btnAssignToMe.setEnabled(true);
+                        btnAssignToMe.setText("ASSIGN");
+                        Toast.makeText(AdminTicketDetailActivity.this,
+                                "Network error", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private String buildUrgencyDetails(Ticket ticket) {

@@ -67,6 +67,12 @@ public class Ticket {
     @SerializedName("urgencyOverrideReason")
     private String urgencyOverrideReason;
 
+    @SerializedName("assignedAdminId")
+    private String assignedAdminId;
+
+    @SerializedName("assignedAdminName")
+    private String assignedAdminName;
+
     @SerializedName("createdAt")
     private String createdAt;
 
@@ -94,6 +100,8 @@ public class Ticket {
     public String getUrgencyUpdatedAt() { return urgencyUpdatedAt; }
     public boolean isUrgencyOverridden() { return urgencyOverridden; }
     public String getUrgencyOverrideReason() { return urgencyOverrideReason; }
+    public String getAssignedAdminId() { return assignedAdminId; }
+    public String getAssignedAdminName() { return assignedAdminName; }
     public String getCreatedAt() { return createdAt; }
     public String getUpdatedAt() { return updatedAt; }
 

@@ -168,6 +168,37 @@
                                 android:textSize="13sp"
                                 tools:text="Student requests assistance in processing a transfer to a different academic program." />
 
+                            <!-- Assigned Admin -->
+                            <LinearLayout
+                                android:id="@+id/layoutAssignedAdmin"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_medium"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="monospace"
+                                    android:text="HANDLED BY  "
+                                    android:textColor="?attr/colorTextSecondary"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/tvAssignedAdmin"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="monospace"
+                                    android:textColor="?attr/colorOnSurface"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold"
+                                    tools:text="Juan Dela Cruz" />
+
+                            </LinearLayout>
+
                             <!-- Attachment card inside content -->
                             <LinearLayout
                                 android:id="@+id/cvAttachment"
