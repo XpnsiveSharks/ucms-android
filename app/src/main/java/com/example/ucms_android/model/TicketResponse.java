@@ -13,6 +13,9 @@ public class TicketResponse {
     @SerializedName("adminName")
     private String adminName;
 
+    @SerializedName("responderRole")
+    private String responderRole;
+
     @SerializedName("createdAt")
     private String createdAt;
 
@@ -22,6 +25,7 @@ public class TicketResponse {
     public Long getId() { return id; }
     public String getMessage() { return message; }
     public String getAdminName() { return adminName; }
+    public String getResponderRole() { return responderRole; }
     public String getCreatedAt() { return createdAt; }
     public String getTicketStatus() { return ticketStatus; }
 }

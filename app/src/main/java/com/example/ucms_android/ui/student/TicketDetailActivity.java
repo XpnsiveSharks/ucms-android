@@ -2,6 +2,9 @@ package com.example.ucms_android.ui.student;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -17,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.example.ucms_android.R;
 import com.example.ucms_android.model.ApiResponse;
 import com.example.ucms_android.model.AttachmentResponse;
+import com.example.ucms_android.model.CreateResponseRequest;
 import com.example.ucms_android.model.Ticket;
 import com.example.ucms_android.model.TicketResponse;
 import com.example.ucms_android.network.ApiClient;
@@ -54,6 +58,11 @@ public class TicketDetailActivity extends AppCompatActivity {
     private LinearLayout layoutError;
     private com.google.android.material.button.MaterialButton btnCloseTicket;
     private NestedScrollView scrollContent;
+    private FrameLayout layoutCommentInput;
+    private EditText etStudentComment;
+    private ImageButton btnSendStudentComment;
+    private ProgressBar pbSendStudentComment;
+    private ImageView ivSendStudentCommentError;
     private TicketService ticketService;
     private Long ticketId;
     private SessionManager sessionManager;
@@ -78,6 +87,8 @@ public class TicketDetailActivity extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> finish());
         btnCloseTicket.setOnClickListener(v -> confirmCloseTicket());
+        btnSendStudentComment.setOnClickListener(v -> appendComment());
+        ivSendStudentCommentError.setOnClickListener(v -> appendComment());
         findViewById(R.id.btnRetry).setOnClickListener(v -> {
             loadTicket();
             loadResponses();
@@ -110,6 +121,11 @@ public class TicketDetailActivity extends AppCompatActivity {
         layoutError = findViewById(R.id.layoutError);
         scrollContent = findViewById(R.id.scrollContent);
         btnCloseTicket = findViewById(R.id.btnCloseTicketView);
+        layoutCommentInput = findViewById(R.id.layoutCommentInput);
+        etStudentComment = findViewById(R.id.etStudentComment);
+        btnSendStudentComment = findViewById(R.id.btnSendStudentComment);
+        pbSendStudentComment = findViewById(R.id.pbSendStudentComment);
+        ivSendStudentCommentError = findViewById(R.id.ivSendStudentCommentError);
     }
 
     private void showTimelineShimmer() {
@@ -216,6 +232,58 @@ public class TicketDetailActivity extends AppCompatActivity {
         btnCloseTicket.setVisibility(showClose ? View.VISIBLE : View.GONE);
         btnCloseTicket.setEnabled(true);
         btnCloseTicket.setText(R.string.close_ticket);
+
+        boolean showComment = "IN_PROGRESS".equalsIgnoreCase(ticket.getStatus());
+        layoutCommentInput.setVisibility(showComment ? View.VISIBLE : View.GONE);
+    }
+
+    private void appendComment() {
+        String message = etStudentComment.getText().toString().trim();
+        if (message.isEmpty()) return;
+        setCommentSendState("SENDING");
+        CreateResponseRequest req = new CreateResponseRequest(message);
+        ticketService.postResponse(ticketId, req).enqueue(new Callback<ApiResponse<TicketResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<TicketResponse>> call,
+                                   @NonNull Response<ApiResponse<TicketResponse>> response) {
+                if (response.isSuccessful()) {
+                    etStudentComment.setText("");
+                    setCommentSendState("IDLE");
+                    sessionManager.saveTicketResponsesJson(ticketId, null);
+                    loadResponses();
+                } else {
+                    setCommentSendState("ERROR");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<TicketResponse>> call, @NonNull Throwable t) {
+                setCommentSendState("ERROR");
+            }
+        });
+    }
+
+    private void setCommentSendState(String state) {
+        switch (state) {
+            case "SENDING":
+                btnSendStudentComment.setVisibility(View.GONE);
+                ivSendStudentCommentError.setVisibility(View.GONE);
+                pbSendStudentComment.setVisibility(View.VISIBLE);
+                etStudentComment.setEnabled(false);
+                break;
+            case "ERROR":
+                pbSendStudentComment.setVisibility(View.GONE);
+                btnSendStudentComment.setVisibility(View.GONE);
+                ivSendStudentCommentError.setVisibility(View.VISIBLE);
+                etStudentComment.setEnabled(true);
+                break;
+            default: // IDLE
+                pbSendStudentComment.setVisibility(View.GONE);
+                ivSendStudentCommentError.setVisibility(View.GONE);
+                btnSendStudentComment.setVisibility(View.VISIBLE);
+                etStudentComment.setEnabled(true);
+                break;
+        }
     }
 
     private void confirmCloseTicket() {
@@ -321,7 +389,8 @@ public class TicketDetailActivity extends AppCompatActivity {
                     r.getAdminName(), r.getMessage(), DateFormatter.formatDate(r.getCreatedAt()),
                     att != null ? att.getSignedUrl() : null,
                     att != null ? att.getMimeType() : null,
-                    att != null ? att.getOriginalFilename() : null));
+                    att != null ? att.getOriginalFilename() : null,
+                    r.getResponderRole()));
         }
 
         // 2. Pending Responses (Initial phase)

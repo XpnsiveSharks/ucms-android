@@ -25,6 +25,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         public String attachmentSignedUrl;
         public String attachmentMimeType;
         public String attachmentFilename;
+        public String responderRole;
 
         public AdminResponse(String adminName, String message, String time) {
             this.adminName = adminName;
@@ -39,6 +40,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             this.attachmentSignedUrl = attachmentSignedUrl;
             this.attachmentMimeType = attachmentMimeType;
             this.attachmentFilename = attachmentFilename;
+        }
+
+        public AdminResponse(String adminName, String message, String time,
+                             String attachmentSignedUrl, String attachmentMimeType,
+                             String attachmentFilename, String responderRole) {
+            this(adminName, message, time, attachmentSignedUrl, attachmentMimeType, attachmentFilename);
+            this.responderRole = responderRole;
         }
     }
 
@@ -107,9 +115,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                 View llAttachFile = responseCard.findViewById(R.id.llAttachmentFile);
                 TextView tvAttachFilename = responseCard.findViewById(R.id.tvAttachFilename);
 
-                tvName.setText(response.adminName != null
-                        ? "Admin Response (" + response.adminName + ")"
-                        : "Admin Response");
+                boolean isStudent = "STUDENT".equals(response.responderRole);
+                if (isStudent) {
+                    tvName.setText("Student Response");
+                } else {
+                    tvName.setText(response.adminName != null
+                            ? "Admin Response (" + response.adminName + ")"
+                            : "Admin Response");
+                }
                 tvMessage.setText(response.message);
                 if (tvTime != null) tvTime.setText(response.time);
 
