@@ -154,34 +154,15 @@
                                 android:layout_marginTop="20dp"
                                 android:background="@drawable/bg_attachment_box"
                                 android:padding="12dp"
-                                android:clickable="true"
-                                android:focusable="true"
+                                android:orientation="vertical"
                                 android:visibility="gone"
                                 tools:visibility="visible">
 
-                                <ImageView
-                                    android:id="@+id/ivAttachmentImage"
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:src="@drawable/ic_attachment"
-                                    app:tint="?attr/colorTextSecondary" />
-
-                                <TextView
-                                    android:id="@+id/tvAttachmentName"
-                                    android:layout_width="0dp"
+                                <LinearLayout
+                                    android:id="@+id/llStudentAttachments"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="12dp"
-                                    android:layout_weight="1"
-                                    android:fontFamily="monospace"
-                                    android:textColor="?attr/colorOnSurface"
-                                    android:textSize="12sp"
-                                    tools:text="image_1000000186.jpg" />
-
-                                <ImageView
-                                    android:layout_width="16dp"
-                                    android:layout_height="16dp"
-                                    android:src="@drawable/ic_chevron_right"
-                                    app:tint="?attr/colorTextSecondary" />
+                                    android:orientation="vertical" />
 
                             </LinearLayout>
 
@@ -368,6 +349,54 @@
                             android:textColor="?attr/colorTextSecondary"
                             android:textSize="10sp"
                             android:textStyle="bold" />
+
+                        <!-- Attachment picker for comment (optional) -->
+                        <FrameLayout
+                            android:id="@+id/cvCommentAttachment"
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_attachment_dashed"
+                            android:clickable="true"
+                            android:focusable="true">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_attachment"
+                                    android:contentDescription="@null"
+                                    app:tint="?attr/colorTextSecondary" />
+
+                                <TextView
+                                    android:id="@+id/tvCommentAttachmentHint"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="6dp"
+                                    android:fontFamily="monospace"
+                                    android:text="TAP TO ATTACH FILE (OPTIONAL)"
+                                    android:textColor="?attr/colorTextSecondary"
+                                    android:textSize="10sp" />
+
+                                <TextView
+                                    android:id="@+id/tvCommentAttachmentName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:fontFamily="monospace"
+                                    android:textColor="?attr/colorHomeSubmitButton"
+                                    android:textStyle="bold"
+                                    android:textSize="10sp"
+                                    android:visibility="gone" />
+
+                            </LinearLayout>
+                        </FrameLayout>
 
                         <!-- Response Input with inline send button -->
                         <FrameLayout

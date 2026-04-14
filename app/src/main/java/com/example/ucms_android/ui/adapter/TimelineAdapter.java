@@ -1,5 +1,7 @@
 package com.example.ucms_android.ui.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ucms_android.R;
-import com.google.android.material.card.MaterialCardView;
+import com.example.ucms_android.ui.ImageViewerActivity;
 
 import java.util.List;
 
@@ -20,11 +22,23 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         public String adminName;
         public String message;
         public String time;
+        public String attachmentSignedUrl;
+        public String attachmentMimeType;
+        public String attachmentFilename;
 
         public AdminResponse(String adminName, String message, String time) {
             this.adminName = adminName;
             this.message = message;
             this.time = time;
+        }
+
+        public AdminResponse(String adminName, String message, String time,
+                             String attachmentSignedUrl, String attachmentMimeType,
+                             String attachmentFilename) {
+            this(adminName, message, time);
+            this.attachmentSignedUrl = attachmentSignedUrl;
+            this.attachmentMimeType = attachmentMimeType;
+            this.attachmentFilename = attachmentFilename;
         }
     }
 
@@ -43,9 +57,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
     }
 
     private List<TimelineEvent> events;
+    private Long ticketId;
 
     public TimelineAdapter(List<TimelineEvent> events) {
         this.events = events;
+    }
+
+    public void setTicketId(Long ticketId) {
+        this.ticketId = ticketId;
     }
 
     public void updateData(List<TimelineEvent> newEvents) {
@@ -85,12 +104,38 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                 TextView tvName = responseCard.findViewById(R.id.tvAdminName);
                 TextView tvMessage = responseCard.findViewById(R.id.tvAdminMessage);
                 TextView tvTime = responseCard.findViewById(R.id.tvResponseTime);
+                View llAttachFile = responseCard.findViewById(R.id.llAttachmentFile);
+                TextView tvAttachFilename = responseCard.findViewById(R.id.tvAttachFilename);
 
                 tvName.setText(response.adminName != null
                         ? "Admin Response (" + response.adminName + ")"
                         : "Admin Response");
                 tvMessage.setText(response.message);
                 if (tvTime != null) tvTime.setText(response.time);
+
+                if (response.attachmentSignedUrl != null && llAttachFile != null) {
+                    llAttachFile.setVisibility(View.VISIBLE);
+                    if (tvAttachFilename != null) {
+                        tvAttachFilename.setText(
+                                response.attachmentFilename != null
+                                        ? response.attachmentFilename
+                                        : "Attachment");
+                    }
+                    boolean isImage = response.attachmentMimeType != null
+                            && response.attachmentMimeType.startsWith("image/");
+                    if (isImage && ticketId != null) {
+                        llAttachFile.setOnClickListener(v -> {
+                            Context ctx = v.getContext();
+                            Intent intent = new Intent(ctx, ImageViewerActivity.class);
+                            intent.putExtra(ImageViewerActivity.EXTRA_TICKET_ID, ticketId);
+                            ctx.startActivity(intent);
+                        });
+                    } else {
+                        llAttachFile.setOnClickListener(null);
+                    }
+                } else if (llAttachFile != null) {
+                    llAttachFile.setVisibility(View.GONE);
+                }
 
                 holder.llResponses.addView(responseCard);
             }
