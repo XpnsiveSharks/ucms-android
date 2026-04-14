@@ -297,7 +297,8 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
                     r.getAdminName(), r.getMessage(), DateFormatter.formatDate(r.getCreatedAt()),
                     att != null ? att.getSignedUrl() : null,
                     att != null ? att.getMimeType() : null,
-                    att != null ? att.getOriginalFilename() : null));
+                    att != null ? att.getOriginalFilename() : null,
+                    r.getResponderRole()));
         }
 
         List<TimelineAdapter.AdminResponse> pendingRes = statusResponses.get("PENDING");
