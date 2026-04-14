@@ -340,6 +340,12 @@
                                 app:tint="?attr/colorHomeSubmitButton" />
                         </FrameLayout>
 
+                        <LinearLayout
+                            android:id="@+id/llCommentSection"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -453,6 +459,8 @@
                                 android:contentDescription="Send failed"
                                 android:visibility="gone"
                                 app:tint="#F44336" /></FrameLayout>
+
+                        </LinearLayout>
 
                         <!-- Execute Button -->
                         <com.google.android.material.button.MaterialButton

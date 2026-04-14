@@ -101,6 +101,7 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
     private List<AttachmentResponse> currentAttachments = new ArrayList<>();
     private Uri selectedCommentFileUri;
     private View cvCommentAttachment;
+    private View llCommentSection;
     private TextView tvCommentAttachmentHint, tvCommentAttachmentName;
 
     private final ActivityResultLauncher<String[]> commentFilePickerLauncher =
@@ -186,6 +187,7 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
         btnSendComment = findViewById(R.id.btnSendComment);
         pbSendComment = findViewById(R.id.pbSendComment);
         ivSendError = findViewById(R.id.ivSendError);
+        llCommentSection = findViewById(R.id.llCommentSection);
 
         btnOverrideUrgency = findViewById(R.id.btnOverrideUrgency);
         
@@ -545,11 +547,14 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
 
     private void configureStatusActions() {
         String nextStatus = getNextStatus(currentStatus);
+        boolean isTerminal = "RESOLVED".equalsIgnoreCase(currentStatus) || "CLOSED".equalsIgnoreCase(currentStatus);
+        llCommentSection.setVisibility(isTerminal ? View.GONE : View.VISIBLE);
         if ("RESOLVED".equalsIgnoreCase(currentStatus)) {
-            btnUpdateStatus.setEnabled(false);
-            btnUpdateStatus.setAlpha(0.5f);
-            btnUpdateStatus.setText("WAITING FOR CONFIRMATION");
-            tvSelectedCategory.setText("RESOLVED");
+            btnUpdateStatus.setEnabled(true);
+            btnUpdateStatus.setAlpha(1.0f);
+            btnUpdateStatus.setText("CLOSE TICKET");
+            tvSelectedCategory.setText("CLOSED");
+            btnUpdateStatus.setOnClickListener(v -> showCloseTicketConfirmation());
         } else if (nextStatus == null) {
             btnUpdateStatus.setEnabled(false);
             btnUpdateStatus.setText("UPDATE STATUS");
@@ -575,7 +580,6 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
                 .enqueue(new Callback<ApiResponse<Ticket>>() {
                     @Override
                     public void onResponse(@NonNull Call<ApiResponse<Ticket>> call, @NonNull Response<ApiResponse<Ticket>> response) {
-                        btnUpdateStatus.setText("Update Status");
                         if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                             Toast.makeText(AdminTicketDetailActivity.this, "Status updated", Toast.LENGTH_SHORT).show();
                             etResponse.setText("");
@@ -584,14 +588,25 @@ public class AdminTicketDetailActivity extends AppCompatActivity {
                             loadResponses();
                         } else {
                             btnUpdateStatus.setEnabled(true);
+                            configureStatusActions();
                         }
                     }
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse<Ticket>> call, @NonNull Throwable t) {
                         btnUpdateStatus.setEnabled(true);
+                        configureStatusActions();
                         Toast.makeText(AdminTicketDetailActivity.this, "Network error", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void showCloseTicketConfirmation() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Close Ticket")
+                .setMessage("Are you sure you want to close this ticket? This action cannot be undone.")
+                .setPositiveButton("Close Ticket", (dialog, which) -> updateStatus("CLOSED"))
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void appendComment() {
