@@ -50,7 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollContent"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -219,40 +219,11 @@
                                 </com.facebook.shimmer.ShimmerFrameLayout>
 
                                 <LinearLayout
-                                    android:id="@+id/layoutAttachmentContent"
+                                    android:id="@+id/llStudentAttachments"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center_vertical"
-                                    android:orientation="horizontal"
-                                    android:visibility="gone">
-
-                                    <ImageView
-                                        android:id="@+id/ivAttachmentPreview"
-                                        android:layout_width="20dp"
-                                        android:layout_height="20dp"
-                                        android:contentDescription="@null"
-                                        android:src="@drawable/ic_attachment"
-                                        app:tint="?attr/colorTextSecondary" />
-
-                                    <TextView
-                                        android:id="@+id/tvAttachmentName"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginStart="12dp"
-                                        android:layout_weight="1"
-                                        android:fontFamily="monospace"
-                                        android:textColor="?attr/colorOnSurface"
-                                        android:textSize="12sp"
-                                        tools:text="image_1000000186.jpg" />
-
-                                    <ImageView
-                                        android:layout_width="20dp"
-                                        android:layout_height="20dp"
-                                        android:src="@drawable/ic_chevron_right"
-                                        android:contentDescription="@null"
-                                        app:tint="?attr/colorTextSecondary" />
-
-                                </LinearLayout>
+                                    android:orientation="vertical"
+                                    android:visibility="gone" />
 
                             </LinearLayout>
 
@@ -300,7 +271,7 @@
 
             </LinearLayout>
 
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCloseTicketView"

@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
+import androidx.core.widget.NestedScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -42,25 +42,25 @@ import retrofit2.Response;
 public class TicketDetailActivity extends AppCompatActivity {
 
     private ImageView btnBack;
-    private TextView tvTicketNumber, tvCategoryName, tvTicketTitle, tvDescription, tvAttachmentName, tvAssignedAdmin;
+    private TextView tvTicketNumber, tvCategoryName, tvTicketTitle, tvDescription, tvAssignedAdmin;
     private View layoutAssignedAdmin;
-    private ImageView ivAttachmentPreview;
     private View cvAttachment;
-    private LinearLayout layoutAttachmentContent;
+    private LinearLayout llStudentAttachments;
     private ShimmerFrameLayout shimmerAttachment;
     private ShimmerFrameLayout shimmerTimeline;
     private RecyclerView rvTimeline;
     private TimelineAdapter timelineAdapter;
     private ProgressBar progressBar;
     private LinearLayout layoutError;
-    private ScrollView scrollContent;
     private com.google.android.material.button.MaterialButton btnCloseTicket;
+    private NestedScrollView scrollContent;
     private TicketService ticketService;
     private Long ticketId;
     private SessionManager sessionManager;
     private Gson gson;
     private Ticket currentTicket;
     private List<TicketResponse> currentResponses = new ArrayList<>();
+    private List<com.example.ucms_android.model.AttachmentResponse> currentAttachments = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +84,7 @@ public class TicketDetailActivity extends AppCompatActivity {
         });
 
         timelineAdapter = new TimelineAdapter(new ArrayList<>());
+        timelineAdapter.setTicketId(ticketId);
         rvTimeline.setLayoutManager(new LinearLayoutManager(this));
         rvTimeline.setAdapter(timelineAdapter);
 
@@ -98,10 +99,8 @@ public class TicketDetailActivity extends AppCompatActivity {
         tvCategoryName = findViewById(R.id.tvCategoryName);
         tvTicketTitle = findViewById(R.id.tvTicketTitle);
         tvDescription = findViewById(R.id.tvDescription);
-        tvAttachmentName = findViewById(R.id.tvAttachmentName);
-        ivAttachmentPreview = findViewById(R.id.ivAttachmentPreview);
         cvAttachment = findViewById(R.id.cvAttachment);
-        layoutAttachmentContent = findViewById(R.id.layoutAttachmentContent);
+        llStudentAttachments = findViewById(R.id.llStudentAttachments);
         layoutAssignedAdmin = findViewById(R.id.layoutAssignedAdmin);
         tvAssignedAdmin = findViewById(R.id.tvAssignedAdmin);
         shimmerAttachment = findViewById(R.id.shimmerAttachment);
@@ -204,7 +203,8 @@ public class TicketDetailActivity extends AppCompatActivity {
         tvCategoryName.setText(ticket.getCategoryName() != null ? ticket.getCategoryName() : "");
         tvTicketTitle.setText(ticket.getTitle());
         tvDescription.setText(ticket.getDescription());
-        layoutAttachmentContent.setVisibility(View.GONE);
+        llStudentAttachments.removeAllViews();
+        llStudentAttachments.setVisibility(View.GONE);
         String assignedName = ticket.getAssignedAdminName();
         if (assignedName != null && !assignedName.isEmpty()) {
             tvAssignedAdmin.setText(assignedName);
@@ -283,6 +283,31 @@ public class TicketDetailActivity extends AppCompatActivity {
                 android.graphics.Color.parseColor("#9E9E9E")
         ));
 
+        // Match each attachment to the response posted within 2 minutes before it
+        java.util.Map<Long, com.example.ucms_android.model.AttachmentResponse> responseIdToAttachment = new java.util.HashMap<>();
+        java.util.Set<Long> usedAttachmentIds = new java.util.HashSet<>();
+        for (TicketResponse r : sortedResponses) {
+            long rEpoch = parseIso(r.getCreatedAt());
+            if (rEpoch < 0 || r.getId() == null) continue;
+            com.example.ucms_android.model.AttachmentResponse best = null;
+            long bestDiff = Long.MAX_VALUE;
+            for (com.example.ucms_android.model.AttachmentResponse a : currentAttachments) {
+                if (!"ADMIN".equals(a.getUploaderRole())) continue;
+                if (a.getId() != null && usedAttachmentIds.contains(a.getId())) continue;
+                long aEpoch = parseIso(a.getUploadedAt());
+                if (aEpoch < 0) continue;
+                long diff = aEpoch - rEpoch;
+                if (diff >= 0 && diff <= 120 && diff < bestDiff) {
+                    best = a;
+                    bestDiff = diff;
+                }
+            }
+            if (best != null) {
+                responseIdToAttachment.put(r.getId(), best);
+                if (best.getId() != null) usedAttachmentIds.add(best.getId());
+            }
+        }
+
         // Group responses by status to show them in the correct status section
         java.util.Map<String, List<TimelineAdapter.AdminResponse>> statusResponses = new java.util.HashMap<>();
         for (TicketResponse r : sortedResponses) {
@@ -290,8 +315,13 @@ public class TicketDetailActivity extends AppCompatActivity {
             if (!statusResponses.containsKey(s)) {
                 statusResponses.put(s, new ArrayList<>());
             }
+            com.example.ucms_android.model.AttachmentResponse att =
+                    r.getId() != null ? responseIdToAttachment.get(r.getId()) : null;
             statusResponses.get(s).add(new TimelineAdapter.AdminResponse(
-                    r.getAdminName(), r.getMessage(), DateFormatter.formatDate(r.getCreatedAt())));
+                    r.getAdminName(), r.getMessage(), DateFormatter.formatDate(r.getCreatedAt()),
+                    att != null ? att.getSignedUrl() : null,
+                    att != null ? att.getMimeType() : null,
+                    att != null ? att.getOriginalFilename() : null));
         }
 
         // 2. Pending Responses (Initial phase)
@@ -353,11 +383,26 @@ public class TicketDetailActivity extends AppCompatActivity {
         }
     }
 
+    private static long parseIso(String iso) {
+        if (iso == null || iso.isEmpty()) return -1;
+        try {
+            return java.time.LocalDateTime.parse(iso)
+                    .toEpochSecond(java.time.ZoneOffset.UTC);
+        } catch (Exception e1) {
+            try {
+                return java.time.OffsetDateTime.parse(iso).toEpochSecond();
+            } catch (Exception e2) {
+                return -1;
+            }
+        }
+    }
+
     private void loadAttachments() {
         cvAttachment.setVisibility(View.VISIBLE);
         shimmerAttachment.setVisibility(View.VISIBLE);
         shimmerAttachment.startShimmer();
-        layoutAttachmentContent.setVisibility(View.GONE);
+        llStudentAttachments.removeAllViews();
+        llStudentAttachments.setVisibility(View.GONE);
 
         ticketService.getAttachments(ticketId).enqueue(new Callback<ApiResponse<List<AttachmentResponse>>>() {
             @Override
@@ -368,27 +413,40 @@ public class TicketDetailActivity extends AppCompatActivity {
 
                 if (!isFinishing() && response.isSuccessful()
                         && response.body() != null
-                        && response.body().getData() != null
-                        && !response.body().getData().isEmpty()) {
+                        && response.body().getData() != null) {
 
-                    AttachmentResponse attachment = response.body().getData().get(0);
-                    tvAttachmentName.setText(attachment.getOriginalFilename());
-                    layoutAttachmentContent.setVisibility(View.VISIBLE);
+                    currentAttachments = response.body().getData();
+                    buildTimeline();
 
-        ivAttachmentPreview.setVisibility(View.VISIBLE);
-        ivAttachmentPreview.setImageResource(R.drawable.ic_attachment);
-
-                String mime = attachment.getMimeType();
-                if (mime != null && mime.startsWith("image/")) {
-                    cvAttachment.setOnClickListener(v -> {
-                        android.content.Intent intent = new android.content.Intent(TicketDetailActivity.this,
-                                com.example.ucms_android.ui.ImageViewerActivity.class);
-                        intent.putExtra(com.example.ucms_android.ui.ImageViewerActivity.EXTRA_TICKET_ID, ticketId);
-                        startActivity(intent);
-                    });
-                } else {
-                    cvAttachment.setOnClickListener(null);
-                }
+                    // Show only student-uploaded attachments in the ticket card
+                    List<AttachmentResponse> studentAttachments = new ArrayList<>();
+                    for (AttachmentResponse a : currentAttachments) {
+                        if ("STUDENT".equals(a.getUploaderRole())) studentAttachments.add(a);
+                    }
+                    if (!studentAttachments.isEmpty()) {
+                        llStudentAttachments.removeAllViews();
+                        for (AttachmentResponse a : studentAttachments) {
+                            android.view.View row = android.view.LayoutInflater.from(TicketDetailActivity.this)
+                                    .inflate(R.layout.item_student_attachment_row, llStudentAttachments, false);
+                            ((TextView) row.findViewById(R.id.tvRowFilename)).setText(a.getOriginalFilename());
+                            row.setOnClickListener(v -> {
+                                if (a.getMimeType() != null && a.getMimeType().startsWith("image/")) {
+                                    android.content.Intent intent = new android.content.Intent(
+                                            TicketDetailActivity.this,
+                                            com.example.ucms_android.ui.ImageViewerActivity.class);
+                                    intent.putExtra(
+                                            com.example.ucms_android.ui.ImageViewerActivity.EXTRA_TICKET_ID,
+                                            ticketId);
+                                    startActivity(intent);
+                                }
+                            });
+                            llStudentAttachments.addView(row);
+                        }
+                        llStudentAttachments.setVisibility(View.VISIBLE);
+                        cvAttachment.setVisibility(View.VISIBLE);
+                    } else {
+                        cvAttachment.setVisibility(View.GONE);
+                    }
                 } else {
                     cvAttachment.setVisibility(View.GONE);
                 }
